@@ -181,7 +181,7 @@ public class FileManagerPanel extends JPanel {
 					filemanagerindex();
 					filemanagersystem();
 				} catch (Exception e) {
-					path.setText("连接失败");
+					path.setText(e.getMessage());
 				}
 
 			}
@@ -208,9 +208,10 @@ public class FileManagerPanel extends JPanel {
 
 	private void filemanagerindex() {
 		String arrtmp = fm.doAction("readindex");
-		if (arrtmp.equals("")) // 为空则出现异常，要么是非200的响应，要么是200没返回内容，后续改用Sock连接返回内容。
+//		System.out.println(arrtmp);
+		if (arrtmp.startsWith("HTTP")) 
 		{
-			throw new RuntimeException("连接失败");
+			throw new RuntimeException(arrtmp);
 		}
 		index_datas = arrtmp.split("\t");
 		webroot = index_datas[0];

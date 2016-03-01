@@ -11,13 +11,13 @@ import java.util.regex.Pattern;
 public class Common {
 
 	public static String purData(String data) {
-		String datas = "";
+		String datas = data;
 		String regex = Common.purRegex(Safe.SPL) + "(.+)"
 				+ Common.purRegex(Safe.SPR);
 		Matcher m = Pattern.compile(regex, Pattern.DOTALL).matcher(data);
 		if (m.find()) {
 			datas = m.group(1);
-		}
+		} 
 		return datas;
 
 	}
@@ -29,6 +29,7 @@ public class Common {
 	}
 
 	public static String send(String url, String params, String code) {
+//		System.out.println(Request.doPost(url, params, code));
 		return Common.purData(Request.doPost(url, params, code));
 	}
 
