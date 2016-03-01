@@ -4,14 +4,21 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
+import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Vector;
+import com.ms509.ui.MainFrame;
 import javax.swing.*;
 
+import com.ms509.ui.panel.ListPanel;
+import com.ms509.util.DbDao;
 import com.ms509.util.GBC;
 
 public class SetDBDialog extends JDialog{
@@ -26,12 +33,36 @@ public class SetDBDialog extends JDialog{
 	private JButton submit;
 	private JScrollPane dbset_scroll;
 	private JComboBox dbtype;
-	public SetDBDialog() {
+	private String id;
+	private String config;
+	private Statement stmt = DbDao.getInstance().getStmt();;
+	private String[] tmp;
+	
+	public SetDBDialog(String[] t) {
 		// TODO Auto-generated constructor stub		
-		super(MainFrame.main, "添加shell", true);
+		super(MainFrame.main, "数据库配置", true);
+		
 		this.setComponent();
 		// 初始化布局和控件
-
+		id = t[0];
+		
+		String getconfig_data = "select config from data where id="+id;
+		System.out.println(getconfig_data);
+		try {
+			ResultSet rs = stmt.executeQuery(getconfig_data);
+			while(rs.next())
+			{
+				//System.out.println(rs.getString(1));
+				config = rs.getString(1);
+				dbset.setText(config);
+			}
+			rs.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.out.println(t[3]);
 		this.setVisible(true);
 	}
 	private void setComponent()
@@ -75,10 +106,13 @@ public class SetDBDialog extends JDialog{
 		InitDB action = new InitDB();
 		dbset_scroll = new JScrollPane(dbset);
 		dbset_scroll.setPreferredSize(new Dimension(400,100));
+		dbset.setText(config);
 		
 		//数据库类型配置 先行支持aspx的各种类型接口
-		String[] dbtypes = new String[]{"<T>ADO</T><C>Provider=Microsoft.Jet.OLEDB.4.0;Data Source=c:\111.mdb</C>",
-				"<T>ADO</T><C>Driver={MySQL};Server=localhost;database=mysql;UID=root;PWD=</C>"};
+		String[] dbtypes = new String[]{"<T>MYSQL</T><H>localhost</H><U>root</U><P>root</P><L>utf8</L>",
+				"<T>MSSQL</T><H>localhost</H><U>root</U><P>root</P><L>utf8</L>",
+				"<T>ORACLE</T><H>localhost</H><U>root</U><P>root</P><L>utf8</L>",
+				"<T>INFORMIX</T><H>localhost</H><U>root</U><P>root</P><L>utf8</L>"};
 		//dbtype
 		dbtype = new JComboBox<>(dbtypes);
 		dbtype.setPreferredSize(new Dimension(400, 30));
@@ -89,26 +123,48 @@ public class SetDBDialog extends JDialog{
 		submit.addActionListener(action);
 		
 		//布局
-		
-		
 		north.add(example,gbcnorth1);
 		north.add(dbtype,gbcnorth2);
 		center.add(setting,gbccenter1);
 		center.add(dbset_scroll,gbccenter2);
 		south.add(submit);
 		
-//		
+		//		
 		this.getContentPane().add(north, gbcnorth);
 		this.getContentPane().add(center, gbccenter);
 		this.getContentPane().add(south, gbcsouth);
 	}
 	class InitDB implements ActionListener
 	{
-
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
-			System.out.println("init db config,waiting for response");
+			//System.out.println("init db config,waiting for response");
+			
+			//System.out.println(id);
+			config = dbset.getText().replaceAll("'", "''");;
+			String sql = "update data set config='"+config+"' where id="+id;
+			//System.out.println(sql);
+			try {
+				stmt.execute(sql);
+				Vector<String> vector = new Vector<String>();
+				tmp = MainFrame.tab.getUrl().split("\t");
+				//System.out.println(MainFrame.tab.getUrl());
+				vector.add(tmp[0]);
+				vector.add(tmp[1].replaceAll("''", "'"));
+				vector.add(tmp[2].replaceAll("''", "'"));
+				vector.add(config.replaceAll("''", "'"));
+				vector.add(tmp[4]);
+				vector.add(tmp[5]);
+				vector.add(tmp[6]);
+				vector.add(tmp[7]);
+				//实例化向上转型，只修改原列表中row的config参数
+				ListPanel list = (ListPanel)MainFrame.tab.addPanel("list");
+				list.getModel().update(id, vector);
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			a.setVisible(false);
 		}
 		

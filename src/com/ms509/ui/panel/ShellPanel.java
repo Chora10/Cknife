@@ -87,7 +87,6 @@ public class ShellPanel extends JPanel {
 		}
 
 		// core = new Shell(path,os,url,code,type1);
-
 		// System.out.println("asp11");
 		core = new Shell(os, url, code, type);
 
@@ -96,9 +95,7 @@ public class ShellPanel extends JPanel {
 			public void run() {
 				
 				status.setText("正在执行...");
-
 				// 显示网站路径
-
 				try {
 					path = core.GetPath();
 					shell_doc.insertString(shell_doc.getLength(), "\n" + path, null);

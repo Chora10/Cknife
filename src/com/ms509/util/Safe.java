@@ -47,7 +47,8 @@ public final class Safe {
 	public static String PHP_UPLOAD;
 	public static String PHP_DOWNLOAD;
 	public static String PHP_SHELL;
-
+	public static String PHP_DB_MYSQL;
+	
 	public static String JSP_BASE64;
 	public static String JSP_MAKE;
 	public static String JSP_INDEX;
