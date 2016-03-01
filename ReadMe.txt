@@ -1,4 +1,7 @@
-20151229
-1、添加sqlitejdbc，修复现有关于中午路径无法识别的问题，但该文件大于2m，会增大程序体积,文件名（sqlitejdbc-v056.jar）；
-2、为shellpane.java 增加线程，临时性解决卡死的问题，后续需按swing.invokelater更改;
-3、增加 asp aspx 上传 下载 功能(filemanager.java)；
+20160302
+1、连接失败返回详细信息，方便用户分析问题；
+
+20160301
+1、合并Cknife与Cknife_Skin；
+2、使用sqlitejdbc-v056.jar代替sqlitejdbc-v033.jar，解决中文路径启动失败的问题；
+3、添加数据库功能，PHP支持MSSQL,MYSQL,ORACLE；
