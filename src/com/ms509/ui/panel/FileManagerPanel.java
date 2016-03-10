@@ -328,11 +328,22 @@ public class FileManagerPanel extends JPanel {
 		@Override
 		public void mousePressed(MouseEvent e) {
 			// TODO Auto-generated method stub
-			TreePath tp = tree.getSelectionPath();
+			final TreePath tp = tree.getSelectionPath();
 			if (tp != null) {
-				showLeft(tp);
-				showRight(TreeMethod.makePath(tp), list);
-				path.setText(TreeMethod.makePath(tp));
+				status.setText("正在读取...请稍后");
+				Runnable run = new Runnable() {
+					public void run() {
+						SwingUtilities.invokeLater(new Runnable() {
+							public void run() {
+								showLeft(tp);
+								showRight(TreeMethod.makePath(tp), list);
+								path.setText(TreeMethod.makePath(tp));
+								status.setText("完成");
+							}
+						});
+					}
+				};
+				new Thread(run).start();
 			}
 		}
 	}
