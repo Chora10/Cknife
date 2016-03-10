@@ -120,9 +120,18 @@ public class ListPopMenu extends JPopupMenu {
 				pop.show(list, e.getX(), e.getY());
 			} else if (e.getClickCount() == 2) {
 				MainFrame.tab.setUrl(getOne(list));
-				MainFrame.tab.addPanel("filemanager");
+				Runnable run = new Runnable() {
+					public void run() {
+						SwingUtilities.invokeLater(new Runnable() {
+							public void run() {
+								MainFrame.tab.addPanel("filemanager");
+							}
+						});
+						
+					}
+				};
+				new Thread(run).start();
 			}
-
 		}
 	}
 
@@ -163,7 +172,17 @@ public class ListPopMenu extends JPopupMenu {
 				}
 			} else if (e.getSource() == filemanager) {
 				MainFrame.tab.setUrl(getOne(list));
-				MainFrame.tab.addPanel("filemanager");
+				Runnable run = new Runnable() {
+					public void run() {
+						SwingUtilities.invokeLater(new Runnable() {
+							public void run() {
+								MainFrame.tab.addPanel("filemanager");
+							}
+						});
+						
+					}
+				};
+				new Thread(run).start();
 			} else if (e.getSource() == database) {
 				MainFrame.tab.setUrl(getOne(list));
 				MainFrame.tab.addPanel("database");

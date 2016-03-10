@@ -69,6 +69,7 @@ public class FileManagerPanel extends JPanel {
 	private String[] tmp1 = null;
 	private String[] index_datas;
 	private String[] trees;
+	private String arrtmp;
 
 	public DefaultMutableTreeNode getRoot() {
 		return root;
@@ -172,17 +173,24 @@ public class FileManagerPanel extends JPanel {
 		} catch (SQLException e) {
 
 		}
-
 		fm = new FileManager(url, pass, type, code);
 		this.path.setText("正在连接...请稍后");
 		Runnable run = new Runnable() {
 			public void run() {
-				// TODO Auto-generated method stub
+				arrtmp = fm.doAction("readindex");
+				if (arrtmp.indexOf("HTTP/1.") > -1 || arrtmp.indexOf("timeout") > -1) 
+				{
+					SwingUtilities.invokeLater(new Runnable() {
+						public void run() {
+							path.setText("连接失败");
+							new MessageDialog(arrtmp);
+						}
+					});
+				}
 				try {
 					filemanagerindex();
 					filemanagersystem();
 				} catch (Exception e) {
-					new MessageDialog(e.getMessage());
 				}
 
 			}
@@ -208,12 +216,6 @@ public class FileManagerPanel extends JPanel {
 	}
 
 	private void filemanagerindex() {
-		String arrtmp = fm.doAction("readindex");
-//		System.out.println(arrtmp);
-		if (arrtmp.indexOf("HTTP/1.") > -1) 
-		{
-			throw new RuntimeException(arrtmp);
-		}
 		index_datas = arrtmp.split("\t");
 		webroot = index_datas[0];
 		if (webroot.charAt(0) != '/') // Windows系统
@@ -261,16 +263,21 @@ public class FileManagerPanel extends JPanel {
 		tree.addMouseListener(new TreeAction());
 		tree.getSelectionModel().setSelectionMode(
 				TreeSelectionModel.SINGLE_TREE_SELECTION);
-		trees = fm.makeleft(webroot);
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
+		Runnable run = new Runnable() {
 			public void run() {
-				// TODO Auto-generated method stub
-				TreeMethod.makeIndexTree(tmp1, trees, root);
-				TreeMethod.expandAll(tree, new TreePath(root), true);
-				showRight(webroot, list);
+				trees = fm.makeleft(webroot);
+				final String search = tmp1[0];
+				final String[] tmp2= Arrays.copyOfRange(tmp1,1,tmp1.length);
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						TreeMethod.makeIndexTree(tmp2, trees, TreeMethod.searchNode(root, search));
+						TreeMethod.expandAll(tree, new TreePath(root), true);
+					}
+				});
 			}
-		});
+		};
+		new Thread(run).start();
+		showRight(webroot, list);
 	}
 
 	public void showRight(String path, JTable list) {
