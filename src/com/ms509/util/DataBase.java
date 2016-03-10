@@ -15,6 +15,10 @@ public class DataBase {
 	private static String dbpass;
 	private static String dbcode;
 
+	private static String sp;
+	private static String p1;
+	private static String params;
+	
 	public DataBase() {
 		// TODO Auto-generated constructor stub
 	}
@@ -42,6 +46,19 @@ public class DataBase {
 		switch (type) {
 		case 0:
 			System.out.println("jsp");
+			//先不考虑jsp base64 编码
+			//String payload = "";
+
+			sp = "choraheiheihei";
+			p1 = Safe.JSP_DB_MYSQL;
+			
+			p1 = p1.replace("localhost", dbhost).replace("testdb","").replace("username", dbuser).replace("userpwd", dbpass);
+			p1.replace("choraheiheihei", sp);
+			
+			params = pass+"="+Safe.JSP_MAKE+"&"+Safe.CODE+"="+dbcode+"&"+Safe.ACTION+"=N"+"&z1="+p1+"&z2=&z3=";
+			System.out.println("params="+params);
+			rs = Common.send(url, params, code);
+			
 			break; // jsp
 		case 1:
 			System.out.println("php");
@@ -97,6 +114,15 @@ public class DataBase {
 		switch (type) {
 		case 0:
 			System.out.println("jsp");
+			sp = "choraheiheihei";
+			p1 = Safe.JSP_DB_MYSQL;
+			
+			p1 = p1.replace("localhost", dbhost).replace("testdb",dbn).replace("username", dbuser).replace("userpwd", dbpass);
+			p1.replace("choraheiheihei", sp);
+			
+			params = pass+"="+Safe.JSP_MAKE+"&"+Safe.CODE+"="+dbcode+"&"+Safe.ACTION+"=Q"+"&z1="+p1+"&z2="+sql+"&z3=";
+			System.out.println("params="+params);
+			result = Common.send(url, params, code);
 			break; // jsp
 		case 1:   //还需区分数据库类型
 			System.out.println("php");

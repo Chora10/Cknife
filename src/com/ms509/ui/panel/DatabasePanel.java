@@ -111,21 +111,27 @@ public class DatabasePanel extends JPanel {
 		
 	
 		//初始化读取数据库
-		String[] dbl = DataBase.getDBs(url,pass,config,type,code);
-		choosedb = new JComboBox<>(dbl);
-		//添加tree显示
-		root = new DefaultMutableTreeNode("/");
-		for(int d=1;d<dbl.length;d++) //dbl[i]="database" 略去
+		choosedb = new JComboBox<>();
+		try{
+			String[] dbl = DataBase.getDBs(url,pass,config,type,code);
+			choosedb = new JComboBox<>(dbl);
+			//添加tree显示
+			root = new DefaultMutableTreeNode("/");
+			for(int d=1;d<dbl.length;d++) //dbl[i]="database" 略去
+			{
+				root.add(new DefaultMutableTreeNode(dbl[d]));
+			}
+			DefaultTreeModel model = new DefaultTreeModel(root);
+			dblist.setModel(model);
+			
+			//添加tree双击事件
+			DoAction caction = new DoAction();
+			dblist.addMouseListener(caction);
+		}catch(Exception e)
 		{
-			root.add(new DefaultMutableTreeNode(dbl[d]));
+			System.out.println("error");
 		}
-		
-		DefaultTreeModel model = new DefaultTreeModel(root);
-		dblist.setModel(model);
-		
-		//添加tree双击事件
-		DoAction caction = new DoAction();
-		dblist.addMouseListener(caction);
+
 		
 		//常用语句
 		String[] sql_example = {"show tables from [dataname];","sql2","sql3"};

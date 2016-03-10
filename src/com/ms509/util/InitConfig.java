@@ -95,7 +95,7 @@ public class InitConfig {
 		config.setValue("JSP_UPLOAD", "G");
 		config.setValue("JSP_DOWNLOAD", "F");
 		config.setValue("JSP_SHELL", "M");
-
+		config.setValue("JSP_DB_MYSQL", "com.mysql.jdbc.Driver%0D%0Ajdbc%3Amysql%3A%2F%2Flocalhost%2Ftestdb%3Fuser%3Dusername%26password%3Duserpwd");
 
 		
 		
@@ -149,7 +149,9 @@ public class InitConfig {
 		Safe.JSP_UPLOAD = config.getValue("JSP_UPLOAD");
 		Safe.JSP_DOWNLOAD = config.getValue("JSP_DOWNLOAD");
 		Safe.JSP_SHELL = config.getValue("JSP_SHELL");
-
+		//SJS DB
+		Safe.JSP_DB_MYSQL = config.getValue("JSP_DB_MYSQL");
+		
 		// Safe.ASP_MAKE = config.getValue("ASP_MAKE");
 		// Safe.ASP_INDEX = config.getValue("ASP_INDEX");
 		// Safe.ASP_PAYLOAD = config.getValue("ASP_PAYLOAD");
