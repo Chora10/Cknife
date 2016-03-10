@@ -5,6 +5,7 @@ import com.ms509.model.ResultSetTableModel;
 import com.ms509.model.RightTableModel;
 import com.ms509.util.FileManager;
 import com.ms509.ui.MainFrame;
+import com.ms509.ui.MessageDialog;
 import com.ms509.ui.menu.FileManagerPopMenu;
 import com.ms509.ui.menu.FileManagerPopMenu.MouseAction;
 import com.ms509.ui.menu.FileManagerPopMenu.SelectedMouseAction;
@@ -181,7 +182,7 @@ public class FileManagerPanel extends JPanel {
 					filemanagerindex();
 					filemanagersystem();
 				} catch (Exception e) {
-					path.setText(e.getMessage());
+					new MessageDialog(e.getMessage());
 				}
 
 			}
@@ -209,7 +210,7 @@ public class FileManagerPanel extends JPanel {
 	private void filemanagerindex() {
 		String arrtmp = fm.doAction("readindex");
 //		System.out.println(arrtmp);
-		if (arrtmp.startsWith("HTTP")) 
+		if (arrtmp.indexOf("HTTP/1.") > -1) 
 		{
 			throw new RuntimeException(arrtmp);
 		}
