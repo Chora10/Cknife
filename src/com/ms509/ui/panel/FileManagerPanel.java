@@ -264,18 +264,19 @@ public class FileManagerPanel extends JPanel {
 		tree.getSelectionModel().setSelectionMode(
 				TreeSelectionModel.SINGLE_TREE_SELECTION);
 		Runnable run = new Runnable() {
-	
 			public void run() {
-				
 				trees = fm.makeleft(webroot);
-				TreeMethod.makeIndexTree(tmp1, trees, root);
-				TreeMethod.expandAll(tree, new TreePath(root), true);
+				final String search = tmp1[0];
+				final String[] tmp2= Arrays.copyOfRange(tmp1,1,tmp1.length);
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						TreeMethod.makeIndexTree(tmp2, trees, TreeMethod.searchNode(root, search));
+						TreeMethod.expandAll(tree, new TreePath(root), true);
+					}
+				});
 			}
 		};
 		new Thread(run).start();
-
-		
-		
 		showRight(webroot, list);
 	}
 
