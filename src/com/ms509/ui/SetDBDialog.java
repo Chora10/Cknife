@@ -37,15 +37,16 @@ public class SetDBDialog extends JDialog{
 	private String config;
 	private Statement stmt = DbDao.getInstance().getStmt();;
 	private String[] tmp;
-	
+	private String type;
 	public SetDBDialog(String[] t) {
 		// TODO Auto-generated constructor stub		
 		super(MainFrame.main, "数据库配置", true);
 		
-		this.setComponent();
+		
 		// 初始化布局和控件
 		id = t[0];
-		
+		type= t[4];
+		this.setComponent();
 		String getconfig_data = "select config from data where id="+id;
 		System.out.println(getconfig_data);
 		try {
@@ -109,10 +110,33 @@ public class SetDBDialog extends JDialog{
 		dbset.setText(config);
 		
 		//数据库类型配置 先行支持aspx的各种类型接口
-		String[] dbtypes = new String[]{"<T>MYSQL</T><H>localhost</H><U>root</U><P>root</P><L>utf8</L>",
-				"<T>MSSQL</T><H>localhost</H><U>root</U><P>root</P><L>utf8</L>",
-				"<T>ORACLE</T><H>localhost</H><U>root</U><P>root</P><L>utf8</L>",
-				"<T>INFORMIX</T><H>localhost</H><U>root</U><P>root</P><L>utf8</L>"};
+		String[] dbtypes = new String[]{};
+		System.out.println(type);
+		switch (type) {
+		case "JSP(Eval)":
+			// System.out.println("jsp");
+			dbtypes = new String[]{"<T>MYSQL</T><H>localhost</H><U>root</U><P>root</P><L>utf8</L>"};
+			// this.jsp();
+			break;
+		case "PHP(Eval)":
+			// System.out.println("php");
+			dbtypes = new String[]{"<T>MYSQL</T><H>localhost</H><U>root</U><P>root</P><L>utf8</L>"};
+			// this.php();
+			break;
+		case "ASP(Eval)":
+			// System.out.println("asp");
+			dbtypes = new String[]{"<T>MYSQL</T><H>localhost</H><U>root</U><P>root</P><L>utf8</L>",
+					"<T>MSSQL</T><H>localhost</H><U>root</U><P>root</P><L>utf8</L>"};
+			// this.asp();
+			break;
+		case "ASPX(Eval)":
+			// System.out.println("aspx");
+			dbtypes = new String[]{"<T>MYSQL</T><H>localhost</H><U>root</U><P>root</P><L>utf8</L>",
+					"<T>ADO</T><C>Provider=SQLOLEDB.1;User ID=;Password=;Initial Catalog=master;Data Source=(local)</C>",
+					"<T>ADO</T><C>Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\\111.mdb</C>"};
+			break;
+		}
+		
 		//dbtype
 		dbtype = new JComboBox<>(dbtypes);
 		dbtype.setPreferredSize(new Dimension(400, 30));
