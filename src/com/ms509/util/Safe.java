@@ -34,6 +34,9 @@ public final class Safe {
 	public static String ASPX_UPLOAD;
 	public static String ASPX_DOWNLOAD;
 	public static String ASPX_SHELL;
+	public static String ASPX_DB_MSSQL1;
+	public static String ASPX_DB_MYSQL;
+	public static String ASPX_DB_MDB;
 	
 	public static String PHP_BASE64;
 	public static String PHP_MAKE;
