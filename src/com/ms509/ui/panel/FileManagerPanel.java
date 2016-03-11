@@ -174,25 +174,32 @@ public class FileManagerPanel extends JPanel {
 
 		}
 		fm = new FileManager(url, pass, type, code);
-		this.path.setText("正在连接...请稍后");
+		this.path.setText("正在连接...请稍等");
 		Runnable run = new Runnable() {
 			public void run() {
 				arrtmp = fm.doAction("readindex");
-				if (arrtmp.indexOf("HTTP/1.") > -1 || arrtmp.indexOf("timeout") > -1) 
-				{
+				// System.out.println(arrtmp);
+
+				if (arrtmp.indexOf("HTTP/1.") > -1 || arrtmp.indexOf("/") < 0
+						&& arrtmp.indexOf("\\") < 0) {
 					SwingUtilities.invokeLater(new Runnable() {
 						public void run() {
 							path.setText("连接失败");
 							new MessageDialog(arrtmp);
 						}
 					});
+				} else {
+					Runnable run2 = new Runnable() {
+						public void run() {
+							try {
+								filemanagerindex();
+								filemanagersystem();
+							} catch (Exception e) {
+							}
+						}
+					};
+					new Thread(run2).start();
 				}
-				try {
-					filemanagerindex();
-					filemanagersystem();
-				} catch (Exception e) {
-				}
-
 			}
 		};
 		new Thread(run).start();
@@ -266,11 +273,19 @@ public class FileManagerPanel extends JPanel {
 		Runnable run = new Runnable() {
 			public void run() {
 				trees = fm.makeleft(webroot);
-				final String search = tmp1[0];
-				final String[] tmp2= Arrays.copyOfRange(tmp1,1,tmp1.length);
+				final String search;
+				final String[] tmp2;
+				if (Safe.SYSTEMSP.equals("/")) {
+					search = "/";
+					tmp2 = Arrays.copyOfRange(tmp1, 1, tmp1.length);
+				} else {
+					search = tmp1[0];
+					tmp2 = Arrays.copyOfRange(tmp1, 1, tmp1.length);
+				}
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						TreeMethod.makeIndexTree(tmp2, trees, TreeMethod.searchNode(root, search));
+						TreeMethod.makeIndexTree(tmp2, trees,
+								TreeMethod.searchNode(root, search));
 						TreeMethod.expandAll(tree, new TreePath(root), true);
 					}
 				});
@@ -330,7 +345,7 @@ public class FileManagerPanel extends JPanel {
 			// TODO Auto-generated method stub
 			final TreePath tp = tree.getSelectionPath();
 			if (tp != null) {
-				status.setText("正在读取...请稍后");
+				status.setText("正在读取...请稍等");
 				Runnable run = new Runnable() {
 					public void run() {
 						SwingUtilities.invokeLater(new Runnable() {

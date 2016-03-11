@@ -126,8 +126,7 @@ public class ListPopMenu extends JPopupMenu {
 							public void run() {
 								MainFrame.tab.addPanel("filemanager");
 							}
-						});
-						
+						});	
 					}
 				};
 				new Thread(run).start();
@@ -188,7 +187,17 @@ public class ListPopMenu extends JPopupMenu {
 				MainFrame.tab.addPanel("database");
 			} else if (e.getSource() == shell) {
 				MainFrame.tab.setUrl(getOne(list));
-				MainFrame.tab.addPanel("shell");
+				Runnable run = new Runnable() {
+					public void run() {
+						SwingUtilities.invokeLater(new Runnable() {
+							public void run() {
+								MainFrame.tab.addPanel("shell");
+							}
+						});
+						
+					}
+				};
+				new Thread(run).start();
 			} else if (e.getSource() == about) {
 				AboutDialog a = new AboutDialog();
 

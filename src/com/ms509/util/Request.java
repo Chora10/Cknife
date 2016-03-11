@@ -19,8 +19,8 @@ public class Request {
 		try {
 			URL u = new URL(url);
 			HttpURLConnection huc = (HttpURLConnection) u.openConnection();
-			huc.setConnectTimeout(5000);
-			huc.setReadTimeout(5000);
+			huc.setConnectTimeout(8000);
+			huc.setReadTimeout(8000);
 			huc.setDoOutput(true);
 			PrintWriter out = new PrintWriter(huc.getOutputStream());
 			out.write(param);
@@ -55,6 +55,7 @@ public class Request {
 			data = head + System.lineSeparator() + data;
 		} catch (Exception e) {
 			data = e.getMessage();
+//			e.printStackTrace();
 		}
 		return data;
 	}

@@ -96,14 +96,16 @@ public class Shell {
 		String make = Safe.ASP_MAKE.replace("PAYLOAD", toHexString(payload));
 		String params = Safe.PASS + "=" + make + "&" + Safe.PARAM1 + "=" + tmp;
 		String[] index_datas = Common.send(url, params, code).split("\t");
-		
-		re[0] = Arrays.toString(index_datas);
-		re[0] = re[0].substring(re[0].indexOf("[") + 1, re[0].indexOf("[S]"));
-		String path = Arrays.toString(index_datas).substring(Arrays.toString(index_datas).indexOf("[S]") + 3,
-				Arrays.toString(index_datas).indexOf("[E]"));
-		re[1] = path;
-		return re;
+		try {
+			re[0] = Arrays.toString(index_datas);
+			re[0] = re[0].substring(re[0].indexOf("[") + 1, re[0].indexOf("[S]"));
+			String path = Arrays.toString(index_datas).substring(Arrays.toString(index_datas).indexOf("[S]") + 3,
+					Arrays.toString(index_datas).indexOf("[E]"));
+			re[1] = path;
+		} catch (Exception e) {
 
+		}
+		return re;
 	}
 
 	// aspx 命令执行
@@ -283,7 +285,10 @@ public class Shell {
 			if (!pa.substring(pa.length() - 1, pa.length()).equals("\\")) {
 				pa = pa + "\\";
 			}
-			pa = pa.replace("/", "\\");
+			if(pa.indexOf("HTTP/1.")<0)
+			{
+				pa = pa.replace("/", "\\");
+			}
 			os = 1;
 		} else // linux系统
 		{

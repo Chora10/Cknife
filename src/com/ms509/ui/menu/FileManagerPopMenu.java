@@ -109,135 +109,131 @@ public class FileManagerPopMenu extends JPopupMenu {
 			this.model = filemanagerpanel.getListmodel();
 			this.model.setFilemanagerpanel(filemanagerpanel);
 			// TODO Auto-generated method stub
-			Runnable run = new Runnable() {
-				public void run() {
-					switch (e.getActionCommand()) {
-					case "上传":
-						JFileChooser upch = new JFileChooser(".");
-						upch.setApproveButtonText("上传");
-						upch.setDialogTitle("上传文件到服务器");
-						String filename = "";
-						int act = upch.showOpenDialog(filemanagerpanel);
-						byte[] udata = null;
-						if (act == JFileChooser.APPROVE_OPTION) {
-							FileInputStream fis;
-							try {
-								File select = upch.getSelectedFile();
-								filename = select.getName();
-								fis = new FileInputStream(select);
-								byte[] b = new byte[fis.available()];
-								fis.read(b);
-								udata = b;
-								abpath = path.getText() + filename;
-								String data = filemanagerpanel.getFm().doAction(
-										"upload", abpath, Common.toHex(udata));
-								filemanagerpanel.showRight(
-										Common.getAbsolutePath(abpath), list);
-								if (data.equals("1")) {
-									filemanagerpanel.getStatus().setText("上传成功");
-									filemanagerpanel.showRight(
-											Common.getAbsolutePath(abpath), list);
-								} else {
-									filemanagerpanel.getStatus().setText("上传失败");
-								}
-							} catch (Exception e1) {
-								// TODO Auto-generated catch block
-							}
-						}
-						break;
-					case "打开":
-						String type = list.getValueAt(list.getSelectedRow(), 0)
-								.toString();
-						if (type.indexOf("folder.png") > -1) {
-							String name = list.getValueAt(list.getSelectedRow(), 1)
-									.toString();
-							abpath = Common.autoPath(path.getText()) + name
-									+ Safe.SYSTEMSP;
-							path.setText(abpath);
-							filemanagerpanel.showRight(abpath, list);
-							DefaultMutableTreeNode tn = TreeMethod.searchNode(
-									filemanagerpanel.getRoot(), name);
-							TreePath tp = new TreePath(tn.getPath());
-							if (tp != null) {
-								filemanagerpanel.showLeft(tp);
-							}
-						} else if (type.indexOf("file.png") > -1) {
-							abpath = path.getText()
-									+ list.getValueAt(list.getSelectedRow(), 1);
-							TextPanel text = (TextPanel) MainFrame.tab.addPanel("text");
-							String data = filemanagerpanel.getFm().doAction("readfile",
-									abpath);
-							text.getPath().setText(abpath);
-							text.getText().setText(data);
-						}
-						break;
-					case "文件":
-						abpath = path.getText() + "newFile.txt";
-						TextPanel text = (TextPanel) MainFrame.tab.addPanel("text");
-						text.getPath().setText(abpath);
-						text.getButton().setText("新建");
-						break;
-					case "删除":
-						abpath = path.getText()
-								+ list.getValueAt(list.getSelectedRow(), 1);
-						String data = filemanagerpanel.getFm().doAction("delete",
-								abpath);
+
+			switch (e.getActionCommand()) {
+			case "上传":
+				JFileChooser upch = new JFileChooser(".");
+				upch.setApproveButtonText("上传");
+				upch.setDialogTitle("上传文件到服务器");
+				String filename = "";
+				int act = upch.showOpenDialog(filemanagerpanel);
+				byte[] udata = null;
+				if (act == JFileChooser.APPROVE_OPTION) {
+					FileInputStream fis;
+					try {
+						File select = upch.getSelectedFile();
+						filename = select.getName();
+						fis = new FileInputStream(select);
+						byte[] b = new byte[fis.available()];
+						fis.read(b);
+						udata = b;
+						abpath = path.getText() + filename;
+						String data = filemanagerpanel.getFm().doAction(
+								"upload", abpath, Common.toHex(udata));
+						filemanagerpanel.showRight(
+								Common.getAbsolutePath(abpath), list);
 						if (data.equals("1")) {
-							filemanagerpanel.getStatus().setText("删除成功");
-							filemanagerpanel.showRight(Common.getAbsolutePath(abpath),
-									list);
+							filemanagerpanel.getStatus().setText("上传成功");
+							filemanagerpanel.showRight(
+									Common.getAbsolutePath(abpath), list);
 						} else {
-							filemanagerpanel.getStatus().setText("删除失败");
+							filemanagerpanel.getStatus().setText("上传失败");
 						}
-						break;
-					case "重命名":
-						filemanagerpanel.getStatus().setText("正在重命名...");
-						model.setEdit(true);
-						list.editCellAt(list.getSelectedRow(), 1);
-						model.setEdit(false);
-						break;
-					case "文件夹":
-						Vector vector = new Vector<>();
-						vector.add(new ImageIcon(getClass().getResource(
-								"/com/ms509/images/folder.png")));
-						vector.add("newFolder");
-						vector.add(Common.getTime());
-						vector.add("0");
-						vector.add("0");
-						model.addRow(vector);
-						model.fireTableDataChanged();
-						model.setEdit(true);
-						list.editCellAt(model.getRowCount() - 1, 1);
-						model.setEdit(false);
-						break;
-					case "下载":
-						String name = list.getValueAt(list.getSelectedRow(), 1)
-								.toString();
-						abpath = path.getText() + name;
-						JFileChooser downch = new JFileChooser(".");
-						downch.setDialogTitle("下载文件到本地");
-						downch.setSelectedFile(new File(name));
-						int select = downch.showSaveDialog(filemanagerpanel);
-						if (select == JFileChooser.APPROVE_OPTION) {
-							try {
-								byte[] bytes = filemanagerpanel.getFm()
-										.Download(abpath);
-								if (bytes != null) {
-									File f = downch.getSelectedFile();
-									FileOutputStream fos = new FileOutputStream(f);
-									fos.write(bytes, Safe.SPL.length(), bytes.length
-											- (Safe.SPL.length() + Safe.SPR.length()));
-									filemanagerpanel.getStatus().setText("下载完成");
-								}
-							} catch (Exception e1) {
-								filemanagerpanel.getStatus().setText("下载失败");
-							}
-						}
-						break;
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
 					}
 				}
-			};
-			new Thread(run).start();
+				break;
+			case "打开":
+				String type = list.getValueAt(list.getSelectedRow(), 0)
+						.toString();
+				if (type.indexOf("folder.png") > -1) {
+					String name = list.getValueAt(list.getSelectedRow(), 1)
+							.toString();
+					abpath = Common.autoPath(path.getText()) + name
+							+ Safe.SYSTEMSP;
+					path.setText(abpath);
+					filemanagerpanel.showRight(abpath, list);
+					DefaultMutableTreeNode tn = TreeMethod.searchNode(
+							filemanagerpanel.getRoot(), name);
+					TreePath tp = new TreePath(tn.getPath());
+					if (tp != null) {
+						filemanagerpanel.showLeft(tp);
+					}
+				} else if (type.indexOf("file.png") > -1) {
+					abpath = path.getText()
+							+ list.getValueAt(list.getSelectedRow(), 1);
+					TextPanel text = (TextPanel) MainFrame.tab.addPanel("text");
+					String data = filemanagerpanel.getFm().doAction("readfile",
+							abpath);
+					text.getPath().setText(abpath);
+					text.getText().setText(data);
+				}
+				break;
+			case "文件":
+				abpath = path.getText() + "newFile.txt";
+				TextPanel text = (TextPanel) MainFrame.tab.addPanel("text");
+				text.getPath().setText(abpath);
+				text.getButton().setText("新建");
+				break;
+			case "删除":
+				abpath = path.getText()
+						+ list.getValueAt(list.getSelectedRow(), 1);
+				String data = filemanagerpanel.getFm().doAction("delete",
+						abpath);
+				if (data.equals("1")) {
+					filemanagerpanel.getStatus().setText("删除成功");
+					filemanagerpanel.showRight(Common.getAbsolutePath(abpath),
+							list);
+				} else {
+					filemanagerpanel.getStatus().setText("删除失败");
+				}
+				break;
+			case "重命名":
+				filemanagerpanel.getStatus().setText("正在重命名...");
+				model.setEdit(true);
+				list.editCellAt(list.getSelectedRow(), 1);
+				model.setEdit(false);
+				break;
+			case "文件夹":
+				Vector vector = new Vector<>();
+				vector.add(new ImageIcon(getClass().getResource(
+						"/com/ms509/images/folder.png")));
+				vector.add("newFolder");
+				vector.add(Common.getTime());
+				vector.add("0");
+				vector.add("0");
+				model.addRow(vector);
+				model.fireTableDataChanged();
+				model.setEdit(true);
+				list.editCellAt(model.getRowCount() - 1, 1);
+				model.setEdit(false);
+				break;
+			case "下载":
+				String name = list.getValueAt(list.getSelectedRow(), 1)
+						.toString();
+				abpath = path.getText() + name;
+				JFileChooser downch = new JFileChooser(".");
+				downch.setDialogTitle("下载文件到本地");
+				downch.setSelectedFile(new File(name));
+				int select = downch.showSaveDialog(filemanagerpanel);
+				if (select == JFileChooser.APPROVE_OPTION) {
+					try {
+						byte[] bytes = filemanagerpanel.getFm()
+								.Download(abpath);
+						if (bytes != null) {
+							File f = downch.getSelectedFile();
+							FileOutputStream fos = new FileOutputStream(f);
+							fos.write(bytes, Safe.SPL.length(), bytes.length
+									- (Safe.SPL.length() + Safe.SPR.length()));
+							filemanagerpanel.getStatus().setText("下载完成");
+						}
+					} catch (Exception e1) {
+						filemanagerpanel.getStatus().setText("下载失败");
+					}
+				}
+				break;
+			}
 		}
 	}
 
@@ -266,6 +262,7 @@ public class FileManagerPopMenu extends JPopupMenu {
 		private JTable list;
 		private JTextField path;
 		private JScrollPane listpane;
+		private String data;
 
 		@Override
 		public void mousePressed(final MouseEvent e) {
@@ -275,45 +272,97 @@ public class FileManagerPopMenu extends JPopupMenu {
 			this.path = filemanagerpanel.getPath();
 			this.listpane = filemanagerpanel.getListpane();
 			// TODO Auto-generated method stub
-			Runnable run = new Runnable() {
-				@Override
-				public void run() {
-					if (e.getButton() == MouseEvent.BUTTON3) {
-						int row = list.rowAtPoint(e.getPoint());
-						list.setRowSelectionInterval(row, row);
-						show(list, e.getX(), e.getY());
-					} else if (e.getClickCount() == 2) {
-						String type = list.getValueAt(list.getSelectedRow(), 0)
-								.toString();
-						if (type.indexOf("folder.png") > -1) {
-							String name = list.getValueAt(list.getSelectedRow(), 1)
-									.toString();
-							String abpath = Common.autoPath(path.getText()) + name
-									+ Safe.SYSTEMSP;
-							path.setText(abpath);
-							filemanagerpanel.showRight(abpath, list);
-							DefaultMutableTreeNode tn = TreeMethod.searchNode(
-									filemanagerpanel.getRoot(), name);
-							if (tn != null) {
-								TreePath tp = new TreePath(tn.getPath());
-								filemanagerpanel.showLeft(tp);
+
+			if (e.getButton() == MouseEvent.BUTTON3) {
+				int row = list.rowAtPoint(e.getPoint());
+				list.setRowSelectionInterval(row, row);
+				show(list, e.getX(), e.getY());
+			} else if (e.getClickCount() == 2) {
+				final String type = list.getValueAt(list.getSelectedRow(), 0)
+						.toString();
+				filemanagerpanel.getStatus().setText("正在读取...请稍等");
+				Runnable run = new Runnable() {
+					public void run() {
+						SwingUtilities.invokeLater(new Runnable() {
+							@Override
+							public void run() {
+								if (type.indexOf("folder.png") > -1) {
+									final String name = list.getValueAt(
+											list.getSelectedRow(), 1)
+											.toString();
+									final String abpath = Common.autoPath(path
+											.getText()) + name + Safe.SYSTEMSP;
+									path.setText(abpath);
+									Runnable run1 = new Runnable() {
+										@Override
+										public void run() {
+											SwingUtilities
+													.invokeLater(new Runnable() {
+														@Override
+														public void run() {
+															// TODO
+															// Auto-generated
+															// method stub
+															filemanagerpanel
+																	.showRight(
+																			abpath,
+																			list);
+															DefaultMutableTreeNode tn = TreeMethod
+																	.searchNode(
+																			filemanagerpanel
+																					.getRoot(),
+																			name);
+															if (tn != null) {
+																TreePath tp = new TreePath(
+																		tn.getPath());
+																filemanagerpanel
+																		.showLeft(tp);
+															}
+														}
+													});
+										}
+									};
+									new Thread(run1).start();
+								} else if (type.indexOf("file.png") > -1) {
+									final String abpath = path.getText()
+											+ list.getValueAt(
+													list.getSelectedRow(), 1);
+									final TextPanel text = (TextPanel) MainFrame.tab
+											.addPanel("text");
+									Runnable run2 = new Runnable() {
+										@Override
+										public void run() {
+											// TODO Auto-generated method stub
+											data = filemanagerpanel.getFm()
+													.doAction("readfile",
+															abpath);
+											SwingUtilities
+													.invokeLater(new Runnable() {
+														@Override
+														public void run() {
+															// TODO
+															// Auto-generated
+															// method stub
+															text.getPath()
+																	.setText(
+																			abpath);
+															text.getText()
+																	.setText(
+																			data);
+														}
+													});
+										}
+									};
+									new Thread(run2).start();
+								}
+								filemanagerpanel.getStatus().setText("完成");
 							}
-						} else if (type.indexOf("file.png") > -1) {
-							String abpath = path.getText()
-									+ list.getValueAt(list.getSelectedRow(), 1);
-							TextPanel text = (TextPanel) MainFrame.tab.addPanel("text");
-							String data = filemanagerpanel.getFm().doAction("readfile",
-									abpath);
-							text.getPath().setText(abpath);
-							text.getText().setText(data);
-						}
+						});
 					}
-					
-				}
-			};
-			
-			new Thread(run).start();
-			
+				};
+				new Thread(run).start();
+			}
+
 		}
 	}
 
@@ -351,7 +400,6 @@ public class FileManagerPopMenu extends JPopupMenu {
 			};
 			filemanagerpanel.getStatus().setText("正在读取...请稍后");
 			new Thread(run).start();
-			
 
 		}
 
@@ -374,7 +422,7 @@ public class FileManagerPopMenu extends JPopupMenu {
 						.getSelectedComponent();
 				String name = Common.getName(path.getText());
 				final DefaultMutableTreeNode tn = TreeMethod.searchNode(
-						filemanagerpanel.getRoot(), name);			
+						filemanagerpanel.getRoot(), name);
 				Runnable run = new Runnable() {
 					public void run() {
 						SwingUtilities.invokeLater(new Runnable() {
