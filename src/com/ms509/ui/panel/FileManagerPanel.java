@@ -70,9 +70,25 @@ public class FileManagerPanel extends JPanel {
 	private String[] index_datas;
 	private String[] trees;
 	private String arrtmp;
-	private boolean lstatus = false;
-	private boolean rstatus = false;
+	private boolean lstatus = true;
+	private boolean rstatus = true;
 	private boolean init = true;
+
+	public boolean isLstatus() {
+		return lstatus;
+	}
+
+	public void setLstatus(boolean lstatus) {
+		this.lstatus = lstatus;
+	}
+
+	public boolean isRstatus() {
+		return rstatus;
+	}
+
+	public void setRstatus(boolean rstatus) {
+		this.rstatus = rstatus;
+	}
 
 	public DefaultMutableTreeNode getRoot() {
 		return root;
@@ -376,40 +392,36 @@ public class FileManagerPanel extends JPanel {
 	class TreeAction extends MouseAdapter {
 		@Override
 		public void mousePressed(MouseEvent e) {
-			lstatus = false;
-			rstatus = false;
-			final TreePath tp = tree.getSelectionPath();
-			if (tp != null) {
-				status.setText("正在读取...请稍等");
-				Runnable run = new Runnable() {
-					public void run() {
-						SwingUtilities.invokeLater(new Runnable() {
-							public void run() {
-								showLeft(tp);
-								showRight(TreeMethod.makePath(tp), list);
-								path.setText(TreeMethod.makePath(tp));
-							}
-						});
-						while (true) {
-							try {
-								Thread.sleep(1);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-							Thread.yield();
-							if (lstatus && rstatus) {
-								SwingUtilities.invokeLater(new Runnable() {
-									@Override
-									public void run() {
-										status.setText("完成");
-									}
-								});
-								break;
+			if (lstatus && rstatus) {
+				final TreePath tp = tree.getSelectionPath();
+				if (tp != null) {
+					lstatus = false;
+					rstatus = false;
+					status.setText("正在读取...请稍等");
+					showLeft(tp);
+					showRight(TreeMethod.makePath(tp), list);
+					path.setText(TreeMethod.makePath(tp));
+					Runnable run = new Runnable() {
+						public void run() {
+							while (true) {
+								Thread.yield();
+								if (lstatus && rstatus) {
+									SwingUtilities.invokeLater(new Runnable() {
+										@Override
+										public void run() {
+											status.setText("完成");
+										}
+									});
+									break;
+								}
 							}
 						}
-					}
-				};
-				new Thread(run).start();
+					};
+					new Thread(run).start();
+				}
+			} else {
+				// new MessageDialog("上一操作尚未执行完毕");
+				status.setText("上一操作尚未执行完毕");
 			}
 		}
 	}
