@@ -70,6 +70,9 @@ public class FileManagerPanel extends JPanel {
 	private String[] index_datas;
 	private String[] trees;
 	private String arrtmp;
+	private boolean lstatus = false;
+	private boolean rstatus = false;
+	private boolean init = true;
 
 	public DefaultMutableTreeNode getRoot() {
 		return root;
@@ -171,10 +174,10 @@ public class FileManagerPanel extends JPanel {
 			vector.add(time);
 			model.update(id, vector);
 		} catch (SQLException e) {
-
 		}
 		fm = new FileManager(url, pass, type, code);
 		this.path.setText("正在连接...请稍等");
+		this.status.setText("正在载入路径...请稍等");
 		Runnable run = new Runnable() {
 			public void run() {
 				arrtmp = fm.doAction("readindex");
@@ -260,7 +263,6 @@ public class FileManagerPanel extends JPanel {
 	}
 
 	private void filemanagersystem() {
-
 		model.setAsksAllowsChildren(true);
 		// ExtendedTreeCellRenderer trenderer = new ExtendedTreeCellRenderer();
 		ExtendedDefaultTreeCellRenderer trenderer = new ExtendedDefaultTreeCellRenderer();
@@ -273,6 +275,7 @@ public class FileManagerPanel extends JPanel {
 				TreeSelectionModel.SINGLE_TREE_SELECTION);
 		Runnable run = new Runnable() {
 			public void run() {
+				status.setText("正在载入左边栏...请稍等");
 				trees = fm.makeleft(webroot);
 				final String search;
 				final String[] tmp2;
@@ -288,6 +291,7 @@ public class FileManagerPanel extends JPanel {
 						TreeMethod.makeIndexTree(tmp2, trees,
 								TreeMethod.searchNode(root, search));
 						TreeMethod.expandAll(tree, new TreePath(root), true);
+						status.setText("正在载入右边栏...请稍等");
 						showRight(webroot, list);
 					}
 				});
@@ -303,8 +307,11 @@ public class FileManagerPanel extends JPanel {
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
-						listmodel = new RightTableModel(filedicts);
-						list.setModel(listmodel);
+						try {
+							listmodel = new RightTableModel(filedicts);
+							list.setModel(listmodel);
+						} catch (Exception e) {
+						}
 						TableColumnModel columnmodel = list.getColumnModel();
 						TableColumn isfiledict = columnmodel.getColumn(0);
 						isfiledict.setHeaderValue("");
@@ -321,6 +328,11 @@ public class FileManagerPanel extends JPanel {
 								.setCellRenderer(renderer);
 						JTableHeader header = list.getTableHeader();
 						header.setDefaultRenderer(renderer);
+						if (init) {
+							status.setText("完成");
+							init = false;
+						}
+						rstatus = true;
 					}
 				});
 			}
@@ -328,16 +340,29 @@ public class FileManagerPanel extends JPanel {
 		new Thread(run2).start();
 	}
 
-	public void showLeft(TreePath tp) {
-		DefaultMutableTreeNode select = (DefaultMutableTreeNode) tp
-				.getLastPathComponent();
-		String[] trees = fm.makeleft(TreeMethod.makePath(tp));
-		TreeMethod.addTree(trees, select, model);
-		if (tree.isExpanded(tp)) {
-			tree.collapsePath(tp);
-		} else {
-			tree.expandPath(tp);
-		}
+	public void showLeft(final TreePath tp) {
+		Runnable run3 = new Runnable() {
+			@Override
+			public void run() {
+				final String[] trees = fm.makeleft(TreeMethod.makePath(tp));
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						DefaultMutableTreeNode select = (DefaultMutableTreeNode) tp
+								.getLastPathComponent();
+						TreeMethod.addTree(trees, select, model);
+						if (tree.isExpanded(tp)) {
+							tree.collapsePath(tp);
+						} else {
+							tree.expandPath(tp);
+						}
+						lstatus = true;
+					}
+				});
+			}
+		};
+		new Thread(run3).start();
+		;
 	}
 
 	public RightTableModel getListmodel() {
@@ -351,7 +376,8 @@ public class FileManagerPanel extends JPanel {
 	class TreeAction extends MouseAdapter {
 		@Override
 		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
+			lstatus = false;
+			rstatus = false;
 			final TreePath tp = tree.getSelectionPath();
 			if (tp != null) {
 				status.setText("正在读取...请稍等");
@@ -362,9 +388,25 @@ public class FileManagerPanel extends JPanel {
 								showLeft(tp);
 								showRight(TreeMethod.makePath(tp), list);
 								path.setText(TreeMethod.makePath(tp));
-								status.setText("完成");
 							}
 						});
+						while (true) {
+							try {
+								Thread.sleep(1);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+							Thread.yield();
+							if (lstatus && rstatus) {
+								SwingUtilities.invokeLater(new Runnable() {
+									@Override
+									public void run() {
+										status.setText("完成");
+									}
+								});
+								break;
+							}
+						}
 					}
 				};
 				new Thread(run).start();

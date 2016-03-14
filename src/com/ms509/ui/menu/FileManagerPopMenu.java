@@ -355,7 +355,6 @@ public class FileManagerPopMenu extends JPopupMenu {
 									};
 									new Thread(run2).start();
 								}
-								filemanagerpanel.getStatus().setText("完成");
 							}
 						});
 					}
