@@ -189,16 +189,17 @@ public class FileManagerPanel extends JPanel {
 						}
 					});
 				} else {
-					Runnable run2 = new Runnable() {
-						public void run() {
-							try {
+					try {
+						SwingUtilities.invokeLater(new Runnable() {
+							@Override
+							public void run() {
 								filemanagerindex();
 								filemanagersystem();
-							} catch (Exception e) {
 							}
-						}
-					};
-					new Thread(run2).start();
+						});
+
+					} catch (Exception e) {
+					}
 				}
 			}
 		};
@@ -287,36 +288,44 @@ public class FileManagerPanel extends JPanel {
 						TreeMethod.makeIndexTree(tmp2, trees,
 								TreeMethod.searchNode(root, search));
 						TreeMethod.expandAll(tree, new TreePath(root), true);
+						showRight(webroot, list);
 					}
 				});
 			}
 		};
 		new Thread(run).start();
-		showRight(webroot, list);
 	}
 
-	public void showRight(String path, JTable list) {
-		String[] filedicts = fm.makeright(path);
-		try {
-			listmodel = new RightTableModel(filedicts);
-			list.setModel(listmodel);
-		} catch (Exception e) {
-
-		}
-		TableColumnModel columnmodel = list.getColumnModel();
-		TableColumn isfiledict = columnmodel.getColumn(0);
-		isfiledict.setHeaderValue("");
-		isfiledict.setMaxWidth(1);
-		TableColumn name = columnmodel.getColumn(1);
-		name.setMinWidth(300);
-		TableColumn time = columnmodel.getColumn(2);
-		time.setMinWidth(150);
-		DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
-		renderer.setHorizontalAlignment(JTextField.CENTER);
-		list.getColumnModel().getColumn(3).setCellRenderer(renderer);
-		list.getColumnModel().getColumn(4).setCellRenderer(renderer);
-		JTableHeader header = list.getTableHeader();
-		header.setDefaultRenderer(renderer);
+	public void showRight(final String path, final JTable list) {
+		Runnable run2 = new Runnable() {
+			public void run() {
+				final String[] filedicts = fm.makeright(path);
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						listmodel = new RightTableModel(filedicts);
+						list.setModel(listmodel);
+						TableColumnModel columnmodel = list.getColumnModel();
+						TableColumn isfiledict = columnmodel.getColumn(0);
+						isfiledict.setHeaderValue("");
+						isfiledict.setMaxWidth(1);
+						TableColumn name = columnmodel.getColumn(1);
+						name.setMinWidth(300);
+						TableColumn time = columnmodel.getColumn(2);
+						time.setMinWidth(150);
+						DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+						renderer.setHorizontalAlignment(JTextField.CENTER);
+						list.getColumnModel().getColumn(3)
+								.setCellRenderer(renderer);
+						list.getColumnModel().getColumn(4)
+								.setCellRenderer(renderer);
+						JTableHeader header = list.getTableHeader();
+						header.setDefaultRenderer(renderer);
+					}
+				});
+			}
+		};
+		new Thread(run2).start();
 	}
 
 	public void showLeft(TreePath tp) {
