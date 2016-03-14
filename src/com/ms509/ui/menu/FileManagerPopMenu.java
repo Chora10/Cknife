@@ -282,6 +282,8 @@ public class FileManagerPopMenu extends JPopupMenu {
 						.toString();
 
 				if (type.indexOf("folder.png") > -1) {
+					if(filemanagerpanel.isLstatus() && filemanagerpanel.isRstatus())
+					{
 					filemanagerpanel.setLstatus(false);
 					filemanagerpanel.setRstatus(false);
 					filemanagerpanel.getStatus().setText("正在读取...请稍等");
@@ -315,6 +317,10 @@ public class FileManagerPopMenu extends JPopupMenu {
 						}
 					};
 					new Thread(run).start();
+					} else 
+					{
+						filemanagerpanel.getStatus().setText("上一操作尚未执行完毕");
+					}
 				} else if (type.indexOf("file.png") > -1) {
 					final String abpath = path.getText()
 							+ list.getValueAt(list.getSelectedRow(), 1);
