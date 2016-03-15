@@ -57,7 +57,7 @@ public class AboutDialog extends JDialog {
 		JEditorPane about_info = new JEditorPane();
 		about_info.setEditable(false);
 		about_info.setContentType("text/html");
-		String copy = "<html></br><div ><h3 style=\"text-align:center;\">Copyright(c) 2015 MS509 Team</h3></div>"
+		String copy = "<html></br><div ><h3 style=\"text-align:center;\">Copyright(c) 2015-2016 MS509 Team</h3></div>"
 				+ "<div style=\"font-size:10px;text-align:center;\">主页:<a href=\"http://www.ms509.com\">http://www.ms509.com</a></div>"
 				+ "<p></p><div style=\"font-size:9px;\">免责声明：该软件仅限用于学习和研究目的；不得将本软件用于商业或者非法用途，否则，一切后果请用户自负。</div><div></div>"
 				+ "<div style=\"text-align:right;font-size:9px;\">Powered by Chora & MelodyZX&nbsp;&nbsp;&nbsp;&nbsp;</div>"

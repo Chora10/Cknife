@@ -14,6 +14,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
 import com.ms509.ui.MainFrame;
+import com.ms509.ui.MessageDialog;
 import com.ms509.util.GBC;
 import com.ms509.util.Safe;
 import com.ms509.util.Shell;
@@ -52,7 +53,6 @@ public class ShellPanel extends JPanel {
 		status = new JLabel("完成");
 		bar.setFloatable(false);
 		console = new JTextPane();
-
 		console_scroll = new JScrollPane(console);
 		shell_doc = console.getDocument();
 		// 初始化常量
@@ -90,32 +90,31 @@ public class ShellPanel extends JPanel {
 		// System.out.println("asp11");
 		core = new Shell(os, url, code, type);
 
-		///
+		// /
+		status.setText("正在连接...请稍等");
 		Thread thread_getpath = new Thread(new Runnable() {
 			public void run() {
-				
-				status.setText("正在执行...");
 				// 显示网站路径
-				try {
-					path = core.GetPath();
-					shell_doc.insertString(shell_doc.getLength(), "\n" + path, null);
-					command_start = shell_doc.getLength();
-					console.setCaretPosition(shell_doc.getLength());
-					status.setText("完成");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					e.getMessage();
-					status.setText("获取shell失败");
-					try {
-						shell_doc.remove(0, shell_doc.getLength());
-						shell_doc.insertString(0, "\n获取shell失败", null);
-					} catch (BadLocationException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+				path = core.GetPath();
+				final String tmp = path.substring(0, path.length() - 1);
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						if (tmp.indexOf("HTTP/1.")>-1 || tmp.indexOf("/") < 0 && tmp.indexOf("\\") < 0) {
+							new MessageDialog(tmp);
+							console.setEnabled(false);
+						} else {
+							try {
+								shell_doc.insertString(shell_doc.getLength(),
+										"\n" + path, null);
+							} catch (BadLocationException e) {
+							}
+						}
+						command_start = shell_doc.getLength();
+						console.setCaretPosition(shell_doc.getLength());
+						status.setText("完成");
 					}
+				});
 
-				}
 			}
 		});
 		thread_getpath.start();
@@ -144,9 +143,11 @@ public class ShellPanel extends JPanel {
 
 		// 初始化布局和控件
 		this.setLayout(new GridBagLayout());
-		GBC gbcinfo = new GBC(0, 0, 6, 1).setFill(GBC.HORIZONTAL).setWeight(100, 0);
+		GBC gbcinfo = new GBC(0, 0, 6, 1).setFill(GBC.HORIZONTAL).setWeight(
+				100, 0);
 		GBC gbcconsole = new GBC(0, 1, 6, 1).setFill(GBC.BOTH).setWeight(0, 10);
-		GBC gbcbar = new GBC(0, 2, 6, 1).setFill(GBC.HORIZONTAL).setWeight(100, 0);
+		GBC gbcbar = new GBC(0, 2, 6, 1).setFill(GBC.HORIZONTAL).setWeight(100,
+				0);
 
 		// console.append("\n"+path);
 
@@ -234,16 +235,19 @@ public class ShellPanel extends JPanel {
 			if (shell_doc.getLength() <= command_start) {
 				if (arg0.getKeyCode() == 8) {
 					try {
-						String t = shell_doc.getText(console.getCaretPosition() - 1, 1);
+						String t = shell_doc.getText(
+								console.getCaretPosition() - 1, 1);
 						// System.out.println("");
-						shell_doc.insertString(console.getCaretPosition(), t, null);
+						shell_doc.insertString(console.getCaretPosition(), t,
+								null);
 					} catch (Exception e) {
 
 					}
 				}
 			}
 
-			if (console.getCaretPosition() < command_start || console.getSelectionStart() < command_start
+			if (console.getCaretPosition() < command_start
+					|| console.getSelectionStart() < command_start
 					|| console.getSelectionEnd() < command_start) {
 				console.setEditable(false);
 				console.setCaretPosition(shell_doc.getLength());
@@ -251,9 +255,8 @@ public class ShellPanel extends JPanel {
 				console.setEditable(true);
 
 			}
-			
-			if(arg0.getKeyCode()==10)
-			{
+
+			if (arg0.getKeyCode() == 10) {
 				console.setCaretPosition(shell_doc.getLength());
 			}
 
@@ -267,7 +270,8 @@ public class ShellPanel extends JPanel {
 			if (arg0.getKeyCode() == 10) {
 				String tmp_cmd = null;
 				try {
-					tmp_cmd = shell_doc.getText(command_start, command_stop - command_start);
+					tmp_cmd = shell_doc.getText(command_start, command_stop
+							- command_start);
 					tmp_cmd = tmp_cmd.replace("\n", "").replace("\r", "");
 					if (tmp_cmd.equals("cls") || tmp_cmd.equals("clear")) {
 						shell_doc.remove(0, shell_doc.getLength());
@@ -278,53 +282,41 @@ public class ShellPanel extends JPanel {
 					else {
 						// shell_doc.insertString(shell_doc.getLength(), "\n",
 						// null);
-
 						Thread exe = new Thread(new Runnable() {
-						//	private Lock lock = new ReentrantLock();// 锁对象    
-							  
+							// private Lock lock = new ReentrantLock();// 锁对象
+
 							@Override
-							public synchronized void run() {
+							public void run() {
 								// TODO Auto-generated method stub
-								num_t = 1;
-								status.setText("正在执行");
-								try {
-									// Thread.sleep(10000);
-									execute(path, shell_doc.getText(command_start, command_stop - command_start), os,
-											type);
-								} catch (Exception e) {
-									// TODO Auto-generated catch block
-									status.setText("执行失败");
-									System.out.println("1");
+								SwingUtilities.invokeLater(new Runnable() {
 									
-									try {
-//										check_path();
-//										System.out.println("2");
-//										shell_doc.insertString(shell_doc.getLength(), "\n" + path, null);
-//										System.out.println("3");
-//										command_start = shell_doc.getLength();
-//										System.out.println("4");
-//										console.setCaretPosition(shell_doc.getLength());
-//										System.out.println("5");
-									} catch (Exception e1) {
-										// TODO Auto-generated catch block
-										e1.printStackTrace();
+									@Override
+									public void run() {
+										num_t = 1;
+										status.setText("正在执行...请稍等");
+										try {
+											// Thread.sleep(10000);
+											execute(path, shell_doc.getText(
+													command_start, command_stop
+															- command_start), os, type);
+										} catch (Exception e) {
+											// TODO Auto-generated catch block
+											status.setText("执行失败");
+
+											console.setEditable(true);
+										} finally {
+											num_t = 0;
+										}
 									}
-									console.setEditable(true);
-									e.printStackTrace();
-								}finally
-								{
-									num_t = 0;
-								}
+								});
 								
-								
+
 							}
 						});
-						if(num_t == 0)
-						{
-						exe.start();
-						System.out.println(1);
-						}else
-						{
+						if (num_t == 0) {
+							exe.start();
+							System.out.println(1);
+						} else {
 							System.out.println(0);
 						}
 						// SwingUtilities.invokeLater(new Runnable() {
@@ -369,8 +361,10 @@ public class ShellPanel extends JPanel {
 			if (arg0.getKeyCode() == KeyEvent.VK_UP) {
 				console.setCaretPosition(command_start);
 				try {
-					shell_doc.remove(command_start, shell_doc.getLength() - command_start);
-					shell_doc.insertString(command_start, key_up_action(), null);
+					shell_doc.remove(command_start, shell_doc.getLength()
+							- command_start);
+					shell_doc
+							.insertString(command_start, key_up_action(), null);
 				} catch (BadLocationException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -382,8 +376,10 @@ public class ShellPanel extends JPanel {
 			if (arg0.getKeyCode() == KeyEvent.VK_DOWN) {
 				console.setCaretPosition(command_start);
 				try {
-					shell_doc.remove(command_start, shell_doc.getLength() - command_start);
-					shell_doc.insertString(command_start, key_down_action(), null);
+					shell_doc.remove(command_start, shell_doc.getLength()
+							- command_start);
+					shell_doc.insertString(command_start, key_down_action(),
+							null);
 				} catch (BadLocationException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -411,11 +407,10 @@ public class ShellPanel extends JPanel {
 			command_start = shell_doc.getLength();
 			console.setCaretPosition(shell_doc.getLength());
 			status.setText("完成");
-			//System.out.println("caret text");
+			// System.out.println("caret text");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.out.println("test");
+			status.setText("执行失败");
 			command_start = shell_doc.getLength();
 			console.setCaretPosition(shell_doc.getLength());
 		}
@@ -466,7 +461,5 @@ public class ShellPanel extends JPanel {
 		}
 		return str;
 	}
-	
-
 
 }
