@@ -70,6 +70,25 @@ public class FileManagerPanel extends JPanel {
 	private String[] index_datas;
 	private String[] trees;
 	private String arrtmp;
+	private boolean lstatus = true;
+	private boolean rstatus = true;
+	private boolean init = true;
+
+	public boolean isLstatus() {
+		return lstatus;
+	}
+
+	public void setLstatus(boolean lstatus) {
+		this.lstatus = lstatus;
+	}
+
+	public boolean isRstatus() {
+		return rstatus;
+	}
+
+	public void setRstatus(boolean rstatus) {
+		this.rstatus = rstatus;
+	}
 
 	public DefaultMutableTreeNode getRoot() {
 		return root;
@@ -171,28 +190,36 @@ public class FileManagerPanel extends JPanel {
 			vector.add(time);
 			model.update(id, vector);
 		} catch (SQLException e) {
-
 		}
 		fm = new FileManager(url, pass, type, code);
-		this.path.setText("正在连接...请稍后");
+		this.path.setText("正在连接...请稍等");
+		this.status.setText("正在载入路径...请稍等");
 		Runnable run = new Runnable() {
 			public void run() {
 				arrtmp = fm.doAction("readindex");
-				if (arrtmp.indexOf("HTTP/1.") > -1 || arrtmp.indexOf("timeout") > -1) 
-				{
+				// System.out.println(arrtmp);
+
+				if (arrtmp.indexOf("HTTP/1.") > -1 || arrtmp.indexOf("/") < 0
+						&& arrtmp.indexOf("\\") < 0) {
 					SwingUtilities.invokeLater(new Runnable() {
 						public void run() {
 							path.setText("连接失败");
 							new MessageDialog(arrtmp);
 						}
 					});
-				}
-				try {
-					filemanagerindex();
-					filemanagersystem();
-				} catch (Exception e) {
-				}
+				} else {
+					try {
+						SwingUtilities.invokeLater(new Runnable() {
+							@Override
+							public void run() {
+								filemanagerindex();
+								filemanagersystem();
+							}
+						});
 
+					} catch (Exception e) {
+					}
+				}
 			}
 		};
 		new Thread(run).start();
@@ -252,7 +279,6 @@ public class FileManagerPanel extends JPanel {
 	}
 
 	private void filemanagersystem() {
-
 		model.setAsksAllowsChildren(true);
 		// ExtendedTreeCellRenderer trenderer = new ExtendedTreeCellRenderer();
 		ExtendedDefaultTreeCellRenderer trenderer = new ExtendedDefaultTreeCellRenderer();
@@ -265,55 +291,94 @@ public class FileManagerPanel extends JPanel {
 				TreeSelectionModel.SINGLE_TREE_SELECTION);
 		Runnable run = new Runnable() {
 			public void run() {
+				status.setText("正在载入左边栏...请稍等");
 				trees = fm.makeleft(webroot);
-				final String search = tmp1[0];
-				final String[] tmp2= Arrays.copyOfRange(tmp1,1,tmp1.length);
+				final String search;
+				final String[] tmp2;
+				if (Safe.SYSTEMSP.equals("/")) {
+					search = "/";
+					tmp2 = Arrays.copyOfRange(tmp1, 1, tmp1.length);
+				} else {
+					search = tmp1[0];
+					tmp2 = Arrays.copyOfRange(tmp1, 1, tmp1.length);
+				}
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						TreeMethod.makeIndexTree(tmp2, trees, TreeMethod.searchNode(root, search));
+						TreeMethod.makeIndexTree(tmp2, trees,
+								TreeMethod.searchNode(root, search));
 						TreeMethod.expandAll(tree, new TreePath(root), true);
+						status.setText("正在载入右边栏...请稍等");
+						showRight(webroot, list);
 					}
 				});
 			}
 		};
 		new Thread(run).start();
-		showRight(webroot, list);
 	}
 
-	public void showRight(String path, JTable list) {
-		String[] filedicts = fm.makeright(path);
-		try {
-			listmodel = new RightTableModel(filedicts);
-			list.setModel(listmodel);
-		} catch (Exception e) {
-
-		}
-		TableColumnModel columnmodel = list.getColumnModel();
-		TableColumn isfiledict = columnmodel.getColumn(0);
-		isfiledict.setHeaderValue("");
-		isfiledict.setMaxWidth(1);
-		TableColumn name = columnmodel.getColumn(1);
-		name.setMinWidth(300);
-		TableColumn time = columnmodel.getColumn(2);
-		time.setMinWidth(150);
-		DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
-		renderer.setHorizontalAlignment(JTextField.CENTER);
-		list.getColumnModel().getColumn(3).setCellRenderer(renderer);
-		list.getColumnModel().getColumn(4).setCellRenderer(renderer);
-		JTableHeader header = list.getTableHeader();
-		header.setDefaultRenderer(renderer);
+	public void showRight(final String path, final JTable list) {
+		Runnable run2 = new Runnable() {
+			public void run() {
+				final String[] filedicts = fm.makeright(path);
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							listmodel = new RightTableModel(filedicts);
+							list.setModel(listmodel);
+						} catch (Exception e) {
+						}
+						TableColumnModel columnmodel = list.getColumnModel();
+						TableColumn isfiledict = columnmodel.getColumn(0);
+						isfiledict.setHeaderValue("");
+						isfiledict.setMaxWidth(1);
+						TableColumn name = columnmodel.getColumn(1);
+						name.setMinWidth(300);
+						TableColumn time = columnmodel.getColumn(2);
+						time.setMinWidth(150);
+						DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+						renderer.setHorizontalAlignment(JTextField.CENTER);
+						list.getColumnModel().getColumn(3)
+								.setCellRenderer(renderer);
+						list.getColumnModel().getColumn(4)
+								.setCellRenderer(renderer);
+						JTableHeader header = list.getTableHeader();
+						header.setDefaultRenderer(renderer);
+						if (init) {
+							status.setText("完成");
+							init = false;
+						}
+						rstatus = true;
+					}
+				});
+			}
+		};
+		new Thread(run2).start();
 	}
 
-	public void showLeft(TreePath tp) {
-		DefaultMutableTreeNode select = (DefaultMutableTreeNode) tp
-				.getLastPathComponent();
-		String[] trees = fm.makeleft(TreeMethod.makePath(tp));
-		TreeMethod.addTree(trees, select, model);
-		if (tree.isExpanded(tp)) {
-			tree.collapsePath(tp);
-		} else {
-			tree.expandPath(tp);
-		}
+	public void showLeft(final TreePath tp) {
+		Runnable run3 = new Runnable() {
+			@Override
+			public void run() {
+				final String[] trees = fm.makeleft(TreeMethod.makePath(tp));
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						DefaultMutableTreeNode select = (DefaultMutableTreeNode) tp
+								.getLastPathComponent();
+						TreeMethod.addTree(trees, select, model);
+						if (tree.isExpanded(tp)) {
+							tree.collapsePath(tp);
+						} else {
+							tree.expandPath(tp);
+						}
+						lstatus = true;
+					}
+				});
+			}
+		};
+		new Thread(run3).start();
+		;
 	}
 
 	public RightTableModel getListmodel() {
@@ -327,23 +392,36 @@ public class FileManagerPanel extends JPanel {
 	class TreeAction extends MouseAdapter {
 		@Override
 		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
-			final TreePath tp = tree.getSelectionPath();
-			if (tp != null) {
-				status.setText("正在读取...请稍后");
-				Runnable run = new Runnable() {
-					public void run() {
-						SwingUtilities.invokeLater(new Runnable() {
-							public void run() {
-								showLeft(tp);
-								showRight(TreeMethod.makePath(tp), list);
-								path.setText(TreeMethod.makePath(tp));
-								status.setText("完成");
+			if (lstatus && rstatus) {
+				final TreePath tp = tree.getSelectionPath();
+				if (tp != null) {
+					lstatus = false;
+					rstatus = false;
+					status.setText("正在读取...请稍等");
+					showLeft(tp);
+					showRight(TreeMethod.makePath(tp), list);
+					path.setText(TreeMethod.makePath(tp));
+					Runnable run = new Runnable() {
+						public void run() {
+							while (true) {
+								Thread.yield();
+								if (lstatus && rstatus) {
+									SwingUtilities.invokeLater(new Runnable() {
+										@Override
+										public void run() {
+											status.setText("完成");
+										}
+									});
+									break;
+								}
 							}
-						});
-					}
-				};
-				new Thread(run).start();
+						}
+					};
+					new Thread(run).start();
+				}
+			} else {
+				// new MessageDialog("上一操作尚未执行完毕");
+				status.setText("上一操作尚未执行完毕");
 			}
 		}
 	}
