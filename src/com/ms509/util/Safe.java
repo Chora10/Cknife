@@ -71,6 +71,7 @@ public final class Safe {
 	public static String JSP_SHELL;
 	public static String JSP_DB_MYSQL;
 	public static String JSP_DB_MSSQL;
+	public static String JSP_DB_ORACLE;
 	
 	public static String CUS_BASE64;
 	public static String CUS_MAKE;

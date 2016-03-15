@@ -31,13 +31,13 @@ public class DataBase {
 		switch(type)
 		{
 		case 0://jsp
-			if (dbtype.equals("MYSQL")) {
+			if (dbtype.equals("MYSQL") || dbtype.equals("ORACLE")) {
 				dbhost = config.substring(config.indexOf("<H>") + 3, config.indexOf("</H>"));
 				dbuser = config.substring(config.indexOf("<U>") + 3, config.indexOf("</U>"));
 				dbpass = config.substring(config.indexOf("<P>") + 3, config.indexOf("</P>"));
 				dbcode = config.substring(config.indexOf("<L>") + 3, config.indexOf("</L>"));
 				if (config.indexOf("<M>") > 0) {
-					dbmaster = config.substring(config.indexOf("<M>") + 3, config.indexOf("<M>"));
+					dbmaster = config.substring(config.indexOf("<M>") + 3, config.indexOf("</M>"));
 				} else {
 					dbmaster = "";
 				}
@@ -85,16 +85,18 @@ public class DataBase {
 				p1 = Safe.JSP_DB_MSSQL;
 			} else if (dbtype.equals("ORACLE")) {
 				// oracle
+				p1 = Safe.JSP_DB_ORACLE;
 			}
 			sp = "choraheiheihei";
-			p1 = p1.replace("localhost:1443", dbhost).replace("testdb", dbmaster).replace("username", dbuser)
+			System.out.println("test");
+			p1 = p1.replace("localhost", dbhost).replace("testdb", dbmaster).replace("username", dbuser)
 					.replace("userpwd", dbpass);
 			p1.replace("choraheiheihei", sp);
 			params = pass + "=" + Safe.JSP_MAKE + "&" + Safe.CODE + "=" + dbcode + "&" + Safe.ACTION + "=N" + "&z1="
 					+ p1 + "&z2=&z3=";
 			System.out.println("params=" + params);
 			rs = Common.send(url, params, code);
-
+			System.out.println(rs);
 			break; 
 		case 1: //php
 			if (Safe.PHP_BASE64.equals("1")) {
@@ -219,6 +221,9 @@ public class DataBase {
 						dbpass);
 			}else if(dbtype.equals("ORACLE"))
 			{
+				p1 = Safe.JSP_DB_ORACLE;
+				p1 = p1.replace("localhost", dbhost).replace("testdb", dbmaster).replace("username", dbuser).replace("userpwd",
+						dbpass);
 				//ORACLE 支持
 			}
 		//	p1 = p1.replace("localhost", dbhost).replace("testdb", dbn).replace("username", dbuser).replace("userpwd",dbpass);
