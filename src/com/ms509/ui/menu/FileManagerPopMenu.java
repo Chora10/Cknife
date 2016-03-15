@@ -326,6 +326,9 @@ public class FileManagerPopMenu extends JPopupMenu {
 							+ list.getValueAt(list.getSelectedRow(), 1);
 					final TextPanel text = (TextPanel) MainFrame.tab
 							.addPanel("text");
+					text.getStatus().setText("正在读取...请稍等");
+					text.getText().setText("读取中...");
+					text.getPath().setText(abpath);
 					Runnable run = new Runnable() {
 						@Override
 						public void run() {
@@ -334,8 +337,8 @@ public class FileManagerPopMenu extends JPopupMenu {
 							SwingUtilities.invokeLater(new Runnable() {
 								@Override
 								public void run() {
-									text.getPath().setText(abpath);
 									text.getText().setText(data);
+									text.getStatus().setText("完成");								
 								}
 							});
 						}
