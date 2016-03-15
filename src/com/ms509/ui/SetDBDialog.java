@@ -126,14 +126,15 @@ public class SetDBDialog extends JDialog{
 		case "ASP(Eval)":
 			// System.out.println("asp");
 			dbtypes = new String[]{"<T>MYSQL</T><H>localhost</H><U>root</U><P>root</P><L>utf8</L>",
-					"<T>MSSQL</T><H>localhost</H><U>root</U><P>root</P><L>utf8</L>"};
+					"<T>MSSQL</T><C>Provider=SQLOLEDB.1;User ID=;Password=;Initial Catalog=master;Data Source=(local)</C>",
+					"<T>MDB</T><C>Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\\111.mdb</C>"};
 			// this.asp();
 			break;
 		case "ASPX(Eval)":
 			// System.out.println("aspx");
 			dbtypes = new String[]{"<T>MYSQL</T><H>localhost</H><U>root</U><P>root</P><L>utf8</L>",
-					"<T>ADO</T><C>Provider=SQLOLEDB.1;User ID=;Password=;Initial Catalog=master;Data Source=(local)</C>",
-					"<T>ADO</T><C>Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\\111.mdb</C>"};
+					"<T>MSSQL</T><C>Provider=SQLOLEDB.1;User ID=;Password=;Initial Catalog=master;Data Source=(local)</C>",
+					"<T>MDB</T><C>Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\\111.mdb</C>"};
 			break;
 		}
 		
