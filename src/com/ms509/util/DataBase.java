@@ -25,30 +25,55 @@ public class DataBase {
 	}
 
 	// 初始化配置文件
-	private static void init(String config) {
+	private static void init(String config,int type) {
 		dbtype = config.substring(config.indexOf("<T>") + 3, config.indexOf("</T>"));
 		System.out.println("dbtype" + dbtype);
-		if (dbtype.equals("MYSQL")) {
-			dbhost = config.substring(config.indexOf("<H>") + 3, config.indexOf("</H>"));
-			dbuser = config.substring(config.indexOf("<U>") + 3, config.indexOf("</U>"));
-			dbpass = config.substring(config.indexOf("<P>") + 3, config.indexOf("</P>"));
-			dbcode = config.substring(config.indexOf("<L>") + 3, config.indexOf("</L>"));
-			if (config.indexOf("<M>") > 0) {
-				dbmaster = config.substring(config.indexOf("<M>") + 3, config.indexOf("<M>"));
-			} else {
-				dbmaster = "";
+		switch(type)
+		{
+		case 0://jsp
+			if (dbtype.equals("MYSQL") || dbtype.equals("ORACLE")) {
+				dbhost = config.substring(config.indexOf("<H>") + 3, config.indexOf("</H>"));
+				dbuser = config.substring(config.indexOf("<U>") + 3, config.indexOf("</U>"));
+				dbpass = config.substring(config.indexOf("<P>") + 3, config.indexOf("</P>"));
+				dbcode = config.substring(config.indexOf("<L>") + 3, config.indexOf("</L>"));
+				if (config.indexOf("<M>") > 0) {
+					dbmaster = config.substring(config.indexOf("<M>") + 3, config.indexOf("</M>"));
+				} else {
+					dbmaster = "";
+				}
+
 			}
+			break;
+		case 1://php
+			if (dbtype.equals("MYSQL")) {
+				dbhost = config.substring(config.indexOf("<H>") + 3, config.indexOf("</H>"));
+				dbuser = config.substring(config.indexOf("<U>") + 3, config.indexOf("</U>"));
+				dbpass = config.substring(config.indexOf("<P>") + 3, config.indexOf("</P>"));
+				dbcode = config.substring(config.indexOf("<L>") + 3, config.indexOf("</L>"));
+				if (config.indexOf("<M>") > 0) {
+					dbmaster = config.substring(config.indexOf("<M>") + 3, config.indexOf("<M>"));
+				} else {
+					dbmaster = "";
+				}
 
-		} else if (dbtype.equals("MDB") || dbtype.equals("MSSQL")) {
+			} else if (dbtype.equals("MDB") || dbtype.equals("MSSQL")) {
+				dbhost = config.substring(config.indexOf("<C>") + 3, config.indexOf("</C>"));
+				System.out.println("db=" + dbhost);
+			}
+			break;
+		case 2://asp
 			dbhost = config.substring(config.indexOf("<C>") + 3, config.indexOf("</C>"));
-			System.out.println("db=" + dbhost);
+			break;
+		case 3://aspx
+				dbhost = config.substring(config.indexOf("<C>") + 3, config.indexOf("</C>"));
+			break;
 		}
-
+			
 	}
 
 	// 获取数据库库名
 	public static String[] getDBs(String url, String pass, String config, int type, String code) {
-		init(config);
+		init(config ,type);
 		String[] result = null;
 		String rs = null;
 		switch (type) {
@@ -60,16 +85,18 @@ public class DataBase {
 				p1 = Safe.JSP_DB_MSSQL;
 			} else if (dbtype.equals("ORACLE")) {
 				// oracle
+				p1 = Safe.JSP_DB_ORACLE;
 			}
 			sp = "choraheiheihei";
-			p1 = p1.replace("localhost:1443", dbhost).replace("testdb", dbmaster).replace("username", dbuser)
+			System.out.println("test");
+			p1 = p1.replace("localhost", dbhost).replace("testdb", dbmaster).replace("username", dbuser)
 					.replace("userpwd", dbpass);
 			p1.replace("choraheiheihei", sp);
 			params = pass + "=" + Safe.JSP_MAKE + "&" + Safe.CODE + "=" + dbcode + "&" + Safe.ACTION + "=N" + "&z1="
 					+ p1 + "&z2=&z3=";
 			System.out.println("params=" + params);
 			rs = Common.send(url, params, code);
-
+			System.out.println(rs);
 			break; 
 		case 1: //php
 			if (Safe.PHP_BASE64.equals("1")) {
@@ -98,7 +125,14 @@ public class DataBase {
 				System.out.println(dbname);
 				rs = "\t|\t\r\n" + dbname;
 				// getTables(url,pass,config,type,code,"");
-			} else {
+			} else if(dbtype.equals("MYSQL"))
+			{
+				String dname = "";
+				dname = dbhost.substring(dbhost.indexOf("database=")+9, dbhost.length());
+				dname = dname.substring(0, dname.indexOf(";"));
+				rs = exec_sql(url, pass, config, type, code, "show databases;", dname);
+			}
+			else {
 				rs = "\t|\t\r\n[ado database]";
 				// getTables(url,pass,config,type,code,"");
 			}
@@ -112,7 +146,13 @@ public class DataBase {
 				System.out.println(dbname);
 				getTables(url, pass, config, type, code, "");
 				rs = "\t|\t\r\n" + dbname;
-			} else {
+			} else if(dbtype.equals("MYSQL"))
+			{
+				String dname = "";
+				dname = dbhost.substring(dbhost.indexOf("database=")+9, dbhost.length());
+				dname = dname.substring(0, dname.indexOf(";"));
+				rs = exec_sql(url, pass, config, type, code, "show databases;", dname);
+			}else {
 				rs = "\t|\t\r\n[ado database]";
 				getTables(url, pass, config, type, code, "");
 			}
@@ -127,10 +167,32 @@ public class DataBase {
 		// String result = null;
 		String s = "show tables from " + dbn;
 		String result = "";
-		if (dbtype.equals("MDB") || dbtype.equals("MSSQL")) {
+		switch(type)
+		{
+		case 0: //jsp
+			if (dbtype.equals("MDB") || dbtype.equals("MSSQL")) {
+				result = exec_sql(url, pass, config, type, code, "", dbn);
+			} else {
+				result = exec_sql(url, pass, config, type, code, s, dbn);
+			}
+			break;
+		case 1://php
+			if (dbtype.equals("MDB") || dbtype.equals("MSSQL")) {
+				result = exec_sql(url, pass, config, type, code, "", dbn);
+			} else {
+				result = exec_sql(url, pass, config, type, code, s, dbn);
+			}
+			break;
+		case 2://asp
 			result = exec_sql(url, pass, config, type, code, "", dbn);
-		} else {
-			result = exec_sql(url, pass, config, type, code, s, dbn);
+			break;
+		case 3://aspx
+			if (dbtype.equals("MDB") || dbtype.equals("MSSQL")) {
+				result = exec_sql(url, pass, config, type, code, "", dbn);
+			} else {
+				result = exec_sql(url, pass, config, type, code, s, dbn);
+			}
+			break;
 		}
 		return result;
 	}
@@ -139,7 +201,7 @@ public class DataBase {
 	public static String exec_sql(String url, String pass, String config, int type, String code, String sql,
 			String dbn) {
 		// System.out.print("config="+config);
-		init(config);
+		init(config,type);
 		String dbsql = "";
 		String result = "";
 		switch (type) {
@@ -159,6 +221,9 @@ public class DataBase {
 						dbpass);
 			}else if(dbtype.equals("ORACLE"))
 			{
+				p1 = Safe.JSP_DB_ORACLE;
+				p1 = p1.replace("localhost", dbhost).replace("testdb", dbmaster).replace("username", dbuser).replace("userpwd",
+						dbpass);
 				//ORACLE 支持
 			}
 		//	p1 = p1.replace("localhost", dbhost).replace("testdb", dbn).replace("username", dbuser).replace("userpwd",dbpass);
@@ -219,6 +284,9 @@ public class DataBase {
 				params = pass + "=" + Safe.ASP_DB_MDB + "&z1=" + p1 + "&z2=" + sql + "&z3=";
 			} else if (dbhost.indexOf("SQLOLEDB.1") > 0) {
 				params = pass + "=" + Safe.ASP_DB_MSSQL + "&z1=" + p1 + "&z2=" + sql + "&z3=";
+			} else if (dbtype.equals("MYSQL"))
+			{
+				params = pass + "=" + Safe.ASP_DB_MSSQL + "&z1=" + p1 + "&z2=" + sql + "&z3=";
 			}
 			System.out.println("params=" + params);
 			result = Common.send(url, params, code);
@@ -244,8 +312,11 @@ public class DataBase {
 			if (dbtype.equals("MDB")) {
 				params = pass + "=" + Safe.ASPX_DB_MDB + "&z1=" + p1 + "&z2=" + sql + "&z3=";
 			} else if (dbtype.equals("MSSQL")) {
-				params = pass + "=" + Safe.ASPX_DB_MSSQL1 + "&z1=" + p1 + "&z2=" + sql + "&z3=";
+				params = pass + "=" + Safe.ASPX_DB_MSSQL + "&z1=" + p1 + "&z2=" + sql + "&z3=";
+			}else if (dbtype.equals("MYSQL")) {
+				params = pass + "=" + Safe.ASPX_DB_MYSQL + "&z1=" + p1 + "&z2=" + sql + "&z3=";
 			}
+			
 			System.out.println("params=" + params);
 			result = Common.send(url, params, code);
 
