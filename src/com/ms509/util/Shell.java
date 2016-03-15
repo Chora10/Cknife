@@ -95,7 +95,7 @@ public class Shell {
 		String payload = Safe.ASP_SHELL.replace("PARAM1", Safe.PARAM1).replace("PARAM2", Safe.PARAM2);
 		String make = Safe.ASP_MAKE.replace("PAYLOAD", toHexString(payload));
 		String params = Safe.PASS + "=" + make + "&" + Safe.PARAM1 + "=" + tmp;
-		System.out.println(params);
+		
 		String[] index_datas = Common.send(url, params, code).split("\t");
 		
 		re[0] = Arrays.toString(index_datas);
