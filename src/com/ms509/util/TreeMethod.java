@@ -69,8 +69,8 @@ public class TreeMethod {
 			}
 		}
 		if (expand) {
-			tree.expandPath(parent);
-			// tree.scrollPathToVisible(parent);
+//			tree.expandPath(parent);
+			 tree.scrollPathToVisible(parent);
 		} else {
 			tree.collapsePath(parent);
 		}

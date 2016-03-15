@@ -1,8 +1,8 @@
 20160314
-1、完成asp对mssql mdb的支持
+1、添加ASP对MSSQL,ACCESS的支持。
 
 20160311
-1、修复模拟终端若干BUG
+1、修复模拟终端若干BUG；
 2、模拟终端使用多线程，防止高延迟请求界面会卡的情况发生。
 
 20160310
@@ -16,4 +16,4 @@
 20160301
 1、合并Cknife与Cknife_Skin；
 2、使用sqlitejdbc-v056.jar代替sqlitejdbc-v033.jar，解决中文路径启动失败的问题；
-3、添加数据库功能，PHP支持MSSQL,MYSQL,ORACLE。
+3、添加数据库功能，PHP支持MSSQL,MYSQL。

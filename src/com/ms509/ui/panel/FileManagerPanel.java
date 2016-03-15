@@ -34,6 +34,8 @@ import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
@@ -286,7 +288,7 @@ public class FileManagerPanel extends JPanel {
 		tree.setVisible(true); // 设置之前再显示出来
 		tree.setModel(model);
 		// tree.setShowsRootHandles(true);
-		tree.addMouseListener(new TreeAction());
+		tree.addTreeSelectionListener(new TreeAction());
 		tree.getSelectionModel().setSelectionMode(
 				TreeSelectionModel.SINGLE_TREE_SELECTION);
 		Runnable run = new Runnable() {
@@ -389,9 +391,9 @@ public class FileManagerPanel extends JPanel {
 		this.listmodel = listmodel;
 	}
 
-	class TreeAction extends MouseAdapter {
+	class TreeAction implements TreeSelectionListener {
 		@Override
-		public void mousePressed(MouseEvent e) {
+		public void valueChanged(TreeSelectionEvent e) {
 			if (lstatus && rstatus) {
 				final TreePath tp = tree.getSelectionPath();
 				if (tp != null) {
@@ -422,7 +424,9 @@ public class FileManagerPanel extends JPanel {
 			} else {
 				// new MessageDialog("上一操作尚未执行完毕");
 				status.setText("上一操作尚未执行完毕");
+				tree.setSelectionPath(e.getOldLeadSelectionPath());
 			}
 		}
+	
 	}
 }
