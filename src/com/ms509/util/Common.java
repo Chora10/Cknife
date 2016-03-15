@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.Properties;
 
 public class Common {
 
@@ -101,5 +102,15 @@ public class Common {
 			sb.append(hexString.charAt((bytes[i] & 0x0f) >> 0));
 		}
 		return sb.toString();
+	}
+	/* helper method to  check the os info of Cknife run in
+	 *   @added by heen
+	 */
+	public static String getOSInfo() {   
+		Properties props=System.getProperties(); //获得系统属性集    
+		String osName = props.getProperty("os.name"); //操作系统名称    
+		String osArch = props.getProperty("os.arch"); //操作系统构架    
+		String osVersion = props.getProperty("os.version"); //操作系统版本  
+		return osName+osArch+osVersion;
 	}
 }
