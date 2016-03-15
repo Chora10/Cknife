@@ -21,6 +21,11 @@ public final class Safe {
 	public static String ASP_UPLOAD;
 	public static String ASP_DOWNLOAD;
 	public static String ASP_SHELL;
+	//test asp mdb 尚未合并
+	public static String ASP_DB_MDB;
+	public static String ASP_DB_MSSQL;
+	public static String ASP_DB_MDB_step2;
+	public static String ASP_DB_MDB_step3;
 	
 	public static String ASPX_BASE64;
 	public static String ASPX_MAKE;
@@ -65,6 +70,7 @@ public final class Safe {
 	public static String JSP_DOWNLOAD;
 	public static String JSP_SHELL;
 	public static String JSP_DB_MYSQL;
+	public static String JSP_DB_MSSQL;
 	
 	public static String CUS_BASE64;
 	public static String CUS_MAKE;

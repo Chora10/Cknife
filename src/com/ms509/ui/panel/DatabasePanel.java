@@ -117,7 +117,7 @@ public class DatabasePanel extends JPanel {
 			choosedb = new JComboBox<>(dbl);
 			//添加tree显示
 			root = new DefaultMutableTreeNode("/");
-			for(int d=1;d<dbl.length;d++) //dbl[i]="database" 略去
+			for(int d=0;d<dbl.length;d++) //dbl[i]="database" 略去
 			{
 				root.add(new DefaultMutableTreeNode(dbl[d]));
 			}
