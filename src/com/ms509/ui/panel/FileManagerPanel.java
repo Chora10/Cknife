@@ -423,7 +423,7 @@ public class FileManagerPanel extends JPanel {
 					new Thread(run).start();
 				}
 			} else {
-				// new MessageDialog("上一操作尚未执行完毕");
+//				 new MessageDialog("上一操作尚未执行完毕");
 				status.setText("上一操作尚未执行完毕");
 			}
 		}

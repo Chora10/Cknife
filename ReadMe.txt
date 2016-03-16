@@ -1,5 +1,14 @@
+20160317
+1、优化文件管理左边栏的打开方式；
+
+20160316
+1、修复在Linux下默认皮肤显示乱码的问题；
+2、添加ASPX对MSSQL、ACCESS的支持；
+3、更换皮肤解决选中后看不清的情况。
+
 20160314
-1、添加ASP对MSSQL,ACCESS的支持。
+1、添加ASP对MSSQL、ACCESS的支持；
+2、修复中文路径启动失败的问题。
 
 20160311
 1、修复模拟终端若干BUG；
@@ -15,5 +24,4 @@
 
 20160301
 1、合并Cknife与Cknife_Skin；
-2、使用sqlitejdbc-v056.jar代替sqlitejdbc-v033.jar，解决中文路径启动失败的问题；
-3、添加数据库功能，PHP支持MSSQL,MYSQL。
+2、添加数据库功能，添加PHP对MYSQL、ORACLE的支持。
