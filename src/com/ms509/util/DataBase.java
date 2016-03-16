@@ -257,8 +257,8 @@ public class DataBase {
 				}
 				String sp = "choraheiheihei";
 				String p1 = dbhost + sp + dbuser + sp + dbpass;
-				String params = pass + "=" + Safe.PHP_MAKE + "&" + Safe.ACTION + "=" + payload + "&z1=" + p1 + "&z2="
-						+ dbn + "&z3=" + dbsql;
+				params = pass + "=" + Safe.JSP_MAKE + "&" + Safe.CODE + "=" + dbcode + "&" + Safe.ACTION + "=Q" + "&z1="
+									+ p1 + sp +dbn+"&z2=" + sql + "&z3=";
 				// System.out.println(params);
 				result = Common.send(url, params, code);
 				// System.out.println(rs);
