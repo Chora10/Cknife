@@ -1,28 +1,19 @@
 package com.ms509.ui.menu;
 
-import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.RandomAccessFile;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -30,7 +21,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
@@ -39,11 +29,8 @@ import com.ms509.ui.MainFrame;
 import com.ms509.ui.panel.FileManagerPanel;
 import com.ms509.ui.panel.TextPanel;
 import com.ms509.util.Common;
-import com.ms509.util.Request;
 import com.ms509.util.Safe;
 import com.ms509.util.TreeMethod;
-import com.sun.corba.se.spi.ior.MakeImmutable;
-import com.sun.imageio.plugins.common.InputStreamAdapter;
 
 public class FileManagerPopMenu extends JPopupMenu {
 	private JMenuItem upfile, downfile, openfile, rename, delete, addfile,
@@ -148,27 +135,73 @@ public class FileManagerPopMenu extends JPopupMenu {
 				String type = list.getValueAt(list.getSelectedRow(), 0)
 						.toString();
 				if (type.indexOf("folder.png") > -1) {
-					String name = list.getValueAt(list.getSelectedRow(), 1)
-							.toString();
-					abpath = Common.autoPath(path.getText()) + name
-							+ Safe.SYSTEMSP;
-					path.setText(abpath);
-					filemanagerpanel.showRight(abpath, list);
-					DefaultMutableTreeNode tn = TreeMethod.searchNode(
-							filemanagerpanel.getRoot(), name);
-					TreePath tp = new TreePath(tn.getPath());
-					if (tp != null) {
-						filemanagerpanel.showLeft(tp);
+					if (filemanagerpanel.isLstatus()
+							&& filemanagerpanel.isRstatus()) {
+						filemanagerpanel.setLstatus(false);
+						filemanagerpanel.setRstatus(false);
+						filemanagerpanel.getStatus().setText("正在读取...请稍等");
+						String name = list.getValueAt(list.getSelectedRow(), 1)
+								.toString();
+						final String abpath = Common.autoPath(path.getText())
+								+ name + Safe.SYSTEMSP;
+						filemanagerpanel.showRight(abpath, list);
+						DefaultMutableTreeNode tn = TreeMethod.searchNode(
+								filemanagerpanel.getRoot(), name);
+						if (tn != null) {
+							TreePath tp = new TreePath(tn.getPath());
+							filemanagerpanel.showLeft(tp);
+						}
+						Runnable run = new Runnable() {
+							@Override
+							public void run() {
+								while (true) {
+									Thread.yield();
+									if (filemanagerpanel.isLstatus()
+											&& filemanagerpanel.isRstatus()) {
+										SwingUtilities
+												.invokeLater(new Runnable() {
+													@Override
+													public void run() {
+														path.setText(abpath);
+														filemanagerpanel
+																.getStatus()
+																.setText("完成");
+													}
+												});
+										break;
+									}
+								}
+							}
+						};
+						new Thread(run).start();
+					} else {
+						filemanagerpanel.getStatus().setText("上一操作尚未执行完毕");
 					}
 				} else if (type.indexOf("file.png") > -1) {
-					abpath = path.getText()
+					final String abpath = path.getText()
 							+ list.getValueAt(list.getSelectedRow(), 1);
-					TextPanel text = (TextPanel) MainFrame.tab.addPanel("text");
-					String data = filemanagerpanel.getFm().doAction("readfile",
-							abpath);
+					final TextPanel text = (TextPanel) MainFrame.tab
+							.addPanel("text");
+					text.getStatus().setText("正在读取...请稍等");
+					text.getText().setText("读取中...");
 					text.getPath().setText(abpath);
-					text.getText().setText(data);
+					Runnable run = new Runnable() {
+						@Override
+						public void run() {
+							final String data = filemanagerpanel.getFm()
+									.doAction("readfile", abpath);
+							SwingUtilities.invokeLater(new Runnable() {
+								@Override
+								public void run() {
+									text.getText().setText(data);
+									text.getStatus().setText("完成");
+								}
+							});
+						}
+					};
+					new Thread(run).start();
 				}
+
 				break;
 			case "文件":
 				abpath = path.getText() + "newFile.txt";
@@ -282,43 +315,46 @@ public class FileManagerPopMenu extends JPopupMenu {
 						.toString();
 
 				if (type.indexOf("folder.png") > -1) {
-					if(filemanagerpanel.isLstatus() && filemanagerpanel.isRstatus())
-					{
-					filemanagerpanel.setLstatus(false);
-					filemanagerpanel.setRstatus(false);
-					filemanagerpanel.getStatus().setText("正在读取...请稍等");
-					String name = list.getValueAt(list.getSelectedRow(),
-							1).toString();
-					final String abpath = Common.autoPath(path.getText())
-							+ name + Safe.SYSTEMSP;
-					filemanagerpanel.showRight(abpath, list);
-					DefaultMutableTreeNode tn = TreeMethod.searchNode(
-							filemanagerpanel.getRoot(), name);
-					if (tn != null) {
-						TreePath tp = new TreePath(tn.getPath());
-						filemanagerpanel.showLeft(tp);
-					}
-					Runnable run = new Runnable() {
-						@Override
-						public void run() {
-							while (true) {
-								Thread.yield();
-								if (filemanagerpanel.isLstatus() && filemanagerpanel.isRstatus()) {
-									SwingUtilities.invokeLater(new Runnable() {
-										@Override
-										public void run() {
-											path.setText(abpath);
-											filemanagerpanel.getStatus().setText("完成");
-										}
-									});
-									break;
+					if (filemanagerpanel.isLstatus()
+							&& filemanagerpanel.isRstatus()) {
+						filemanagerpanel.setLstatus(false);
+						filemanagerpanel.setRstatus(false);
+						filemanagerpanel.getStatus().setText("正在读取...请稍等");
+						String name = list.getValueAt(list.getSelectedRow(), 1)
+								.toString();
+						final String abpath = Common.autoPath(path.getText())
+								+ name + Safe.SYSTEMSP;
+						filemanagerpanel.showRight(abpath, list);
+						DefaultMutableTreeNode tn = TreeMethod.searchNode(
+								filemanagerpanel.getRoot(), name);
+						if (tn != null) {
+							TreePath tp = new TreePath(tn.getPath());
+							filemanagerpanel.showLeft(tp);
+						}
+						Runnable run = new Runnable() {
+							@Override
+							public void run() {
+								while (true) {
+									Thread.yield();
+									if (filemanagerpanel.isLstatus()
+											&& filemanagerpanel.isRstatus()) {
+										SwingUtilities
+												.invokeLater(new Runnable() {
+													@Override
+													public void run() {
+														path.setText(abpath);
+														filemanagerpanel
+																.getStatus()
+																.setText("完成");
+													}
+												});
+										break;
+									}
 								}
 							}
-						}
-					};
-					new Thread(run).start();
-					} else 
-					{
+						};
+						new Thread(run).start();
+					} else {
 						filemanagerpanel.getStatus().setText("上一操作尚未执行完毕");
 					}
 				} else if (type.indexOf("file.png") > -1) {
@@ -338,7 +374,7 @@ public class FileManagerPopMenu extends JPopupMenu {
 								@Override
 								public void run() {
 									text.getText().setText(data);
-									text.getStatus().setText("完成");								
+									text.getStatus().setText("完成");
 								}
 							});
 						}
@@ -362,30 +398,18 @@ public class FileManagerPopMenu extends JPopupMenu {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-
 			final FileManagerPanel filemanagerpanel = (FileManagerPanel) MainFrame.tab
 					.getSelectedComponent();
+			filemanagerpanel.getStatus().setText("读取中...请稍等");
 			String name = Common.getName(path.getText());
 			final DefaultMutableTreeNode tn = TreeMethod.searchNode(
 					filemanagerpanel.getRoot(), name);
-			Runnable run = new Runnable() {
-				public void run() {
-					SwingUtilities.invokeLater(new Runnable() {
-						public void run() {
-							if (tn != null) {
-								TreePath tp = new TreePath(tn.getPath());
-								filemanagerpanel.showLeft(tp);
-							}
-							filemanagerpanel.showRight(path.getText(), list);
-							filemanagerpanel.getStatus().setText("完成");
-						}
-					});
-				}
-			};
-			filemanagerpanel.getStatus().setText("正在读取...请稍后");
-			new Thread(run).start();
-
+			if (tn != null) {
+				TreePath tp = new TreePath(tn.getPath());
+				filemanagerpanel.showLeft(tp);
+			}
+			filemanagerpanel.showRight(path.getText(), list);
+			new Status(filemanagerpanel).start();
 		}
 
 	}
@@ -405,25 +429,43 @@ public class FileManagerPopMenu extends JPopupMenu {
 			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 				final FileManagerPanel filemanagerpanel = (FileManagerPanel) MainFrame.tab
 						.getSelectedComponent();
+				filemanagerpanel.getStatus().setText("读取中...请稍等");
 				String name = Common.getName(path.getText());
 				final DefaultMutableTreeNode tn = TreeMethod.searchNode(
 						filemanagerpanel.getRoot(), name);
-				Runnable run = new Runnable() {
-					public void run() {
-						SwingUtilities.invokeLater(new Runnable() {
-							public void run() {
-								if (tn != null) {
-									TreePath tp = new TreePath(tn.getPath());
-									filemanagerpanel.showLeft(tp);
-								}
-								filemanagerpanel.showRight(path.getText(), list);
-								filemanagerpanel.getStatus().setText("完成");
-							}
-						});
-					}
-				};
-				filemanagerpanel.getStatus().setText("正在读取...请稍后");
-				new Thread(run).start();
+				if (tn != null) {
+					TreePath tp = new TreePath(tn.getPath());
+					filemanagerpanel.showLeft(tp);
+				}
+				filemanagerpanel.showRight(path.getText(), list);
+				new Status(filemanagerpanel).start();
+			}
+		}
+	}
+
+	class Status extends Thread {
+		private JLabel status;
+		private FileManagerPanel fmp;
+
+		public Status(FileManagerPanel fmp) {
+			this.fmp = fmp;
+			this.status = fmp.getStatus();
+			this.fmp.setLstatus(false);
+			this.fmp.setRstatus(false);
+		}
+
+		public void run() {
+			while (true) {
+				Thread.yield();
+				if (this.fmp.isLstatus() && this.fmp.isRstatus()) {
+					SwingUtilities.invokeLater(new Runnable() {
+						@Override
+						public void run() {
+							status.setText("完成");
+						}
+					});
+					break;
+				}
 			}
 		}
 	}
