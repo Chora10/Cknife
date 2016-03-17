@@ -208,7 +208,8 @@ public class FileManagerPanel extends JPanel {
 					SwingUtilities.invokeLater(new Runnable() {
 						public void run() {
 							path.setText("连接失败");
-							new MessageDialog(arrtmp);
+							status.setText("载入路径失败");
+							new MessageDialog(arrtmp,5);
 						}
 					});
 				} else {

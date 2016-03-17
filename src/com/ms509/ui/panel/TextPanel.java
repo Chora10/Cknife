@@ -11,6 +11,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
 
 import com.ms509.ui.MainFrame;
 import com.ms509.util.Common;
@@ -93,10 +94,21 @@ public class TextPanel extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
 			if (e.getActionCommand().equals("载入")) {
-				String data = filemanagerpanel.getFm().doAction("readfile",
-						getPath().getText());
-				text.setText(data);
-
+				text.setText("载入中...");
+				status.setText("正在载入...请稍等");
+				Runnable rrun = new Runnable() {
+					public void run() {
+						final String data = filemanagerpanel.getFm().doAction("readfile",
+								getPath().getText());
+						SwingUtilities.invokeLater(new Runnable() {
+							public void run() {
+								text.setText(data);
+								status.setText("载入完成");
+							}
+						});
+					}
+				};
+				new Thread(rrun).start();
 			} else {
 				String data = filemanagerpanel.getFm().doAction("savefile",
 						getPath().getText(), text.getText());

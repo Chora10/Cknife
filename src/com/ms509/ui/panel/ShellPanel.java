@@ -100,7 +100,7 @@ public class ShellPanel extends JPanel {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						if (tmp.indexOf("HTTP/1.")>-1 || tmp.indexOf("/") < 0 && tmp.indexOf("\\") < 0) {
-							new MessageDialog(tmp);
+							new MessageDialog(tmp,5);
 							console.setEnabled(false);
 						} else {
 							try {
