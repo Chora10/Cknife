@@ -135,6 +135,7 @@ public class TextPanel extends JPanel {
 									SwingUtilities.invokeLater(new Runnable() {
 										public void run() {
 											filemanagerpanel.getStatus().setText("保存成功");
+											status.setText("保存成功");
 										}
 									});
 									break;
@@ -145,6 +146,7 @@ public class TextPanel extends JPanel {
 							SwingUtilities.invokeLater(new Runnable() {
 								public void run() {
 									filemanagerpanel.getStatus().setText("保存失败");
+									status.setText("保存失败");
 								}
 							});
 						}
