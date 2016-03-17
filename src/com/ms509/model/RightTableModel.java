@@ -158,29 +158,23 @@ public class RightTableModel extends AbstractTableModel {
 									"正在新建文件夹...请稍等");
 							ret = filemanagerpanel.getFm().doAction("newdict",
 									np);
-							while (true) {
-								if (!ret.equals("-1")) {
-									SwingUtilities.invokeLater(new Runnable() {
-										public void run() {
-											if (ret.equals("1")) {
-												datas.set(rowIndex, data);
-												fireTableDataChanged();
-												filemanagerpanel.getStatus()
-														.setText("新建文件夹成功");
-											} else {
-												filemanagerpanel.getStatus()
-														.setText("新建文件夹失败");
-											}
-										}
-									});
-									break;
+							SwingUtilities.invokeLater(new Runnable() {
+								public void run() {
+									if (ret.equals("1")) {
+										datas.set(rowIndex, data);
+										fireTableDataChanged();
+										filemanagerpanel.getStatus().setText(
+												"新建文件夹成功");
+									} else {
+										filemanagerpanel.getStatus().setText(
+												"新建文件夹失败");
+									}
 								}
-							}
+							});
 						}
 					};
 					new Thread(newrun).start();
 				}
-
 			}
 		} else {
 			final String op = path + oldname;
@@ -190,24 +184,18 @@ public class RightTableModel extends AbstractTableModel {
 					ret = "-1";
 					filemanagerpanel.getStatus().setText("正在重命名...请稍等");
 					ret = filemanagerpanel.getFm().doAction("rename", op, np);
-					while (true) {
-						if (!ret.equals("-1")) {
-							SwingUtilities.invokeLater(new Runnable() {
-								public void run() {
-									if (ret.equals("1")) {
-										datas.set(rowIndex, data);
-										fireTableDataChanged();
-										filemanagerpanel.getStatus().setText(
-												"重命名成功");
-									} else {
-										filemanagerpanel.getStatus().setText(
-												"重命名失败");
-									}
-								}
-							});
-							break;
+
+					SwingUtilities.invokeLater(new Runnable() {
+						public void run() {
+							if (ret.equals("1")) {
+								datas.set(rowIndex, data);
+								fireTableDataChanged();
+								filemanagerpanel.getStatus().setText("重命名成功");
+							} else {
+								filemanagerpanel.getStatus().setText("重命名失败");
+							}
 						}
-					}
+					});
 				}
 			};
 			new Thread(rerun).start();

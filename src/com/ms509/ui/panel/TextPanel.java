@@ -91,15 +91,15 @@ public class TextPanel extends JPanel {
 
 	class TextAction implements ActionListener {
 		@Override
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(final ActionEvent e) {
 			// TODO Auto-generated method stub
 			if (e.getActionCommand().equals("载入")) {
 				text.setText("载入中...");
 				status.setText("正在载入...请稍等");
 				Runnable rrun = new Runnable() {
 					public void run() {
-						final String data = filemanagerpanel.getFm().doAction("readfile",
-								getPath().getText());
+						final String data = filemanagerpanel.getFm().doAction(
+								"readfile", getPath().getText());
 						SwingUtilities.invokeLater(new Runnable() {
 							public void run() {
 								text.setText(data);
@@ -110,18 +110,47 @@ public class TextPanel extends JPanel {
 				};
 				new Thread(rrun).start();
 			} else {
-				String data = filemanagerpanel.getFm().doAction("savefile",
-						getPath().getText(), text.getText());
-				if (data.equals("1")) {
-					status.setText("操作完成");
-					if (e.getActionCommand().equals("新建")) {
-						filemanagerpanel.showRight(
-								Common.getAbsolutePath(getPath().getText()),
-								filemanagerpanel.getList());
+				status.setText("正在保存...请稍等");
+				String data;
+				Runnable nrun = new Runnable() {
+					public void run() {
+						final String data = filemanagerpanel.getFm()
+								.doAction("savefile", getPath().getText(),
+										text.getText());
+						if(data.equals("1"))
+						{
+							SwingUtilities.invokeLater(new Runnable() {
+								public void run() {
+									filemanagerpanel.showRight(
+											Common.getAbsolutePath(getPath()
+													.getText()),
+											filemanagerpanel
+													.getList());
+								}
+							});
+							while(true)
+							{
+								Thread.yield();
+								if (filemanagerpanel.isRstatus()) {
+									SwingUtilities.invokeLater(new Runnable() {
+										public void run() {
+											filemanagerpanel.getStatus().setText("保存成功");
+										}
+									});
+									break;
+								}
+							}
+						} else
+						{
+							SwingUtilities.invokeLater(new Runnable() {
+								public void run() {
+									filemanagerpanel.getStatus().setText("保存失败");
+								}
+							});
+						}
 					}
-				} else {
-					status.setText("操作失败");
-				}
+				};
+				new Thread(nrun).start();
 			}
 		}
 	}

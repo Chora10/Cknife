@@ -200,13 +200,12 @@ public class FileManagerPopMenu extends JPopupMenu {
 				abpath = path.getText() + "newFile.txt";
 				TextPanel text = (TextPanel) MainFrame.tab.addPanel("text");
 				text.getPath().setText(abpath);
-				text.getButton().setText("新建");
 				break;
 			case "删除":
 				filemanagerpanel.getStatus().setText("正在删除...请稍等");
 				abpath = path.getText()
 						+ list.getValueAt(list.getSelectedRow(), 1);
-				new RStatus(filemanagerpanel, abpath, "删除成功").start();
+				new deleteThread(filemanagerpanel, abpath).start();
 				break;
 			case "重命名":
 				model.setEdit(true);
@@ -243,8 +242,7 @@ public class FileManagerPopMenu extends JPopupMenu {
 							public void run() {
 								bytes = filemanagerpanel.getFm().Download(
 										abpath);
-								while (true) {
-									Thread.yield();
+						
 									if (bytes != null) {
 										try {
 											File f = downch.getSelectedFile();
@@ -257,6 +255,7 @@ public class FileManagerPopMenu extends JPopupMenu {
 															- (Safe.SPL
 																	.length() + Safe.SPR
 																	.length()));
+											fos.close();
 											SwingUtilities
 													.invokeLater(new Runnable() {
 														public void run() {
@@ -268,14 +267,13 @@ public class FileManagerPopMenu extends JPopupMenu {
 													});
 
 										} catch (Exception e2) {
+											filemanagerpanel.getStatus().setText("下载失败");
 										}
-										break;
-									}
+							
 								}
 							}
 						};
 						new Thread(dlrun).start();
-
 					} catch (Exception e1) {
 						filemanagerpanel.getStatus().setText("下载失败");
 					}
@@ -487,24 +485,21 @@ public class FileManagerPopMenu extends JPopupMenu {
 		}
 	}
 
-	class RStatus extends Thread {
+	class deleteThread extends Thread {
 		private FileManagerPanel fmp;
 		private String abpath;
 		private JTable list;
-		private String info;
 
-		public RStatus(FileManagerPanel fmp, String abpath, String info) {
+		public deleteThread(FileManagerPanel fmp, String abpath) {
 			this.fmp = fmp;
 			this.fmp.setRstatus(false);
 			this.abpath = abpath;
-			this.info = info;
 			this.list = fmp.getList();
 		}
 
 		public void run() {
 			String data = fmp.getFm().doAction("delete", abpath);
-			while (true) {
-				if (!data.equals("-1")) {
+				if (data.equals("1")) {
 					fmp.setRstatus(false);
 					SwingUtilities.invokeLater(new Runnable() {
 						public void run() {
@@ -516,21 +511,25 @@ public class FileManagerPopMenu extends JPopupMenu {
 						if (fmp.isRstatus()) {
 							SwingUtilities.invokeLater(new Runnable() {
 								public void run() {
-									fmp.getStatus().setText(info);
+									fmp.getStatus().setText("删除成功");
 								}
 							});
 							break;
 						}
 					}
-					break;
-				}
+			} else
+			{
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						fmp.getStatus().setText("删除失败");
+					}
+				});
 			}
 		}
 	}
 
 	class uploadThread extends Thread {
 		private FileManagerPanel fmp;
-		private String data = "-1";
 		private String abpath;
 		private byte[] udata;
 		private JTable list;
@@ -543,9 +542,8 @@ public class FileManagerPopMenu extends JPopupMenu {
 		}
 
 		public void run() {
-			data = fmp.getFm().doAction("upload", abpath, Common.toHex(udata));
-			while (true) {
-				if (!data.equals("-1")) {
+			String data = fmp.getFm().doAction("upload", abpath, Common.toHex(udata));
+				if (data.equals("1")) {
 					fmp.setRstatus(false);
 					SwingUtilities.invokeLater(new Runnable() {
 						public void run() {
@@ -563,9 +561,14 @@ public class FileManagerPopMenu extends JPopupMenu {
 							break;
 						}
 					}
-					break;
+				} else 
+				{
+					SwingUtilities.invokeLater(new Runnable() {
+						public void run() {
+							fmp.getStatus().setText("上传失败");
+						}
+					});
 				}
-			}
 		}
 	}
 }
