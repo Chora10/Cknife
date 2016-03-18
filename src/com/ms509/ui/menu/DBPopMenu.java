@@ -314,7 +314,7 @@ public class DBPopMenu extends JPopupMenu {
 		// System.out.println("nodecount="+node.remove(0);
 
 		// table 显示 向量
-		DefaultTableModel dtm = new DefaultTableModel();
+		final DefaultTableModel dtm = new DefaultTableModel();
 		Vector<Object> al = new Vector<Object>();
 		String[] rows = tables.split("\\|\t\r\n");
 		// System.out.println(rows[0]);
@@ -347,9 +347,16 @@ public class DBPopMenu extends JPopupMenu {
 		}
 
 		dtm.setDataVector(al, vtitle);
+		SwingUtilities.invokeLater(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				table.setModel(dtm);
 
-		table.setModel(dtm);
+				tree.updateUI();
+			}
+		});
 
-		tree.updateUI();
 	}
 }
