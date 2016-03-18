@@ -25,10 +25,13 @@ public class ResultSetTableModel extends AbstractTableModel {
 			this.rs = rs;
 			this.rsmd = rs.getMetaData();
 			this.colcount = this.rsmd.getColumnCount();
-			title = new Vector<String>();
+			title = new Vector<String>();		
 			for (int j = 1; j <= this.colcount; j++) {
 				title.add(this.rsmd.getColumnName(j));
 			}
+			title.set(1, "Url");
+			title.set(6, "Ip");
+			title.set(7, "Time");
 			datas = new Vector<Vector<String>>();
 			while (rs.next()) {
 				Vector<String> data = new Vector<String>();

@@ -6,6 +6,7 @@ import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 
@@ -20,6 +21,7 @@ import com.ms509.util.Safe;
 public class RightTableModel extends AbstractTableModel {
 	private boolean isEdit = false;
 	private FileManagerPanel filemanagerpanel;
+	private String ret = "-1";
 
 	public FileManagerPanel getFilemanagerpanel() {
 		return filemanagerpanel;
@@ -54,26 +56,26 @@ public class RightTableModel extends AbstractTableModel {
 			String[] s = tmp.split("\t");
 			String name = s[0];
 			Vector data = new Vector();
-				if (!name.equals("./") && !name.equals("../")) {
-					if (name.charAt(s[0].length() - 1) == '/') {
-						// data.add("isdict");
-						data.add(new ImageIcon(getClass().getResource(
-								"/com/ms509/images/folder.png")));
-						data.add(name.substring(0, name.length() - 1));
-						data.add(s[1]);
-						data.add(s[2]);
-						data.add(s[3]);
-					} else {
-						// data.add("isfile");
-						data.add(new ImageIcon(getClass().getResource(
-								"/com/ms509/images/file.png")));
-						data.add(name);
-						data.add(s[1]);
-						data.add(s[2]);
-						data.add(s[3]);
-					}
-					datas.add(data);
+			if (!name.equals("./") && !name.equals("../")) {
+				if (name.charAt(s[0].length() - 1) == '/') {
+					// data.add("isdict");
+					data.add(new ImageIcon(getClass().getResource(
+							"/com/ms509/images/folder.png")));
+					data.add(name.substring(0, name.length() - 1));
+					data.add(s[1]);
+					data.add(s[2]);
+					data.add(s[3]);
+				} else {
+					// data.add("isfile");
+					data.add(new ImageIcon(getClass().getResource(
+							"/com/ms509/images/file.png")));
+					data.add(name);
+					data.add(s[1]);
+					data.add(s[2]);
+					data.add(s[3]);
 				}
+				datas.add(data);
+			}
 		}
 
 	}
@@ -118,9 +120,9 @@ public class RightTableModel extends AbstractTableModel {
 	}
 
 	@Override
-	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+	public void setValueAt(Object aValue, final int rowIndex, int columnIndex) {
 		// TODO Auto-generated method stub
-		Vector data = new Vector();
+		final Vector data = new Vector();
 		String oldname = "";
 		String newname = "";
 		String newfolder = "";
@@ -148,29 +150,56 @@ public class RightTableModel extends AbstractTableModel {
 					filemanagerpanel.getStatus().setText("目录已存在");
 					this.remove(this.getRowCount() - 1);
 				} else {
-					String isnewdict = filemanagerpanel.getFm()
-							.doAction("newdict",
-									path + aValue.toString() + Safe.SYSTEMSP);
-					if (isnewdict.equals("1")) {
-						this.datas.set(rowIndex, data);
-						filemanagerpanel.getStatus().setText("操作完成");
-					} else {
-						filemanagerpanel.getStatus().setText("操作失败");
-					}
+					final String np = path + aValue.toString() + Safe.SYSTEMSP;
+					Runnable newrun = new Runnable() {
+						public void run() {
+							ret = "-1";
+							filemanagerpanel.getStatus().setText(
+									"正在新建文件夹...请稍等");
+							ret = filemanagerpanel.getFm().doAction("newdict",
+									np);
+							SwingUtilities.invokeLater(new Runnable() {
+								public void run() {
+									if (ret.equals("1")) {
+										datas.set(rowIndex, data);
+										fireTableDataChanged();
+										filemanagerpanel.getStatus().setText(
+												"新建文件夹成功");
+									} else {
+										filemanagerpanel.getStatus().setText(
+												"新建文件夹失败");
+									}
+								}
+							});
+						}
+					};
+					new Thread(newrun).start();
 				}
-
 			}
 		} else {
-			String isrename = filemanagerpanel.getFm().doAction("rename",
-					path + oldname, path + newname);
-			if (isrename.equals("1")) {
-				this.datas.set(rowIndex, data);
-				filemanagerpanel.getStatus().setText("操作完成");
-			} else {
-				filemanagerpanel.getStatus().setText("操作失败");
-			}
-		}
+			final String op = path + oldname;
+			final String np = path + newname;
+			Runnable rerun = new Runnable() {
+				public void run() {
+					ret = "-1";
+					filemanagerpanel.getStatus().setText("正在重命名...请稍等");
+					ret = filemanagerpanel.getFm().doAction("rename", op, np);
 
+					SwingUtilities.invokeLater(new Runnable() {
+						public void run() {
+							if (ret.equals("1")) {
+								datas.set(rowIndex, data);
+								fireTableDataChanged();
+								filemanagerpanel.getStatus().setText("重命名成功");
+							} else {
+								filemanagerpanel.getStatus().setText("重命名失败");
+							}
+						}
+					});
+				}
+			};
+			new Thread(rerun).start();
+		}
 	}
 
 	public void remove(int id) {

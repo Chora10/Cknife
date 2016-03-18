@@ -16,12 +16,13 @@ import javax.swing.SwingUtilities;
 import java.util.Timer;
 
 public class MessageDialog extends JDialog {
-	private int i = 5;
+	private int i;
 	private java.util.TimerTask task;
 	private java.util.Timer timer;
 
-	public MessageDialog(String message) {
-		super(MainFrame.main, "5秒后自动关闭窗口", true);
+	public MessageDialog(String message,int time) {
+		super(MainFrame.main, time+"秒后自动关闭窗口", true);
+		this.i = time;
 		Toolkit t = Toolkit.getDefaultToolkit();
 		Dimension d = t.getScreenSize();
 		this.setResizable(false);

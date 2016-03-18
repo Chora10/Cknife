@@ -13,25 +13,17 @@ public class DbDao {
 	private String user;
 	private String pass;
 	private Statement stmt;
+	private Connection conn;
 
 	public DbDao() {
 		this.driver = "org.sqlite.JDBC";
 		this.url = "jdbc:sqlite:Cknife.db";
 		try {
 			Class.forName(this.driver);
-			Connection conn = DriverManager.getConnection(this.url);
+			conn = DriverManager.getConnection(this.url);
 			stmt = conn.createStatement();
-			// stmt.execute("CREATE TABLE IF NOT EXISTS  \"data\" (\"id\"  INTEGER NOT NULL,\"url\"  TEXT,\"pass\"  TEXT,\"config\"  TEXT,\"type\"  TEXT,\"code\"  TEXT,\"ip\"  TEXT,\"time\"  TEXT,PRIMARY KEY (\"id\"));");
+			stmt.execute("CREATE TABLE IF NOT EXISTS  \"data\" (\"id\"  INTEGER NOT NULL,\"url\"  TEXT,\"pass\"  TEXT,\"config\"  TEXT,\"type\"  TEXT,\"code\"  TEXT,\"ip\"  TEXT,\"time\"  TEXT,PRIMARY KEY (\"id\"));");
 		} catch (Exception e) {
-
-		} finally {
-			try {
-				Class.forName(this.driver);
-				Connection conn = DriverManager.getConnection(this.url);
-				stmt = conn.createStatement();
-				stmt.execute("CREATE TABLE IF NOT EXISTS  \"data\" (\"id\"  INTEGER NOT NULL,\"url\"  TEXT,\"pass\"  TEXT,\"config\"  TEXT,\"type\"  TEXT,\"code\"  TEXT,\"ip\"  TEXT,\"time\"  TEXT,PRIMARY KEY (\"id\"));");
-			} catch (Exception e1) {
-			}
 		}
 	}
 
