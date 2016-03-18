@@ -50,6 +50,12 @@ public class ListPopMenu extends JPopupMenu {
 		about = new JMenuItem("关于");
 		LookAndFeelInfo[] looks = UIManager.getInstalledLookAndFeels();
 		ButtonGroup group = new ButtonGroup();
+		JCheckBoxMenuItem gskin = new JCheckBoxMenuItem("Graphite");
+		SkinAction action1 = new SkinAction();
+		action1.setLookAndFeel("org.pushingpixels.substance.api.skin.SubstanceGraphiteLookAndFeel");
+		gskin.addActionListener(action1);
+		group.add(gskin);
+		skins.add(gskin);
 		for(LookAndFeelInfo look : looks)
 		{
 			JCheckBoxMenuItem skin = new JCheckBoxMenuItem(look.getName());
@@ -58,7 +64,7 @@ public class ListPopMenu extends JPopupMenu {
 			skin.addActionListener(action2);
 			group.add(skin);
 			skins.add(skin);
-		}
+		}	
 		add.addActionListener(action);
 		about.addActionListener(action);
 		pop.add(add);
@@ -222,7 +228,7 @@ public class ListPopMenu extends JPopupMenu {
 				Configuration config = new Configuration();
 				config.setValue("SKIN", this.LookAndFeel);
 				UIManager.setLookAndFeel(this.LookAndFeel);
-				SwingUtilities.updateComponentTreeUI(MainFrame.main.getContentPane());
+				SwingUtilities.updateComponentTreeUI(MainFrame.main);
 				SwingUtilities.updateComponentTreeUI(pop);
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block

@@ -426,7 +426,6 @@ public class FileManager {
 
 	public String[] makeright(String path) {
 		String tmp = this.doAction("readdict", path);
-		System.out.println(tmp);
 		if(tmp.equals(""))
 		{
 			tmp = "./	1970-00-00 00:00:00	0	0\n../	1970-00-00 00:00:00	0	0";//初始化

@@ -19,8 +19,8 @@ public class Request {
 		try {
 			URL u = new URL(url);
 			HttpURLConnection huc = (HttpURLConnection) u.openConnection();
-			huc.setConnectTimeout(80000);
-			huc.setReadTimeout(80000);
+			huc.setConnectTimeout(10000);
+			huc.setReadTimeout(10000);
 			huc.setDoOutput(true);
 			PrintWriter out = new PrintWriter(huc.getOutputStream());
 			out.write(param);
