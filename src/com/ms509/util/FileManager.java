@@ -398,7 +398,7 @@ public class FileManager {
 			}
 			break;
 		}
-//		System.out.println(Common.send(this.url, params, this.code));
+//		System.out.println(params);
 		return Common.send(this.url, params, this.code);
 	}
 

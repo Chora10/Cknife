@@ -11,6 +11,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
 
 import com.ms509.ui.MainFrame;
 import com.ms509.util.Common;
@@ -90,26 +91,68 @@ public class TextPanel extends JPanel {
 
 	class TextAction implements ActionListener {
 		@Override
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(final ActionEvent e) {
 			// TODO Auto-generated method stub
 			if (e.getActionCommand().equals("载入")) {
-				String data = filemanagerpanel.getFm().doAction("readfile",
-						getPath().getText());
-				text.setText(data);
-
-			} else {
-				String data = filemanagerpanel.getFm().doAction("savefile",
-						getPath().getText(), text.getText());
-				if (data.equals("1")) {
-					status.setText("操作完成");
-					if (e.getActionCommand().equals("新建")) {
-						filemanagerpanel.showRight(
-								Common.getAbsolutePath(getPath().getText()),
-								filemanagerpanel.getList());
+				text.setText("载入中...");
+				status.setText("正在载入...请稍等");
+				Runnable rrun = new Runnable() {
+					public void run() {
+						final String data = filemanagerpanel.getFm().doAction(
+								"readfile", getPath().getText());
+						SwingUtilities.invokeLater(new Runnable() {
+							public void run() {
+								text.setText(data);
+								status.setText("载入完成");
+							}
+						});
 					}
-				} else {
-					status.setText("操作失败");
-				}
+				};
+				new Thread(rrun).start();
+			} else {
+				status.setText("正在保存...请稍等");
+				String data;
+				Runnable nrun = new Runnable() {
+					public void run() {
+						final String data = filemanagerpanel.getFm()
+								.doAction("savefile", getPath().getText(),
+										text.getText());
+						if(data.equals("1"))
+						{
+							SwingUtilities.invokeLater(new Runnable() {
+								public void run() {
+									filemanagerpanel.showRight(
+											Common.getAbsolutePath(getPath()
+													.getText()),
+											filemanagerpanel
+													.getList());
+								}
+							});
+							while(true)
+							{
+								Thread.yield();
+								if (filemanagerpanel.isRstatus()) {
+									SwingUtilities.invokeLater(new Runnable() {
+										public void run() {
+											filemanagerpanel.getStatus().setText("保存成功");
+											status.setText("保存成功");
+										}
+									});
+									break;
+								}
+							}
+						} else
+						{
+							SwingUtilities.invokeLater(new Runnable() {
+								public void run() {
+									filemanagerpanel.getStatus().setText("保存失败");
+									status.setText("保存失败");
+								}
+							});
+						}
+					}
+				};
+				new Thread(nrun).start();
 			}
 		}
 	}

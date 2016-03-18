@@ -5,6 +5,12 @@ import java.awt.EventQueue;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
+
+import org.pushingpixels.substance.api.SubstanceLookAndFeel;
+import org.pushingpixels.substance.internal.fonts.DefaultGnomeFontPolicy;
+import org.pushingpixels.substance.internal.fonts.DefaultKDEFontPolicy;
+import org.pushingpixels.substance.internal.fonts.DefaultMacFontPolicy;
+
 import com.ms509.util.Configuration;
 import com.ms509.util.InitConfig;
 
@@ -26,27 +32,36 @@ public class Cknife {
 		try {
 			Configuration config = new Configuration();
 			String skin = config.getValue("SKIN");
-
+			JFrame.setDefaultLookAndFeelDecorated(true);
+			JDialog.setDefaultLookAndFeelDecorated(true);
 			if (skin != null) {
 				UIManager.setLookAndFeel(skin);
 			} else {
-				// UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-
-				UIManager.setLookAndFeel("org.jvnet.substance.skin.SubstanceRavenGraphiteGlassLookAndFeel");
-
+				// substance皮肤带LookAndFeel结尾的其实与不带的是一样的，只是实现方式不同而已。
+				// 即SubstanceGraphiteLookAndFeel与GraphiteSkin是同一款皮肤
+	
+				// 带LookAndFeel结尾的皮肤使用UIManager.setLookAndFeel
+//				UIManager.setLookAndFeel("org.pushingpixels.substance.api.skin.SubstanceGraphiteLookAndFeel");
+				
+				// 不带LookAndFeel结尾的皮肤使用SubstanceLookAndFeel.setSkin
+//				SubstanceLookAndFeel.setSkin(new GraphiteSkin());
+				SubstanceLookAndFeel.setSkin("org.pushingpixels.substance.api.skin.GraphiteSkin");
+				String os = System.getProperty("os.name");
+				if(os.startsWith("Mac"))
+				{
+					SubstanceLookAndFeel.setFontPolicy(new DefaultMacFontPolicy());
+				} else if(os.startsWith("Linux"))
+				{
+					SubstanceLookAndFeel.setFontPolicy(new DefaultKDEFontPolicy());
+				}
 			}
-
-			JFrame.setDefaultLookAndFeelDecorated(true);
-			JDialog.setDefaultLookAndFeelDecorated(true);
 		} catch (Exception e) {
-			e.printStackTrace();
 			try {
-				UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
 				JFrame.setDefaultLookAndFeelDecorated(true);
 				JDialog.setDefaultLookAndFeelDecorated(true);
+				UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
 			} catch (Exception e1) {
 			}
-
 		}
 
 	}

@@ -25,6 +25,7 @@ public class TreeMethod {
 	public static void makeIndexTree(String paths[], String[] adds,
 			DefaultMutableTreeNode root) {
 		DefaultMutableTreeNode node = root;
+		root.setAllowsChildren(true);
 		int i;
 		for (i = 0; i < paths.length; i++) {
 			if (!paths[i].equals("")) {
@@ -32,9 +33,11 @@ public class TreeMethod {
 						paths[i]);
 				node.add(tmp);
 				node = tmp;
-				if (i == paths.length - 1) {
+				if (i == paths.length - 1) {				
 					for (String add : adds) {
-						node.add(new DefaultMutableTreeNode(add));
+						DefaultMutableTreeNode dmtn = new DefaultMutableTreeNode(add);
+						dmtn.setAllowsChildren(false);
+						node.add(new DefaultMutableTreeNode(dmtn));
 					}
 				}
 			}
@@ -52,6 +55,7 @@ public class TreeMethod {
 		for (String tree : trees) {
 			if (!al.contains(tree)) {
 				DefaultMutableTreeNode tmp = new DefaultMutableTreeNode(tree);
+				tmp.setAllowsChildren(false);
 				model.insertNodeInto(tmp, parent, parent.getChildCount());
 			}
 		}

@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -21,8 +22,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionEvent;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 
 import com.ms509.model.RightTableModel;
 import com.ms509.ui.MainFrame;
@@ -86,6 +90,7 @@ public class FileManagerPopMenu extends JPopupMenu {
 		private JTextField path;
 		private RightTableModel model;
 		private String abpath = "";
+		private byte[] bytes;
 
 		@Override
 		public void actionPerformed(final ActionEvent e) {
@@ -108,6 +113,7 @@ public class FileManagerPopMenu extends JPopupMenu {
 				if (act == JFileChooser.APPROVE_OPTION) {
 					FileInputStream fis;
 					try {
+						filemanagerpanel.getStatus().setText("正在上传...请稍等");
 						File select = upch.getSelectedFile();
 						filename = select.getName();
 						fis = new FileInputStream(select);
@@ -115,19 +121,10 @@ public class FileManagerPopMenu extends JPopupMenu {
 						fis.read(b);
 						udata = b;
 						abpath = path.getText() + filename;
-						String data = filemanagerpanel.getFm().doAction(
-								"upload", abpath, Common.toHex(udata));
-						filemanagerpanel.showRight(
-								Common.getAbsolutePath(abpath), list);
-						if (data.equals("1")) {
-							filemanagerpanel.getStatus().setText("上传成功");
-							filemanagerpanel.showRight(
-									Common.getAbsolutePath(abpath), list);
-						} else {
-							filemanagerpanel.getStatus().setText("上传失败");
-						}
+						new uploadThread(filemanagerpanel, abpath, udata)
+								.start();
 					} catch (Exception e1) {
-						// TODO Auto-generated catch block
+
 					}
 				}
 				break;
@@ -149,6 +146,10 @@ public class FileManagerPopMenu extends JPopupMenu {
 								filemanagerpanel.getRoot(), name);
 						if (tn != null) {
 							TreePath tp = new TreePath(tn.getPath());
+							DefaultTreeSelectionModel dsmodel = new DefaultTreeSelectionModel();
+							dsmodel.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+							dsmodel.setSelectionPath(tp);
+							filemanagerpanel.getTree().setSelectionModel(dsmodel);
 							filemanagerpanel.showLeft(tp);
 						}
 						Runnable run = new Runnable() {
@@ -201,29 +202,19 @@ public class FileManagerPopMenu extends JPopupMenu {
 					};
 					new Thread(run).start();
 				}
-
 				break;
 			case "文件":
 				abpath = path.getText() + "newFile.txt";
 				TextPanel text = (TextPanel) MainFrame.tab.addPanel("text");
 				text.getPath().setText(abpath);
-				text.getButton().setText("新建");
 				break;
 			case "删除":
+				filemanagerpanel.getStatus().setText("正在删除...请稍等");
 				abpath = path.getText()
 						+ list.getValueAt(list.getSelectedRow(), 1);
-				String data = filemanagerpanel.getFm().doAction("delete",
-						abpath);
-				if (data.equals("1")) {
-					filemanagerpanel.getStatus().setText("删除成功");
-					filemanagerpanel.showRight(Common.getAbsolutePath(abpath),
-							list);
-				} else {
-					filemanagerpanel.getStatus().setText("删除失败");
-				}
+				new deleteThread(filemanagerpanel, abpath).start();
 				break;
 			case "重命名":
-				filemanagerpanel.getStatus().setText("正在重命名...");
 				model.setEdit(true);
 				list.editCellAt(list.getSelectedRow(), 1);
 				model.setEdit(false);
@@ -246,21 +237,50 @@ public class FileManagerPopMenu extends JPopupMenu {
 				String name = list.getValueAt(list.getSelectedRow(), 1)
 						.toString();
 				abpath = path.getText() + name;
-				JFileChooser downch = new JFileChooser(".");
+				final JFileChooser downch = new JFileChooser(".");
 				downch.setDialogTitle("下载文件到本地");
 				downch.setSelectedFile(new File(name));
 				int select = downch.showSaveDialog(filemanagerpanel);
 				if (select == JFileChooser.APPROVE_OPTION) {
 					try {
-						byte[] bytes = filemanagerpanel.getFm()
-								.Download(abpath);
-						if (bytes != null) {
-							File f = downch.getSelectedFile();
-							FileOutputStream fos = new FileOutputStream(f);
-							fos.write(bytes, Safe.SPL.length(), bytes.length
-									- (Safe.SPL.length() + Safe.SPR.length()));
-							filemanagerpanel.getStatus().setText("下载完成");
-						}
+						filemanagerpanel.getStatus().setText("正在下载...请稍等");
+						bytes = null;
+						Runnable dlrun = new Runnable() {
+							public void run() {
+								bytes = filemanagerpanel.getFm().Download(
+										abpath);
+						
+									if (bytes != null) {
+										try {
+											File f = downch.getSelectedFile();
+											FileOutputStream fos = new FileOutputStream(
+													f);
+											fos.write(
+													bytes,
+													Safe.SPL.length(),
+													bytes.length
+															- (Safe.SPL
+																	.length() + Safe.SPR
+																	.length()));
+											fos.close();
+											SwingUtilities
+													.invokeLater(new Runnable() {
+														public void run() {
+															filemanagerpanel
+																	.getStatus()
+																	.setText(
+																			"下载完成");
+														}
+													});
+
+										} catch (Exception e2) {
+											filemanagerpanel.getStatus().setText("下载失败");
+										}
+							
+								}
+							}
+						};
+						new Thread(dlrun).start();
 					} catch (Exception e1) {
 						filemanagerpanel.getStatus().setText("下载失败");
 					}
@@ -329,6 +349,10 @@ public class FileManagerPopMenu extends JPopupMenu {
 								filemanagerpanel.getRoot(), name);
 						if (tn != null) {
 							TreePath tp = new TreePath(tn.getPath());
+							DefaultTreeSelectionModel dsmodel = new DefaultTreeSelectionModel();
+							dsmodel.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+							dsmodel.setSelectionPath(tp);
+							filemanagerpanel.getTree().setSelectionModel(dsmodel);
 							filemanagerpanel.showLeft(tp);
 						}
 						Runnable run = new Runnable() {
@@ -409,7 +433,7 @@ public class FileManagerPopMenu extends JPopupMenu {
 				filemanagerpanel.showLeft(tp);
 			}
 			filemanagerpanel.showRight(path.getText(), list);
-			new Status(filemanagerpanel).start();
+			new Status(filemanagerpanel, "完成").start();
 		}
 
 	}
@@ -438,7 +462,7 @@ public class FileManagerPopMenu extends JPopupMenu {
 					filemanagerpanel.showLeft(tp);
 				}
 				filemanagerpanel.showRight(path.getText(), list);
-				new Status(filemanagerpanel).start();
+				new Status(filemanagerpanel, "完成").start();
 			}
 		}
 	}
@@ -446,12 +470,14 @@ public class FileManagerPopMenu extends JPopupMenu {
 	class Status extends Thread {
 		private JLabel status;
 		private FileManagerPanel fmp;
+		private String info;
 
-		public Status(FileManagerPanel fmp) {
+		public Status(FileManagerPanel fmp, String info) {
 			this.fmp = fmp;
 			this.status = fmp.getStatus();
 			this.fmp.setLstatus(false);
 			this.fmp.setRstatus(false);
+			this.info = info;
 		}
 
 		public void run() {
@@ -461,12 +487,99 @@ public class FileManagerPopMenu extends JPopupMenu {
 					SwingUtilities.invokeLater(new Runnable() {
 						@Override
 						public void run() {
-							status.setText("完成");
+							status.setText(info);
 						}
 					});
 					break;
 				}
 			}
+		}
+	}
+
+	class deleteThread extends Thread {
+		private FileManagerPanel fmp;
+		private String abpath;
+		private JTable list;
+
+		public deleteThread(FileManagerPanel fmp, String abpath) {
+			this.fmp = fmp;
+			this.fmp.setRstatus(false);
+			this.abpath = abpath;
+			this.list = fmp.getList();
+		}
+
+		public void run() {
+			String data = fmp.getFm().doAction("delete", abpath);
+				if (data.equals("1")) {
+					fmp.setRstatus(false);
+					SwingUtilities.invokeLater(new Runnable() {
+						public void run() {
+							fmp.showRight(Common.getAbsolutePath(abpath), list);
+						}
+					});
+					while (true) {
+						Thread.yield();
+						if (fmp.isRstatus()) {
+							SwingUtilities.invokeLater(new Runnable() {
+								public void run() {
+									fmp.getStatus().setText("删除成功");
+								}
+							});
+							break;
+						}
+					}
+			} else
+			{
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						fmp.getStatus().setText("删除失败");
+					}
+				});
+			}
+		}
+	}
+
+	class uploadThread extends Thread {
+		private FileManagerPanel fmp;
+		private String abpath;
+		private byte[] udata;
+		private JTable list;
+
+		public uploadThread(FileManagerPanel fmp, String abpath, byte[] udata) {
+			this.fmp = fmp;
+			this.list = fmp.getList();
+			this.abpath = abpath;
+			this.udata = udata;
+		}
+
+		public void run() {
+			String data = fmp.getFm().doAction("upload", abpath, Common.toHex(udata));
+				if (data.equals("1")) {
+					fmp.setRstatus(false);
+					SwingUtilities.invokeLater(new Runnable() {
+						public void run() {
+							fmp.showRight(Common.getAbsolutePath(abpath), list);
+						}
+					});
+					while (true) {
+						Thread.yield();
+						if (fmp.isRstatus()) {
+							SwingUtilities.invokeLater(new Runnable() {
+								public void run() {
+									fmp.getStatus().setText("上传成功");
+								}
+							});
+							break;
+						}
+					}
+				} else 
+				{
+					SwingUtilities.invokeLater(new Runnable() {
+						public void run() {
+							fmp.getStatus().setText("上传失败");
+						}
+					});
+				}
 		}
 	}
 }

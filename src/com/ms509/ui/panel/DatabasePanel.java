@@ -406,7 +406,7 @@ public class DatabasePanel extends JPanel {
 					status.setText("执行完毕");
 					t_locker = 0;
 				} catch (Exception e) {
-					new MessageDialog(re);
+					new MessageDialog(re,5);
 					status.setText("error");
 					t_locker = 0;
 				}
