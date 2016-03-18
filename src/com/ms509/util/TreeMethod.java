@@ -22,43 +22,41 @@ public class TreeMethod {
 		return path.substring(1, path.length());
 	}
 
-	public static void makeIndexTree(String paths[], String[] adds,DefaultMutableTreeNode root) {
+	public static void makeIndexTree(String paths[], String[] adds,
+			DefaultMutableTreeNode root) {
 		DefaultMutableTreeNode node = root;
 		int i;
-		for(i = 0;i<paths.length;i++)
-		{
-			if(!paths[i].equals(""))
-			{
-				DefaultMutableTreeNode tmp = new DefaultMutableTreeNode(paths[i]);
+		for (i = 0; i < paths.length; i++) {
+			if (!paths[i].equals("")) {
+				DefaultMutableTreeNode tmp = new DefaultMutableTreeNode(
+						paths[i]);
 				node.add(tmp);
 				node = tmp;
-				if(i==paths.length-1)
-				{
-					for(String add : adds)
-					{
+				if (i == paths.length - 1) {
+					for (String add : adds) {
 						node.add(new DefaultMutableTreeNode(add));
 					}
 				}
 			}
 		}
 	}
-	public static void addTree(String[] trees,DefaultMutableTreeNode parent,DefaultTreeModel model)
-	{
+
+	public static void addTree(String[] trees, DefaultMutableTreeNode parent,
+			DefaultTreeModel model) {
 		ArrayList<String> al = new ArrayList<String>();
 		for (Enumeration e = parent.children(); e.hasMoreElements();) {
 			DefaultMutableTreeNode n = (DefaultMutableTreeNode) e.nextElement();
 			al.add(n.getUserObject().toString());
 		}
 
-		for(String tree : trees)
-		{
-			if(!al.contains(tree))
-			{
+		for (String tree : trees) {
+			if (!al.contains(tree)) {
 				DefaultMutableTreeNode tmp = new DefaultMutableTreeNode(tree);
 				model.insertNodeInto(tmp, parent, parent.getChildCount());
 			}
 		}
 	}
+
 	public static void expandAll(JTree tree, TreePath parent, boolean expand) {
 		TreeNode node = (TreeNode) parent.getLastPathComponent();
 		if (node.getChildCount() >= 0) {
@@ -69,24 +67,23 @@ public class TreeMethod {
 			}
 		}
 		if (expand) {
-			tree.expandPath(parent);
-			// tree.scrollPathToVisible(parent);
+			// tree.expandPath(parent);
+			tree.scrollPathToVisible(parent);
 		} else {
 			tree.collapsePath(parent);
 		}
 	}
-	public static DefaultMutableTreeNode searchNode(DefaultMutableTreeNode root,String name)  
-    {  
-        DefaultMutableTreeNode node = null;  
-        Enumeration e = root.breadthFirstEnumeration();  
-        while (e.hasMoreElements())  
-        {  
-            node = (DefaultMutableTreeNode) e.nextElement();  
-            if (name.equalsIgnoreCase(node.getUserObject().toString()))  
-            {  
-                return node;  
-            }  
-        }  
-        return null;  
-    }  
+
+	public static DefaultMutableTreeNode searchNode(
+			DefaultMutableTreeNode root, String name) {
+		DefaultMutableTreeNode node = null;
+		Enumeration e = root.breadthFirstEnumeration();
+		while (e.hasMoreElements()) {
+			node = (DefaultMutableTreeNode) e.nextElement();
+			if (name.equalsIgnoreCase(node.getUserObject().toString())) {
+				return node;
+			}
+		}
+		return null;
+	}
 }
