@@ -77,6 +77,11 @@ public class FileManagerPanel extends JPanel {
 	private boolean rstatus = true;
 	private boolean init = true;
 
+	public JTree getTree()
+	{
+		return tree;
+	}
+	
 	public boolean isLstatus() {
 		return lstatus;
 	}
@@ -158,11 +163,11 @@ public class FileManagerPanel extends JPanel {
 		path = new JTextField();
 		list = new JTable();
 		tree = new JTree();
+		list.setAutoCreateRowSorter(true);
 		model = (DefaultTreeModel) tree.getModel();
 		model.setRoot(new DefaultMutableTreeNode(""));// 先初始化根节点，不初始化会显示更多的组件自带内容
 		tree.setVisible(false);// 先隐藏，再最后更新的时候再显示出来，就不会看到初始化的节点，就是完全空白的，美观。
-		// tree.setExpandsSelectedPaths(false);
-		list.setAutoCreateRowSorter(true);
+		tree.setShowsRootHandles(true);
 		read = new JButton("读取");
 		bar = new JToolBar();
 		status = new JLabel("完成");
@@ -263,7 +268,9 @@ public class FileManagerPanel extends JPanel {
 				drive = String.valueOf(index_datas[1].charAt(i));
 				drive = drive + String.valueOf(index_datas[1].charAt(i + 1));
 				i++;
-				root.add(new DefaultMutableTreeNode(drive));
+				DefaultMutableTreeNode dmtn = new DefaultMutableTreeNode(drive);
+				dmtn.setAllowsChildren(false);
+				root.add(dmtn);
 			}
 			model.setRoot(root); // 后面设置：windows下即使设置了setRootVisible(false)也会显示，可以使用expandAll以外的方式展开
 			tree.setRootVisible(false);
@@ -286,13 +293,11 @@ public class FileManagerPanel extends JPanel {
 	}
 
 	private void filemanagersystem() {
-		model.setAsksAllowsChildren(true);
 		// ExtendedTreeCellRenderer trenderer = new ExtendedTreeCellRenderer();
 		ExtendedDefaultTreeCellRenderer trenderer = new ExtendedDefaultTreeCellRenderer();
 		tree.setCellRenderer(trenderer);
 		tree.setVisible(true); // 设置之前再显示出来
 		tree.setModel(model);
-		// tree.setShowsRootHandles(true);
 		tree.addTreeSelectionListener(new TreeAction());
 		tree.getSelectionModel().setSelectionMode(
 				TreeSelectionModel.SINGLE_TREE_SELECTION);
@@ -373,6 +378,7 @@ public class FileManagerPanel extends JPanel {
 					public void run() {
 						DefaultMutableTreeNode select = (DefaultMutableTreeNode) tp
 								.getLastPathComponent();
+						select.setAllowsChildren(true);
 						TreeMethod.addTree(trees, select, model);
 						if (!tree.isExpanded(tp)) {
 							tree.expandPath(tp);
@@ -425,6 +431,7 @@ public class FileManagerPanel extends JPanel {
 				}
 			} else {
 //				 new MessageDialog("上一操作尚未执行完毕");
+				tree.clearSelection();
 				status.setText("上一操作尚未执行完毕");
 			}
 		}
