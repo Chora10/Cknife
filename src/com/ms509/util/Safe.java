@@ -86,6 +86,8 @@ public final class Safe {
 	public static String CUS_DOWNLOAD;
 	public static String CUS_SHELL;
 	
+	public static String COMMON_SQL_STRING;
+	
 	public static String PASS;
 	public static String SYSTEMSP;
 }
