@@ -398,7 +398,7 @@ public class FileManager {
 			}
 			break;
 		}
-//		System.out.println(Common.send(this.url, params, this.code));
+//		System.out.println(params);
 		return Common.send(this.url, params, this.code);
 	}
 
@@ -426,7 +426,8 @@ public class FileManager {
 
 	public String[] makeright(String path) {
 		String tmp = this.doAction("readdict", path);
-		if(tmp.equals(""))
+		System.out.println(tmp);
+		if(tmp.indexOf("HTTP/1.")>-1)
 		{
 			tmp = "./	1970-00-00 00:00:00	0	0\n../	1970-00-00 00:00:00	0	0";//初始化
 		}

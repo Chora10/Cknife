@@ -22,8 +22,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionEvent;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 
 import com.ms509.model.RightTableModel;
 import com.ms509.ui.MainFrame;
@@ -143,6 +146,10 @@ public class FileManagerPopMenu extends JPopupMenu {
 								filemanagerpanel.getRoot(), name);
 						if (tn != null) {
 							TreePath tp = new TreePath(tn.getPath());
+							DefaultTreeSelectionModel dsmodel = new DefaultTreeSelectionModel();
+							dsmodel.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+							dsmodel.setSelectionPath(tp);
+							filemanagerpanel.getTree().setSelectionModel(dsmodel);
 							filemanagerpanel.showLeft(tp);
 						}
 						Runnable run = new Runnable() {
@@ -342,6 +349,10 @@ public class FileManagerPopMenu extends JPopupMenu {
 								filemanagerpanel.getRoot(), name);
 						if (tn != null) {
 							TreePath tp = new TreePath(tn.getPath());
+							DefaultTreeSelectionModel dsmodel = new DefaultTreeSelectionModel();
+							dsmodel.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+							dsmodel.setSelectionPath(tp);
+							filemanagerpanel.getTree().setSelectionModel(dsmodel);
 							filemanagerpanel.showLeft(tp);
 						}
 						Runnable run = new Runnable() {

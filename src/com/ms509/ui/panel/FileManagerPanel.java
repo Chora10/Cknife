@@ -19,6 +19,7 @@ import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Text;
 import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -42,6 +43,8 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.DefaultTreeSelectionModel;
+import javax.swing.tree.RowMapper;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
@@ -430,9 +433,12 @@ public class FileManagerPanel extends JPanel {
 					new Thread(run).start();
 				}
 			} else {
-//				 new MessageDialog("上一操作尚未执行完毕");
-				tree.clearSelection();
+//				 new MessageDialog("上一操作尚未执行完毕");		
 				status.setText("上一操作尚未执行完毕");
+				DefaultTreeSelectionModel dsmodel = new DefaultTreeSelectionModel();
+				dsmodel.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+				dsmodel.setSelectionPath(e.getOldLeadSelectionPath());
+				tree.setSelectionModel(dsmodel);
 			}
 		}
 
