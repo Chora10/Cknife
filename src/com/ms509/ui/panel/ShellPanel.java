@@ -32,6 +32,7 @@ public class ShellPanel extends JPanel {
 	private int os;
 	private String path = null;
 	private String path_bak = null;
+	private String path_show = null; //用于[/usr/]$显示
 	private int command_start;
 	private int command_stop;
 	private JToolBar bar;
@@ -44,7 +45,6 @@ public class ShellPanel extends JPanel {
 	private Shell core;
 	private Font shell_font = null;
 	private int num_t = 0;
-
 	public ShellPanel() {
 		// TODO Auto-generated constructor stub
 		// 控件初始化
@@ -96,6 +96,7 @@ public class ShellPanel extends JPanel {
 			public void run() {
 				// 显示网站路径
 				path = core.GetPath();
+				System.out.println("path="+path);
 				final String tmp = path.substring(0, path.length() - 1);
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
@@ -202,11 +203,13 @@ public class ShellPanel extends JPanel {
 			if (!path.substring(path.length() - 1, path.length()).equals("\\")) {
 				path = path + "\\";
 			}
+			path_show = path +">";
 		} else {
 			Safe.SYSTEMSP = "/";
 			if (!path.substring(path.length() - 1, path.length()).equals("/")) {
 				path = path + "/";
 			}
+			path_show  = "["+path+"]$";
 		}
 
 	}
@@ -403,7 +406,7 @@ public class ShellPanel extends JPanel {
 			// check_path();
 			// System.out.println("path=" + path + "\n");
 			check_path();
-			shell_doc.insertString(shell_doc.getLength(), "\n" + path, null);
+			shell_doc.insertString(shell_doc.getLength(), "\n" + path_show, null);
 			command_start = shell_doc.getLength();
 			console.setCaretPosition(shell_doc.getLength());
 			status.setText("完成");

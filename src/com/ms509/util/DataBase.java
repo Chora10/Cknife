@@ -33,6 +33,7 @@ public class DataBase {
 		case 0://jsp
 			if (dbtype.equals("MYSQL") || dbtype.equals("ORACLE")) {
 				dbhost = config.substring(config.indexOf("<H>") + 3, config.indexOf("</H>"));
+				
 				dbuser = config.substring(config.indexOf("<U>") + 3, config.indexOf("</U>"));
 				dbpass = config.substring(config.indexOf("<P>") + 3, config.indexOf("</P>"));
 				dbcode = config.substring(config.indexOf("<L>") + 3, config.indexOf("</L>"));
@@ -87,11 +88,9 @@ public class DataBase {
 				// oracle
 				p1 = Safe.JSP_DB_ORACLE;
 			}
-			sp = "choraheiheihei";
 			System.out.println("test");
 			p1 = p1.replace("localhost", dbhost).replace("testdb", dbmaster).replace("username", dbuser)
 					.replace("userpwd", dbpass);
-			p1.replace("choraheiheihei", sp);
 			params = pass + "=" + Safe.JSP_MAKE + "&" + Safe.CODE + "=" + dbcode + "&" + Safe.ACTION + "=N" + "&z1="
 					+ p1 + "&z2=&z3=";
 			System.out.println("params=" + params);
@@ -111,12 +110,15 @@ public class DataBase {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				String sp = "choraheiheihei";
+				sp = "choraheiheihei";
 				String p1 = dbhost + sp + dbuser + sp + dbpass;
 				String params = pass + "=" + Safe.PHP_MAKE + "&" + Safe.ACTION + "=" + payload + "&z1=" + p1
 						+ "&z2=&z3=";
+				System.out.println(params);
 				rs = Common.send(url, params, code);
 
+			}else{
+				
 			}
 			break; // 
 		case 2:   //asp    //读取库名时实际并未连接数据库
@@ -172,7 +174,11 @@ public class DataBase {
 		case 0: //jsp
 			if (dbtype.equals("MDB") || dbtype.equals("MSSQL")) {
 				result = exec_sql(url, pass, config, type, code, "", dbn);
-			} else {
+			}
+			else if(dbtype.equals("ORACLE")){
+				result = exec_sql(url, pass, config, type, code, "oracle_get_tables", dbn);
+			}else
+			{
 				result = exec_sql(url, pass, config, type, code, s, dbn);
 			}
 			break;
@@ -207,7 +213,7 @@ public class DataBase {
 		switch (type) {
 		case 0:
 			System.out.println("jsp");
-			sp = "choraheiheihei";
+			String action = "Q";
 			if(dbtype.equals("MYSQL"))
 			{
 				p1 = Safe.JSP_DB_MYSQL;
@@ -221,15 +227,21 @@ public class DataBase {
 						dbpass);
 			}else if(dbtype.equals("ORACLE"))
 			{
+				if(sql.equals("oracle_get_tables"))
+				{
+					action = "O";
+				}
 				p1 = Safe.JSP_DB_ORACLE;
 				p1 = p1.replace("localhost", dbhost).replace("testdb", dbmaster).replace("username", dbuser).replace("userpwd",
 						dbpass);
 				//ORACLE 支持
 			}
 		//	p1 = p1.replace("localhost", dbhost).replace("testdb", dbn).replace("username", dbuser).replace("userpwd",dbpass);
-			p1.replace("choraheiheihei", sp);
-			params = pass + "=" + Safe.JSP_MAKE + "&" + Safe.CODE + "=" + dbcode + "&" + Safe.ACTION + "=Q" + "&z1="
-					+ p1 + "&z2=" + sql + "&z3=";
+			System.out.println("p1="+p1);
+			System.out.println("dbn="+dbn);
+			sp = "choraheiheihei";
+			params = pass + "=" + Safe.JSP_MAKE + "&" + Safe.CODE + "=" + dbcode + "&" + Safe.ACTION + "="+action + "&z1="
+					+ p1 + sp +dbn+"&z2=" + sql + "&z3=";
 			System.out.println("params=" + params);
 			result = Common.send(url, params, code);
 			break; // jsp
@@ -255,11 +267,11 @@ public class DataBase {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				String sp = "choraheiheihei";
+				sp= "choraheiheihei";
 				String p1 = dbhost + sp + dbuser + sp + dbpass;
 				String params = pass + "=" + Safe.PHP_MAKE + "&" + Safe.ACTION + "=" + payload + "&z1=" + p1 + "&z2="
 						+ dbn + "&z3=" + dbsql;
-				// System.out.println(params);
+				System.out.println("params="+params);
 				result = Common.send(url, params, code);
 				// System.out.println(rs);
 			}
@@ -325,6 +337,18 @@ public class DataBase {
 		return result;
 	}
 
+	
+	public static String[] Load_SQL()
+	{
+		String k = Safe.COMMON_SQL_STRING;
+		String[] sqls = k.split("\\|\\|\\|");
+		for(int a =0;a<sqls.length;a++)
+		{
+			System.out.println(sqls[a]);
+		}
+		return sqls;
+	}
+	
 	// 16进制 转换
 	private static String toHexString(String s) {
 		String str = "";

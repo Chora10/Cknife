@@ -17,7 +17,9 @@ import java.util.Vector;
 import com.ms509.ui.MainFrame;
 import javax.swing.*;
 
+import com.ms509.ui.panel.DatabasePanel;
 import com.ms509.ui.panel.ListPanel;
+import com.ms509.util.DataBase;
 import com.ms509.util.DbDao;
 import com.ms509.util.GBC;
 
@@ -34,7 +36,7 @@ public class SetDBDialog extends JDialog{
 	private JScrollPane dbset_scroll;
 	private JComboBox dbtype;
 	private String id;
-	private String config;
+	private static String config;
 	private Statement stmt = DbDao.getInstance().getStmt();;
 	private String[] tmp;
 	private String type;
@@ -192,6 +194,7 @@ public class SetDBDialog extends JDialog{
 				e1.printStackTrace();
 			}
 			a.setVisible(false);
+
 		}
 		
 	}
@@ -206,5 +209,11 @@ public class SetDBDialog extends JDialog{
 		}
 
 		
+	}
+	
+	public static String getStr()
+	{
+		config = config.replace("''","'");
+		return config;
 	}
 }

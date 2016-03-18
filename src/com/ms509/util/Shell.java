@@ -289,6 +289,7 @@ public class Shell {
 			{
 				pa = pa.replace("/", "\\");
 			}
+			pa = pa +">";
 			os = 1;
 		} else // linux系统
 		{
@@ -299,6 +300,7 @@ public class Shell {
 				pa = pa + "/";
 			}
 			pa = pa.replace("\t", "");
+			pa = "["+pa+"]$";
 			os = 2;
 		}
 		SimpleAttributeSet a = new SimpleAttributeSet();
