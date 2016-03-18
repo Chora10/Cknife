@@ -1,4 +1,4 @@
 /.settings
 /bin
 /Cknife.db
-lib/sqlitejdbc-v056.jar
+/Config.ini
