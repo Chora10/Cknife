@@ -1,8 +1,9 @@
 软件名称：Cknife
 中文名称：C刀
+源码地址：https://github.com/Chora10/Cknife
+下载地址：http://pan.baidu.com/s/1nul1mpr  密码：f65g
 官方博客：http://www.ms509.com/
-源码地址: https://github.com/Chora10/Cknife
-下载地址: http://pan.baidu.com/s/1nul1mpr  密码：f65g
+作者：	  Chora && MelodyZX
 ----------------------------------------------------------------------------------------------------------
 免责申明：
 	请使用者注意使用环境并遵守国家相关法律法规！
