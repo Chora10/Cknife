@@ -235,7 +235,7 @@ public class DatabasePanel extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
-			String sql_query = commandlist.getText();
+			tmp_sql_str = commandlist.getText();
 
 			String dataname = GetSelectDB();
 			System.out.println("选择数据" + dataname);
@@ -247,7 +247,6 @@ public class DatabasePanel extends JPanel {
 
 			Thread_exec();
 
-			System.out.println(sql_query);
 		}
 
 	}
