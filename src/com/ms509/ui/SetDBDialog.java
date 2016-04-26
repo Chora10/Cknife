@@ -118,7 +118,8 @@ public class SetDBDialog extends JDialog{
 		case "JSP(Eval)":
 			// System.out.println("jsp");
 			dbtypes = new String[]{"<T>MYSQL</T><H>localhost</H><U>root</U><P>root</P><L>utf8</L>",
-					"<T>ORACLE</T><H>localhost:1443/test</H><U>root</U><P>root</P><M>database</M><L>utf8</L>"};
+					"<T>ORACLE</T><H>localhost:1443/test</H><U>root</U><P>root</P><M>database</M><L>utf8</L>",
+					"<T>MSSQL</T><H>localhost:1443/test</H><U>root</U><P>root</P><M>database</M><L>utf8</L>"};
 			// this.jsp();
 			break;
 		case "PHP(Eval)":

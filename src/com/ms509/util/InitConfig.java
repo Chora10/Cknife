@@ -32,7 +32,7 @@ public class InitConfig {
 		config.setValue("ACTION", "action");
 		config.setValue("PARAM1", "z1");
 		config.setValue("PARAM2", "z2");
-		
+		config.setValue("PARAM2", "z3");
 		
 		
 		
@@ -98,7 +98,7 @@ public class InitConfig {
 		config.setValue("JSP_UPLOAD", "G");
 		config.setValue("JSP_DOWNLOAD", "F");
 		config.setValue("JSP_SHELL", "M");
-		config.setValue("JSP_DB_MYSQL", "com.mysql.jdbc.Driverchoraheiheiheijdbc%3Amysql%3A%2F%2Flocalhost%2Ftestdb%3Fuser%3Dusername%26password%3Duserpwd");
+		config.setValue("JSP_DB_MYSQL", "com.mysql.jdbc.Driverchoraheiheiheijdbc%3Amysql%3A%2F%2Flocalhost%2Ftestdbchoraheiheiheiusernamechoraheiheiheiuserpwd");
 		config.setValue("JSP_DB_MSSQL", "com.microsoft.sqlserver.jdbc.SQLServerDriverchoraheiheiheijdbc%3Asqlserver%3A%2F%2Flocalhost%3BdatabaseName%3Dtestdb%3Bchoraheiheiheiusernamechoraheiheiheiuserpwd");
 		config.setValue("JSP_DB_ORACLE", "oracle.jdbc.driver.OracleDriverchoraheiheiheijdbc%3aoracle%3athin%3a%40localhostchoraheiheiheiusernamechoraheiheiheiuserpwdchoraheiheiheitestdb");
 		
@@ -125,7 +125,9 @@ public class InitConfig {
 		Safe.ACTION = config.getValue("ACTION");
 		Safe.PARAM1 = config.getValue("PARAM1");
 		Safe.PARAM2 = config.getValue("PARAM2");
-
+		Safe.PARAM3 = config.getValue("PARAM3");
+		
+		
 		Safe.PHP_BASE64 = config.getValue("PHP_BASE64");
 		Safe.PHP_MAKE = config.getValue("PHP_MAKE");
 		Safe.PHP_INDEX = config.getValue("PHP_INDEX");
@@ -212,5 +214,7 @@ public class InitConfig {
 		Safe.CUS_UPLOAD = config.getValue("CUS_UPLOAD");
 		Safe.CUS_DOWNLOAD = config.getValue("CUS_DOWNLOAD");
 		Safe.CUS_SHELL = config.getValue("CUS_SHELL");
+		Safe.CUS_SHELL_SPL = config.getValue("CUS_SHELL_SPL");
+		Safe.CUS_SHELL_SPR = config.getValue("CUS_SHELL_SPR");
 	}
 }

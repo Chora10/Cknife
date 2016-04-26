@@ -44,6 +44,18 @@ public class DataBase {
 				}
 
 			}
+			if(dbtype.equals("MSSQL"))
+			{
+				dbhost = config.substring(config.indexOf("<H>") + 3, config.indexOf("</H>"));
+				dbuser = config.substring(config.indexOf("<U>") + 3, config.indexOf("</U>"));
+				dbpass = config.substring(config.indexOf("<P>") + 3, config.indexOf("</P>"));
+				dbcode = config.substring(config.indexOf("<L>") + 3, config.indexOf("</L>"));
+				if (config.indexOf("<M>") > 0) {
+					dbmaster = config.substring(config.indexOf("<M>") + 3, config.indexOf("</M>"));
+				} else {
+					dbmaster = "";
+				}
+			}
 			break;
 		case 1://php
 			if (dbtype.equals("MYSQL")) {
@@ -172,11 +184,11 @@ public class DataBase {
 		switch(type)
 		{
 		case 0: //jsp
-			if (dbtype.equals("MDB") || dbtype.equals("MSSQL")) {
+			if (dbtype.equals("MDB") ) {
 				result = exec_sql(url, pass, config, type, code, "", dbn);
 			}
-			else if(dbtype.equals("ORACLE")){
-				result = exec_sql(url, pass, config, type, code, "oracle_get_tables", dbn);
+			else if(dbtype.equals("ORACLE")|| dbtype.equals("MSSQL")){
+				result = exec_sql(url, pass, config, type, code, "get_tables", dbn);
 			}else
 			{
 				result = exec_sql(url, pass, config, type, code, s, dbn);
@@ -222,12 +234,17 @@ public class DataBase {
 				
 			}else if(dbtype.equals("MSSQL"))
 			{
+				if(sql.equals("get_tables"))
+				{
+					action = "O";
+				}
 				p1 = Safe.JSP_DB_MSSQL;
-				p1 = p1.replace("localhost", dbhost).replace("testdb", dbmaster).replace("username", dbuser).replace("userpwd",
+				p1 = p1.replace("localhost", dbhost).replace("testdb", dbn).replace("username", dbuser).replace("userpwd",
 						dbpass);
+				System.out.println(p1);
 			}else if(dbtype.equals("ORACLE"))
 			{
-				if(sql.equals("oracle_get_tables"))
+				if(sql.equals("get_tables"))
 				{
 					action = "O";
 				}

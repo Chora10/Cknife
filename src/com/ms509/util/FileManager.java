@@ -166,6 +166,7 @@ public class FileManager {
 				break;
 			case "readfile":
 				params = Safe.PASS+"="+Safe.ASP_MAKE.replace("PAYLOAD", Safe.ASP_READFILE)+"&"+Safe.PARAM1+"="+toHexString(path);
+				System.out.println(params);
 				break;
 			case "savefile":
 				params = Safe.PASS+"="+Safe.ASP_MAKE.replace("PAYLOAD", Safe.ASP_SAVEFILE)+"&"+Safe.PARAM1+"="+toHexString(path)+"&"+Safe.PARAM2+"="+this.makeParam2(data);
@@ -303,6 +304,7 @@ public class FileManager {
 				}
 				break;
 			}
+			System.out.println(params);
 			break;
 		case "PHP(Eval)":
 			switch (action) {
@@ -398,7 +400,7 @@ public class FileManager {
 			}
 			break;
 		}
-//		System.out.println(params);
+		System.out.println(params);
 		return Common.send(this.url, params, this.code);
 	}
 

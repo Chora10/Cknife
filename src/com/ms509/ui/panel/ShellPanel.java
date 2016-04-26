@@ -32,7 +32,7 @@ public class ShellPanel extends JPanel {
 	private int os;
 	private String path = null;
 	private String path_bak = null;
-	private String path_show = null; //用于[/usr/]$显示
+	private String path_show = null; // 用于[/usr/]$显示
 	private int command_start;
 	private int command_stop;
 	private JToolBar bar;
@@ -45,6 +45,7 @@ public class ShellPanel extends JPanel {
 	private Shell core;
 	private Font shell_font = null;
 	private int num_t = 0;
+
 	public ShellPanel() {
 		// TODO Auto-generated constructor stub
 		// 控件初始化
@@ -62,32 +63,31 @@ public class ShellPanel extends JPanel {
 		// type = tmp[4];
 		code = tmp[5];
 		Safe.PASS = pass; // 初始化PASS常量
-		// System.out.println(type);
 		// 初始化脚本类型
 		switch (tmp[4]) {
 		case "JSP(Eval)":
-			// System.out.println("jsp");
 			type = 0;
 			// this.jsp();
 			break;
 		case "PHP(Eval)":
-			// System.out.println("php");
 			type = 1;
 			// this.php();
 			break;
 		case "ASP(Eval)":
-			// System.out.println("asp");
 			type = 2;
 			// this.asp();
 			break;
 		case "ASPX(Eval)":
-			// System.out.println("aspx");
 			type = 3;
+			break;
+		case "Customize":  //添加自定义
+			type = 4;
 			break;
 		}
 
 		// core = new Shell(path,os,url,code,type1);
-		// System.out.println("asp11");
+		//System.out.println("asp11");
+		System.out.println("os0="+type);
 		core = new Shell(os, url, code, type);
 
 		// /
@@ -96,17 +96,16 @@ public class ShellPanel extends JPanel {
 			public void run() {
 				// 显示网站路径
 				path = core.GetPath();
-				System.out.println("path="+path);
+				System.out.println("path=" + path);
 				final String tmp = path.substring(0, path.length() - 1);
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						if (tmp.indexOf("HTTP/1.")>-1 || tmp.indexOf("/") < 0 && tmp.indexOf("\\") < 0) {
-							new MessageDialog(tmp,5);
+						if (tmp.indexOf("HTTP/1.") > -1 || tmp.indexOf("/") < 0 && tmp.indexOf("\\") < 0) {
+							new MessageDialog(tmp, 5);
 							console.setEnabled(false);
 						} else {
 							try {
-								shell_doc.insertString(shell_doc.getLength(),
-										"\n" + path, null);
+								shell_doc.insertString(shell_doc.getLength(), "\n" + path, null);
 							} catch (BadLocationException e) {
 							}
 						}
@@ -119,36 +118,12 @@ public class ShellPanel extends JPanel {
 			}
 		});
 		thread_getpath.start();
-		// SwingUtilities.invokeLater(new Runnable(){
-		//
-		// @Override
-		// public void run() {
-		// // TODO Auto-generated method stub
-		// status.setText("正在执行...");
-		// path = core.GetPath();
-		//
-		//
-		// // 显示网站路径
-		//
-		// try {
-		// shell_doc.insertString(shell_doc.getLength(), "\n" + path, null);
-		// status.setText("完成");
-		// } catch (BadLocationException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// status.setText("获取shell失败");
-		// }
-		// }
-		//
-		// });
 
 		// 初始化布局和控件
 		this.setLayout(new GridBagLayout());
-		GBC gbcinfo = new GBC(0, 0, 6, 1).setFill(GBC.HORIZONTAL).setWeight(
-				100, 0);
+		GBC gbcinfo = new GBC(0, 0, 6, 1).setFill(GBC.HORIZONTAL).setWeight(100, 0);
 		GBC gbcconsole = new GBC(0, 1, 6, 1).setFill(GBC.BOTH).setWeight(0, 10);
-		GBC gbcbar = new GBC(0, 2, 6, 1).setFill(GBC.HORIZONTAL).setWeight(100,
-				0);
+		GBC gbcbar = new GBC(0, 2, 6, 1).setFill(GBC.HORIZONTAL).setWeight(100, 0);
 
 		// console.append("\n"+path);
 
@@ -203,13 +178,13 @@ public class ShellPanel extends JPanel {
 			if (!path.substring(path.length() - 1, path.length()).equals("\\")) {
 				path = path + "\\";
 			}
-			path_show = path +">";
+			path_show = path + ">";
 		} else {
 			Safe.SYSTEMSP = "/";
 			if (!path.substring(path.length() - 1, path.length()).equals("/")) {
 				path = path + "/";
 			}
-			path_show  = "["+path+"]$";
+			path_show = "[" + path + "]$";
 		}
 
 	}
@@ -238,19 +213,16 @@ public class ShellPanel extends JPanel {
 			if (shell_doc.getLength() <= command_start) {
 				if (arg0.getKeyCode() == 8) {
 					try {
-						String t = shell_doc.getText(
-								console.getCaretPosition() - 1, 1);
+						String t = shell_doc.getText(console.getCaretPosition() - 1, 1);
 						// System.out.println("");
-						shell_doc.insertString(console.getCaretPosition(), t,
-								null);
+						shell_doc.insertString(console.getCaretPosition(), t, null);
 					} catch (Exception e) {
 
 					}
 				}
 			}
 
-			if (console.getCaretPosition() < command_start
-					|| console.getSelectionStart() < command_start
+			if (console.getCaretPosition() < command_start || console.getSelectionStart() < command_start
 					|| console.getSelectionEnd() < command_start) {
 				console.setEditable(false);
 				console.setCaretPosition(shell_doc.getLength());
@@ -270,19 +242,31 @@ public class ShellPanel extends JPanel {
 			command_stop = shell_doc.getLength();
 			// System.out.print(arg0.getKeyCode());
 			// System.out.println(path);
-			if (arg0.getKeyCode() == 10) {
+			if (arg0.getKeyCode() == 10) { // 判断回车
 				String tmp_cmd = null;
 				try {
-					tmp_cmd = shell_doc.getText(command_start, command_stop
-							- command_start);
+					tmp_cmd = shell_doc.getText(command_start, command_stop - command_start);
 					tmp_cmd = tmp_cmd.replace("\n", "").replace("\r", "");
-					if (tmp_cmd.equals("cls") || tmp_cmd.equals("clear")) {
+					if (tmp_cmd.equals("cls") || tmp_cmd.equals("clear")) { // 清空文本显示区域
 						shell_doc.remove(0, shell_doc.getLength());
 						shell_doc.insertString(0, "\n" + path, null);
 						command_start = shell_doc.getLength();
+					
 					}
-
-					else {
+					else if(tmp_cmd.indexOf("setp")==0)   //自定义路径
+					{	
+						if(tmp_cmd.substring(0,4).equals("setp"))
+						{
+							String k = tmp_cmd.substring(5,tmp_cmd.length());
+							System.out.println("kkk="+k);
+							core.SetCMD(k);
+							shell_doc.insertString(shell_doc.getLength(), "\n设置命令路径为:"+k, null);
+							System.out.println("path="+path);
+							shell_doc.insertString(shell_doc.getLength(), "\n" + path+">", null);
+							command_start = shell_doc.getLength();
+						}
+					}
+					else { // 执行命令
 						// shell_doc.insertString(shell_doc.getLength(), "\n",
 						// null);
 						Thread exe = new Thread(new Runnable() {
@@ -291,30 +275,22 @@ public class ShellPanel extends JPanel {
 							@Override
 							public void run() {
 								// TODO Auto-generated method stub
-								SwingUtilities.invokeLater(new Runnable() {
-									
-									@Override
-									public void run() {
-										num_t = 1;
-										status.setText("正在执行...请稍等");
-										try {
-											// Thread.sleep(10000);
-											execute(path, shell_doc.getText(
-													command_start, command_stop
-															- command_start), os, type);
-										} catch (Exception e) {
-											// TODO Auto-generated catch block
-											status.setText("执行失败");
+								num_t = 1;
+								status.setText("正在执行...请稍等");
+								try {
+									// Thread.sleep(10000);
+									execute(path, shell_doc.getText(command_start, command_stop - command_start), os,
+											type);
+								} catch (Exception e) {
+									// TODO Auto-generated catch block
+									status.setText("执行失败");
 
-											console.setEditable(true);
-										} finally {
-											num_t = 0;
-										}
-									}
-								});
-								
-
+									console.setEditable(true);
+								} finally {
+									num_t = 0;
+								}
 							}
+
 						});
 						if (num_t == 0) {
 							exe.start();
@@ -322,35 +298,6 @@ public class ShellPanel extends JPanel {
 						} else {
 							System.out.println(0);
 						}
-						// SwingUtilities.invokeLater(new Runnable() {
-						//
-						// @Override
-						// public void run() {
-						// // TODO Auto-generated method stub
-						// status.setText("正在执行");
-						//
-						// try {
-						// //Thread.sleep(10000);
-						// execute(path, shell_doc.getText(command_start,
-						// command_stop - command_start), os, type);
-						// } catch (Exception e) {
-						// // TODO Auto-generated catch block
-						// status.setText("执行失败");
-						// e.printStackTrace();
-						// try {
-						// shell_doc.insertString(shell_doc.getLength(),
-						// "\n"+path, null);
-						// } catch (BadLocationException e1) {
-						// // TODO Auto-generated catch block
-						// e1.printStackTrace();
-						// }
-						// }
-						// status.setText("完成");
-						// }
-						// });
-						// exe.start();
-						// execute(path, shell_doc.getText(command_start,
-						// command_stop - command_start), os, type);
 					}
 					last_commands.add(tmp_cmd);
 					num = last_commands.size();
@@ -364,10 +311,8 @@ public class ShellPanel extends JPanel {
 			if (arg0.getKeyCode() == KeyEvent.VK_UP) {
 				console.setCaretPosition(command_start);
 				try {
-					shell_doc.remove(command_start, shell_doc.getLength()
-							- command_start);
-					shell_doc
-							.insertString(command_start, key_up_action(), null);
+					shell_doc.remove(command_start, shell_doc.getLength() - command_start);
+					shell_doc.insertString(command_start, key_up_action(), null);
 				} catch (BadLocationException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -379,10 +324,8 @@ public class ShellPanel extends JPanel {
 			if (arg0.getKeyCode() == KeyEvent.VK_DOWN) {
 				console.setCaretPosition(command_start);
 				try {
-					shell_doc.remove(command_start, shell_doc.getLength()
-							- command_start);
-					shell_doc.insertString(command_start, key_down_action(),
-							null);
+					shell_doc.remove(command_start, shell_doc.getLength() - command_start);
+					shell_doc.insertString(command_start, key_down_action(), null);
 				} catch (BadLocationException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
