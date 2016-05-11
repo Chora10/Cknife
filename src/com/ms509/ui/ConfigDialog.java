@@ -11,10 +11,11 @@ import com.ms509.ui.config.panel.HttpHeaderPanel;
 import com.ms509.ui.config.panel.ProxyPanel;
 
 public class ConfigDialog extends JDialog{
-
+	public static ConfigDialog cdialog;
 	public ConfigDialog() {
 		super(MainFrame.main,"Cknife 设置",true);
 		this.setComponent();
+		cdialog = this;
 		this.setVisible(true);
 	}
 	private void setComponent()
@@ -27,8 +28,8 @@ public class ConfigDialog extends JDialog{
 				(d.height - this.getHeight()) / 2);
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		JTabbedPane pane = new JTabbedPane();
-		pane.addTab("代 理", new ProxyPanel());
-		pane.addTab("Http头", new HttpHeaderPanel());
+		pane.addTab("代理", new ProxyPanel());
+		pane.addTab("请求头", new HttpHeaderPanel());
 		this.getContentPane().add(pane);
 	}
 }
