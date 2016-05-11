@@ -7,6 +7,7 @@ public final class Safe {
 	public static String ACTION;
 	public static String PARAM1;
 	public static String PARAM2;
+	public static String PARAM3;
 
 	public static String ASP_BASE64;
 	public static String ASP_MAKE;
@@ -85,6 +86,8 @@ public final class Safe {
 	public static String CUS_UPLOAD;
 	public static String CUS_DOWNLOAD;
 	public static String CUS_SHELL;
+	public static String CUS_SHELL_SPL;
+	public static String CUS_SHELL_SPR;
 	
 	public static String COMMON_SQL_STRING;
 	
