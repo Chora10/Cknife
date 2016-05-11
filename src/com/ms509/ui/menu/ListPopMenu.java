@@ -28,6 +28,7 @@ import sun.swing.SwingUtilities2;
 
 import com.ms509.ui.AboutDialog;
 import com.ms509.ui.AddDialog;
+import com.ms509.ui.ConfigDialog;
 import com.ms509.ui.MainFrame;
 import com.ms509.ui.panel.ListPanel;
 import com.ms509.util.Configuration;
@@ -35,7 +36,7 @@ import com.ms509.util.DbDao;
 
 public class ListPopMenu extends JPopupMenu {
 	private JScrollPane listPane;
-	private JMenuItem add, edit, delete, database, filemanager, shell, about;
+	private JMenuItem add, edit, delete, database, filemanager, shell, about,config;
 	private JTable list;
 	private JPopupMenu pop;
 
@@ -48,6 +49,7 @@ public class ListPopMenu extends JPopupMenu {
 		add = new JMenuItem("添加");
 		JMenu skins = new JMenu("皮肤");
 		about = new JMenuItem("关于");
+		config = new JMenuItem("设置");
 		LookAndFeelInfo[] looks = UIManager.getInstalledLookAndFeels();
 		ButtonGroup group = new ButtonGroup();
 		JCheckBoxMenuItem gskin = new JCheckBoxMenuItem("Graphite");
@@ -67,9 +69,12 @@ public class ListPopMenu extends JPopupMenu {
 		}	
 		add.addActionListener(action);
 		about.addActionListener(action);
+		config.addActionListener(action);
 		pop.add(add);
 		pop.add(skins);
 		pop.add(about);
+		this.addSeparator();
+		pop.add(config);
 		panel.add(this);
 	}
 
@@ -92,14 +97,17 @@ public class ListPopMenu extends JPopupMenu {
 		add = new JMenuItem("添加");
 		edit = new JMenuItem("编辑");
 		delete = new JMenuItem("删除");
+		config = new JMenuItem("设置");
 		this.add(add);
 		this.add(edit);
 		this.add(delete);
+		this.addSeparator();
+		this.add(config);
 		add.addActionListener(action);
 		edit.addActionListener(action);
 		delete.addActionListener(action);
+		config.addActionListener(action);
 		database.setEnabled(true);
-		//database.setEnabled(false);   //禁用数据库功能
 		panel.add(this);
 	}
 
@@ -206,7 +214,9 @@ public class ListPopMenu extends JPopupMenu {
 				new Thread(run).start();
 			} else if (e.getSource() == about) {
 				AboutDialog a = new AboutDialog();
-
+			} else if (e.getSource() == config)
+			{
+				new ConfigDialog();
 			}
 		}
 
