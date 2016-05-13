@@ -122,6 +122,9 @@ public class InitConfig {
 		config.setValue("PROXY_PASS","");
 		config.setValue("PROXY_TYPE","");
 		config.setValue("PROXY_STATUS", Common.getProxyStatus());
+		
+		config.setValue("REQUEST_DATA", "");
+		config.setValue("REQUEST_STATUS", "");
 	}
 
 	private void LoadParams() {
@@ -230,5 +233,9 @@ public class InitConfig {
 		Safe.PROXY_PASS = config.getValue("PROXY_PASS");
 		Safe.PROXY_TYPE = config.getValue("PROXY_TYPE");
 		Safe.PROXY_STATUS = Common.getProxyStatus();
+		
+		Safe.REQUEST_DATA = config.getValue("REQUEST_DATA");
+		Safe.REQUEST_STATUS = config.getValue("REQUEST_STATUS");
+		Common.getData();
 	}
 }

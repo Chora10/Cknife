@@ -54,7 +54,11 @@ public class Configuration {
 			fis.close();
 			value = propertie.getProperty(key);
 		} catch (Exception e) {
-
+			
+		}
+		if(value == null)
+		{
+			value = "";
 		}
 		return value;
 	}

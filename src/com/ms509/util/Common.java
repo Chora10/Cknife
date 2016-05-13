@@ -1,5 +1,6 @@
 package com.ms509.util;
 
+import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.InetAddress;
@@ -7,11 +8,17 @@ import java.net.SocketAddress;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Common {
+	public static HashMap<String, String> map = new HashMap<String, String>();
 
 	public static String purData(String data) {
 		String datas = data;
@@ -107,7 +114,8 @@ public class Common {
 
 	public static String getProxyStatus() {
 		try {
-			if (Safe.PROXY_HOST.equals("") || Safe.PROXY_PORT.equals("") || Safe.PROXY_TYPE.equals("DIRECT")) {
+			if (Safe.PROXY_HOST.equals("") || Safe.PROXY_PORT.equals("")
+					|| Safe.PROXY_TYPE.equals("DIRECT")) {
 				return "0";
 			} else {
 				return "1";
@@ -133,5 +141,25 @@ public class Common {
 			return Proxy.Type.DIRECT;
 		}
 		return null;
+	}
+
+	public static void getData() {
+		String[] datas = Safe.REQUEST_DATA.split("\n");
+		for (String data : datas) {
+			if (!data.equals("")) {
+				if (data.indexOf(":") < 0) {
+					data = data + ": ";
+				}
+				String[] headers = data.split(":");
+				Common.map.put(headers[0], headers[1]);
+			}
+		}
+	}
+
+	public static void RequestHeader(HttpURLConnection huc) {
+		Set<Map.Entry<String, String>> set = Common.map.entrySet();
+		for (Map.Entry<String, String> header : set) {
+			huc.setRequestProperty(header.getKey(), header.getValue());
+		}
 	}
 }

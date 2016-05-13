@@ -10,7 +10,7 @@ public class MainFrame {
 		// TODO Auto-generated constructor stub
 		Toolkit t = Toolkit.getDefaultToolkit();
 		Dimension d = t.getScreenSize();
-		main = new JFrame("Cknife 1.0 Beta2");
+		main = new JFrame("Cknife 1.0 Beta3");
 		main.setIconImage(new ImageIcon(getClass().getResource("/com/ms509/images/main.png")).getImage());
 		main.setSize(900, 480);
 		main.setLocation((d.width - main.getWidth()) / 2,

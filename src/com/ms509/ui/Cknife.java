@@ -34,7 +34,7 @@ public class Cknife {
 			String skin = config.getValue("SKIN");
 			JFrame.setDefaultLookAndFeelDecorated(true);
 			JDialog.setDefaultLookAndFeelDecorated(true);
-			if (skin != null) {
+			if (!skin.equals("")) {
 				UIManager.setLookAndFeel(skin);
 			} else {
 				// substance皮肤带LookAndFeel结尾的其实与不带的是一样的，只是实现方式不同而已。

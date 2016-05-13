@@ -100,4 +100,7 @@ public final class Safe {
 	public static String PROXY_PASS;
 	public static String PROXY_TYPE;
 	public static String PROXY_STATUS;
+	
+	public static String REQUEST_STATUS;
+	public static String REQUEST_DATA;
 }

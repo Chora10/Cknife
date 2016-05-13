@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -83,7 +84,7 @@ public class ProxyPanel extends JPanel{
 		port.setText(iport);
 		user.setText(iuser);
 		pass.setText(ipass);
-		if(itype!=null&&!itype.equals(""))
+		if(!itype.equals(""))
 		{
 			type.setSelectedItem(itype);
 		}
@@ -110,7 +111,7 @@ public class ProxyPanel extends JPanel{
 			config.setValue("PROXY_PASS", spass);
 			config.setValue("PROXY_TYPE", stype);
 			config.setValue("PROXY_STATUS", sstatus);
-			ConfigDialog.cdialog.hide();
+			JOptionPane.showMessageDialog(ConfigDialog.cdialog, "代理设置成功", "提示", JOptionPane.DEFAULT_OPTION);
 		}
 	}
 }

@@ -29,20 +29,16 @@ public class Request {
 			if(Safe.PROXY_STATUS.equals("1"))
 			{
 				Proxy proxy = new Proxy(Common.ProxyType(), Common.ProxySocketAddress());
-				// 可以同时用于HTTP、SOCKS类型的代理。但是有一个已知BUG，如果验证成功，就算更换成了不能通过验证的代理也能正常执行。
-				// 使用AuthCacheValue.setAuthCache(new AuthCacheImpl())可以临时解决这个问题。
-				// HTTP类型的代理也可以使用Proxy-Authorization请求头完美解决这个问题，但是该方式不适用于SOCKS。
 				AuthCacheValue.setAuthCache(new AuthCacheImpl());
 				Authenticator.setDefault(new BasicAuthenticator(Safe.PROXY_USER, Safe.PROXY_PASS));
 				huc = (HttpURLConnection) u.openConnection(proxy);
-				// 只能用于HTTP类型的代理，不能用于SOCKS类型的代理。
-//				BASE64Encoder encode = new BASE64Encoder();
-//				String key = "Proxy-Authorization"; 
-//				String value = "Basic " + encode.encode((Safe.PROXY_USER+":"+Safe.PROXY_PASS).getBytes()); 
-//				huc.setRequestProperty(key, value); 
 			} else 
 			{
 				huc = (HttpURLConnection) u.openConnection();
+			}
+			if(Safe.REQUEST_STATUS.equals("1"))
+			{
+				Common.RequestHeader(huc);
 			}
 			huc.setConnectTimeout(10000);
 			huc.setReadTimeout(10000);

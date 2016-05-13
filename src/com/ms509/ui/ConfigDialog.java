@@ -7,7 +7,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JTabbedPane;
 
-import com.ms509.ui.config.panel.HttpHeaderPanel;
+import com.ms509.ui.config.panel.RequestPanel;
 import com.ms509.ui.config.panel.ProxyPanel;
 
 public class ConfigDialog extends JDialog{
@@ -29,7 +29,7 @@ public class ConfigDialog extends JDialog{
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		JTabbedPane pane = new JTabbedPane();
 		pane.addTab("代理", new ProxyPanel());
-		pane.addTab("请求头", new HttpHeaderPanel());
+		pane.addTab("请求头", new RequestPanel());
 		this.getContentPane().add(pane);
 	}
 }
