@@ -157,9 +157,9 @@ public class FileManagerPanel extends JPanel {
 				100, 0);
 		GBC gbcread = new GBC(5, 0);
 		GBC gbctree = new GBC(0, 1, 2, 1).setFill(GBC.VERTICAL)
-				.setWeight(0, 100).setIpad(200, 0);
+				.setWeight(0, 100).setIpad(200, 500);
 		GBC gbclist = new GBC(2, 1, 4, 1).setFill(GBC.BOTH).setWeight(0, 100)
-				.setInsets(0, 5, 0, 0).setIpad(0, 400);
+				.setInsets(0, 5, 0, 0);
 		GBC gbcbar = new GBC(0, 2, 6, 1).setFill(GBC.HORIZONTAL).setWeight(100,
 				0);
 

@@ -84,7 +84,7 @@ public class DatabasePanel extends JPanel {
 		// Label 显示
 		status = new JLabel("状态栏");
 		selectdb = new JLabel("数据库");
-		sql_list = new JLabel("常用sql");
+		sql_list = new JLabel("常用SQL语句");
 
 		// 数据库jtree
 		dblist = new JTree();
@@ -123,13 +123,13 @@ public class DatabasePanel extends JPanel {
 		dbset.addActionListener(action);
 
 		// sql命令执行
-		exec = new JButton("执行SQL(ctrl+回车)");
+		exec = new JButton("执行SQL(Ctrl+回车)");
 		Exec execation = new Exec();
 		exec.addActionListener(execation);
 
 		// 初始化布局
 		this.setLayout(new GridBagLayout());
-		GBC gbcleft = new GBC(0, 0, 2, 4).setFill(GBC.BOTH).setWeight(100, 0).setIpad(180, 0);
+		GBC gbcleft = new GBC(0, 0, 2, 4).setFill(GBC.VERTICAL).setWeight(0,100).setIpad(200, 500);
 		// GBC gbcright = new GBC(1, 0, 1, 1).setFill(GBC.BOTH).setInsets(0, 0,
 		// 0, 0);
 
