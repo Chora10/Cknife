@@ -32,7 +32,7 @@ public class InitConfig {
 		config.setValue("ACTION", "action");
 		config.setValue("PARAM1", "z1");
 		config.setValue("PARAM2", "z2");
-		config.setValue("PARAM2", "z3");
+		config.setValue("PARAM3", "z3");
 		
 		
 		
