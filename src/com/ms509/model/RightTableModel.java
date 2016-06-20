@@ -2,6 +2,7 @@ package com.ms509.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -53,7 +54,14 @@ public class RightTableModel extends AbstractTableModel {
 		title.add("大小");
 		title.add("属性");
 		for (String tmp : filedicts) {
-			String[] s = tmp.split("\t");
+			String[] s = null;
+			String[] t = tmp.split("\t");
+			if (t.length == 4) {
+				s = t;
+			} else {
+				s = "./	1970-00-00 00:00:00	0	0\n../	1970-00-00 00:00:00	0	0"
+						.split("\t");
+			}
 			String name = s[0];
 			Vector data = new Vector();
 			if (!name.equals("./") && !name.equals("../")) {

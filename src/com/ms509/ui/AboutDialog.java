@@ -87,7 +87,7 @@ public class AboutDialog extends JDialog {
 		this.add(about_pane);
 		this.setSize(400, 250);
 		this.setResizable(false);
-		this.setTitle("关于Ckinfe");
+		this.setTitle("关于 Cknife");
 		this.setLocationRelativeTo(MainFrame.main);
 	}
 

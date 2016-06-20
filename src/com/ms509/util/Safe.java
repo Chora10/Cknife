@@ -93,4 +93,14 @@ public final class Safe {
 	
 	public static String PASS;
 	public static String SYSTEMSP;
+	
+	public static String PROXY_HOST;
+	public static String PROXY_PORT;
+	public static String PROXY_USER;
+	public static String PROXY_PASS;
+	public static String PROXY_TYPE;
+	public static String PROXY_STATUS;
+	
+	public static String REQUEST_STATUS;
+	public static String REQUEST_DATA;
 }

@@ -126,9 +126,9 @@ public class DataBase {
 				String p1 = dbhost + sp + dbuser + sp + dbpass;
 				String params = pass + "=" + Safe.PHP_MAKE + "&" + Safe.ACTION + "=" + payload + "&z1=" + p1
 						+ "&z2=&z3=";
-				System.out.println(params);
+//				System.out.println(params);
 				rs = Common.send(url, params, code);
-
+//				System.out.println(rs);
 			}else{
 				
 			}

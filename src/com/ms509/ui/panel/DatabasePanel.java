@@ -84,7 +84,7 @@ public class DatabasePanel extends JPanel {
 		// Label 显示
 		status = new JLabel("状态栏");
 		selectdb = new JLabel("数据库");
-		sql_list = new JLabel("常用sql");
+		sql_list = new JLabel("常用SQL语句");
 
 		// 数据库jtree
 		dblist = new JTree();
@@ -99,8 +99,8 @@ public class DatabasePanel extends JPanel {
 		// 数据库查询结果窗口
 		datalist = new JTable();
 		datalistpane = new JScrollPane(datalist);
-		datalist.setAutoResizeMode(datalist.AUTO_RESIZE_OFF);
-		// datalist.setAutoResizeMode(datalist.AUTO_RESIZE_ALL_COLUMNS);
+		datalist.setAutoCreateRowSorter(true);
+		datalist.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		// jtree右键菜单
 		DBPopMenu m = new DBPopMenu(this, dblist, datalist);
 
@@ -123,18 +123,18 @@ public class DatabasePanel extends JPanel {
 		dbset.addActionListener(action);
 
 		// sql命令执行
-		exec = new JButton("执行SQL(ctrl+回车)");
+		exec = new JButton("执行SQL(Ctrl+回车)");
 		Exec execation = new Exec();
 		exec.addActionListener(execation);
 
 		// 初始化布局
 		this.setLayout(new GridBagLayout());
-		GBC gbcleft = new GBC(0, 0, 2, 4).setFill(GBC.BOTH).setWeight(100, 0).setIpad(180, 0);
+		GBC gbcleft = new GBC(0, 0, 2, 4).setFill(GBC.VERTICAL).setWeight(0,100).setIpad(200, 500);
 		// GBC gbcright = new GBC(1, 0, 1, 1).setFill(GBC.BOTH).setInsets(0, 0,
 		// 0, 0);
 
 		// x.= 1
-		GBC gbcright1 = new GBC(2, 0, 5, 1).setFill(GBC.BOTH).setWeight(100, 100);
+		GBC gbcright1 = new GBC(2, 0, 5, 1).setFill(GBC.BOTH).setWeight(100, 100).setInsets(0, 5, 0, 0);
 
 		// x.= 2
 		GBC gbcright2_1 = new GBC(2, 1, 1, 1).setFill(GBC.NONE).setWeight(40, 0);
@@ -144,10 +144,10 @@ public class DatabasePanel extends JPanel {
 		GBC gbcright2_5 = new GBC(6, 1, 1, 1).setFill(GBC.NONE).setWeight(0, 0);
 
 		// x.= 3
-		GBC gbcright3 = new GBC(2, 2, 8, 1).setFill(GBC.BOTH).setWeight(100, 50);
+		GBC gbcright3 = new GBC(2, 2, 8, 1).setFill(GBC.BOTH).setWeight(100, 50).setInsets(0, 5, 0, 0);
 
 		// x. = 4
-		GBC gbcright4_1 = new GBC(2, 3, 5, 1).setFill(GBC.BOTH).setWeight(100, 0);
+		GBC gbcright4_1 = new GBC(2, 3, 5, 1).setFill(GBC.BOTH).setWeight(100, 0).setInsets(0, 5, 0, 0);
 		// GBC gbcright4_2 = new GBC(5, 3, 1, 1).setFill(GBC.NONE).setWeight(30,
 		// 0);
 		GBC gbcstatus = new GBC(0, 4, 9, 1).setFill(GBC.BOTH).setWeight(100, 0);
@@ -550,7 +550,7 @@ public class DatabasePanel extends JPanel {
 		dtm.setDataVector(al, vtitle);
 
 		datalist.setModel(dtm);
-		datalistpane.updateUI();
+//		datalistpane.updateUI();
 	}
 
 }

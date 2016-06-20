@@ -115,6 +115,16 @@ public class InitConfig {
 		config.setValue("CUS_UPLOAD", "upload");
 		config.setValue("CUS_DOWNLOAD", "download");
 		config.setValue("CUS_SHELL", "shell");
+		
+		config.setValue("PROXY_HOST","");
+		config.setValue("PROXY_PORT","");
+		config.setValue("PROXY_USER","");
+		config.setValue("PROXY_PASS","");
+		config.setValue("PROXY_TYPE","");
+		config.setValue("PROXY_STATUS", Common.getProxyStatus());
+		
+		config.setValue("REQUEST_DATA", "");
+		config.setValue("REQUEST_STATUS", "");
 	}
 
 	private void LoadParams() {
@@ -216,5 +226,16 @@ public class InitConfig {
 		Safe.CUS_SHELL = config.getValue("CUS_SHELL");
 		Safe.CUS_SHELL_SPL = config.getValue("CUS_SHELL_SPL");
 		Safe.CUS_SHELL_SPR = config.getValue("CUS_SHELL_SPR");
+		
+		Safe.PROXY_HOST = config.getValue("PROXY_HOST");
+		Safe.PROXY_PORT = config.getValue("PROXY_PORT");
+		Safe.PROXY_USER = config.getValue("PROXY_USER");
+		Safe.PROXY_PASS = config.getValue("PROXY_PASS");
+		Safe.PROXY_TYPE = config.getValue("PROXY_TYPE");
+		Safe.PROXY_STATUS = Common.getProxyStatus();
+		
+		Safe.REQUEST_DATA = config.getValue("REQUEST_DATA");
+		Safe.REQUEST_STATUS = config.getValue("REQUEST_STATUS");
+		Common.getData();
 	}
 }
