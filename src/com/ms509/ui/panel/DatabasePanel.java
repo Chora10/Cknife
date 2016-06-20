@@ -10,6 +10,8 @@ import com.ms509.util.Common;
 import com.ms509.util.DataBase;
 import com.ms509.util.DbDao;
 import com.ms509.util.GBC;
+import com.ms509.util.NodeData;
+import com.ms509.util.NodeData.DataType;
 import com.ms509.util.Safe;
 
 import java.awt.Color;
@@ -28,6 +30,8 @@ import java.util.Vector;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
@@ -285,7 +289,6 @@ public class DatabasePanel extends JPanel {
 					dbn = GetSelectDB();
 					tmp_sql_str = "select * from " + dblist.getLastSelectedPathComponent().toString().replace("\t", "");
 					Thread_exec();
-
 					// tmp_sql_str = "";
 				}
 			} else {
@@ -440,11 +443,12 @@ public class DatabasePanel extends JPanel {
 						choosedb.addItem(dbl[i]);
 					}
 					// 添加tree显示
-					root = new DefaultMutableTreeNode("/");
+					NodeData n = new NodeData(DataType.DATABASE,"/");
+					root = new DefaultMutableTreeNode(n);
 					for (int d = 0; d < dbl.length; d++) // dbl[i]="database" 略去
 					{
-						DefaultMutableTreeNode dmtn = new DefaultMutableTreeNode(dbl[d]);
-//						dmtn.setAllowsChildren(false);
+						NodeData nd = new NodeData(DataType.DATABASE, dbl[d]);
+						DefaultMutableTreeNode dmtn = new DefaultMutableTreeNode(nd);
 						root.add(dmtn);
 					}
 					DefaultTreeModel model = new DefaultTreeModel(root);
@@ -553,7 +557,14 @@ public class DatabasePanel extends JPanel {
 		dtm.setDataVector(al, vtitle);
 
 		datalist.setModel(dtm);
+		
+//		TableColumnModel cmodel = datalist.getColumnModel();
+//		TableColumn test = cmodel.getColumn(0);
+//		test.setMinWidth(3000);
+		
 //		datalistpane.updateUI();
 	}
 
 }
+
+
