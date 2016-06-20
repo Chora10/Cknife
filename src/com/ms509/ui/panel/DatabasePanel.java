@@ -1,5 +1,6 @@
 package com.ms509.ui.panel;
 
+import com.ms509.model.DatabaseTreeCellRenderer;
 import com.ms509.model.ResultSetTableModel;
 import com.ms509.ui.MainFrame;
 import com.ms509.ui.MessageDialog;
@@ -93,7 +94,7 @@ public class DatabasePanel extends JPanel {
 		model.setRoot(new DefaultMutableTreeNode(""));// 先初始化根节点，不初始化会显示更多的组件自带内容
 		dblist.setShowsRootHandles(true);
 		dblist.setRootVisible(false);
-
+		dblist.setCellRenderer(new DatabaseTreeCellRenderer());
 		choosedb = new JComboBox<>();
 		RePainDBList();
 		// 数据库查询结果窗口
@@ -442,7 +443,9 @@ public class DatabasePanel extends JPanel {
 					root = new DefaultMutableTreeNode("/");
 					for (int d = 0; d < dbl.length; d++) // dbl[i]="database" 略去
 					{
-						root.add(new DefaultMutableTreeNode(dbl[d]));
+						DefaultMutableTreeNode dmtn = new DefaultMutableTreeNode(dbl[d]);
+//						dmtn.setAllowsChildren(false);
+						root.add(dmtn);
 					}
 					DefaultTreeModel model = new DefaultTreeModel(root);
 					dblist.setModel(model);
