@@ -175,4 +175,4 @@ CUS_SHELL=shell
 
 20160301
 1、合并Cknife与Cknife_Skin
-2、添加数据库功能，添加PHP对MYSQL、ORACLE的支持
+2、添加数据库功能，添加PHP对MYSQL的支持
