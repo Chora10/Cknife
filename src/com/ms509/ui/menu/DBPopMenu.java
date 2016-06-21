@@ -26,6 +26,8 @@ import javax.swing.tree.TreePath;
 import com.ms509.ui.MainFrame;
 import com.ms509.ui.panel.FileManagerPanel;
 import com.ms509.util.DataBase;
+import com.ms509.util.NodeData;
+import com.ms509.util.NodeData.DataType;
 import com.ms509.util.Safe;
 import com.ms509.util.TreeMethod;
 
@@ -339,7 +341,8 @@ public class DBPopMenu extends JPopupMenu {
 					// 添加到向量vector中，后续加入到table里面显示
 					vector.add(cols[m].replace("\t\\|\t", ""));
 					// 添加到tree parent节点中
-					DefaultMutableTreeNode child = new DefaultMutableTreeNode(cols[m]);
+					NodeData nd = new NodeData(DataType.TABLE, cols[m]);
+					DefaultMutableTreeNode child = new DefaultMutableTreeNode(nd);
 					root.insertNodeInto(child, node, 0);
 				}
 				al.add(vector);

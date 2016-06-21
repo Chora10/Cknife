@@ -22,7 +22,7 @@ public class GBC extends GridBagConstraints
 		this.fill = fill;
 		return this;
 	}
-	public GBC setWeight(int weightx,int weighty)
+	public GBC setWeight(double weightx,double weighty)
 	{
 		this.weightx = weightx;
 		this.weighty = weighty;

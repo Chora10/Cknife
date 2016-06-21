@@ -16,6 +16,7 @@ import com.ms509.util.Safe;
 import com.ms509.util.TreeMethod;
 import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Text;
 
+import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -34,6 +35,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.JTree;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -153,15 +155,11 @@ public class FileManagerPanel extends JPanel {
 		// TODO Auto-generated constructor stub
 
 		this.setLayout(new GridBagLayout());
-		GBC gbcpath = new GBC(0, 0, 5, 1).setFill(GBC.HORIZONTAL).setWeight(
-				100, 0);
-		GBC gbcread = new GBC(5, 0);
-		GBC gbctree = new GBC(0, 1, 2, 1).setFill(GBC.VERTICAL)
-				.setWeight(0, 100).setIpad(200, 500);
-		GBC gbclist = new GBC(2, 1, 4, 1).setFill(GBC.BOTH).setWeight(0, 100)
-				.setInsets(0, 5, 0, 0);
-		GBC gbcbar = new GBC(0, 2, 6, 1).setFill(GBC.HORIZONTAL).setWeight(100,
-				0);
+		GBC gbcpath = new GBC(0, 0 ,2 ,1).setWeight(1, 0).setFill(GBC.HORIZONTAL);
+		GBC gbcread = new GBC(2, 0);
+		GBC gbctree = new GBC(0, 1).setWeight(0, 1).setFill(GBC.VERTICAL).setIpad(200, 0);
+		GBC gbclist = new GBC(1, 1, 2, 1).setWeight(1, 1).setFill(GBC.BOTH).setInsets(0, 5, 0, 0);
+		GBC gbcbar = new GBC(0, 2, 3, 1).setFill(GBC.HORIZONTAL).setWeight(100,0);
 
 		path = new JTextField();
 		list = new JTable();
@@ -239,6 +237,7 @@ public class FileManagerPanel extends JPanel {
 		bar.add(status);
 		bar.setFloatable(false);
 		treepane = new JScrollPane(tree);
+		treepane.setPreferredSize(new Dimension(25, 0));
 		listpane = new JScrollPane(list);
 		FileManagerPopMenu fpop = new FileManagerPopMenu("select");
 		FileManagerPopMenu npop = new FileManagerPopMenu("none");
