@@ -117,7 +117,11 @@ CUS_UPLOAD=upload
 CUS_DOWNLOAD=download 
 CUS_SHELL=shell
 
-七、更新日志：
+七、更新日志(更新版本后请删除Config.ini文件，重新打开自动生成新版本的Config.ini)：
+
+20160620
+1、修复命令执行低概率执行失败的情况
+2、数据库管理界面优化
 
 20160618
 1、添加对HTTPS协议的支持
