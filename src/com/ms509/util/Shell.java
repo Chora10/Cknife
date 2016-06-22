@@ -367,7 +367,7 @@ public class Shell {
 			{
 				pa = pa.replace("/", "\\");
 			}
-			pa = pa +"";
+			//pa = pa +"";
 			os = 1;
 			z1 = "cmd"; //设置cmd初始化路径
 		} else // linux系统
@@ -379,7 +379,7 @@ public class Shell {
 				pa = pa + "/";
 			}
 			pa = pa.replace("\t", "");
-			pa = "["+pa+"]$";
+			//pa = "["+pa+"]$";
 			os = 2;
 			z1 = "/bin/sh";  //设置cmd初始化路径
 		}
