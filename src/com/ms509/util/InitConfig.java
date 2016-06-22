@@ -102,7 +102,7 @@ public class InitConfig {
 		config.setValue("JSP_DB_MSSQL", "com.microsoft.sqlserver.jdbc.SQLServerDriverchoraheiheiheijdbc%3Asqlserver%3A%2F%2Flocalhost%3BdatabaseName%3Dtestdb%3Bchoraheiheiheiusernamechoraheiheiheiuserpwd");
 		config.setValue("JSP_DB_ORACLE", "oracle.jdbc.driver.OracleDriverchoraheiheiheijdbc%3aoracle%3athin%3a%40localhostchoraheiheiheiusernamechoraheiheiheiuserpwdchoraheiheiheitestdb");
 		
-		config.setValue("COMMON_SQL_STRING", "SHOW DATABASES;|||SQL2;");
+		config.setValue("COMMON_SQL_STRING", "SHOW DATABASES;|||SHOW TABLES;");
 		
 		config.setValue("CUS_MAKE", "1");
 		config.setValue("CUS_INDEX", "index");

@@ -15,6 +15,7 @@ import com.ms509.util.NodeData.DataType;
 import com.ms509.util.Safe;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
@@ -29,7 +30,10 @@ import java.sql.SQLException;
 import java.util.Vector;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -400,14 +404,18 @@ public class DatabasePanel extends JPanel {
 
 	private void Thread_exec() {
 		Thread thread_exec = new Thread(new Runnable() {
+			private String re="";
 			public void run() {
-				status.setText("正在执行");
-				String re = "";
+				status.setText("正在执行...请稍等");
 				try {
 					re = DataBase.exec_sql(url, pass, config, type, code, tmp_sql_str, dbn);
-					UpdateData(re);
-					status.setText("执行完毕");
-					t_locker = 0;
+					SwingUtilities.invokeLater(new Runnable() {
+						public void run() {
+							UpdateData(re);
+							status.setText("执行完毕");
+							t_locker = 0;
+						}
+					});		
 				} catch (Exception e) {
 					new MessageDialog(re,5);
 					status.setText("error");
@@ -553,15 +561,25 @@ public class DatabasePanel extends JPanel {
 				al.add(vector);
 			}
 		}
-
 		dtm.setDataVector(al, vtitle);
-
 		datalist.setModel(dtm);
 		
-//		TableColumnModel cmodel = datalist.getColumnModel();
-//		TableColumn test = cmodel.getColumn(0);
-//		test.setMinWidth(3000);
-		
+		DefaultTableCellRenderer rend = new DefaultTableCellRenderer();
+		for(int i=0;i<datalist.getColumnCount();i++)
+		{
+			Object value = datalist.getValueAt(0, i);
+			Component comp = rend.getTableCellRendererComponent(datalist, value, false, false,0,0);
+		    int width = (int) comp.getPreferredSize().getWidth();    
+			TableColumnModel cmodel = datalist.getColumnModel();
+			TableColumn column = cmodel.getColumn(i);
+			column.setMinWidth(width);
+			if(i==0)
+			{
+				rend.setIcon(new ImageIcon(getClass().getResource("/com/ms509/images/data.png")));
+				column.setCellRenderer(rend);
+			}
+		}
+
 //		datalistpane.updateUI();
 	}
 
