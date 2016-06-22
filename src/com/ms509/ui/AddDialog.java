@@ -133,6 +133,9 @@ public class AddDialog extends JDialog {
 					case "jsp":
 						atype.setSelectedItem("JSP(Eval)");
 						break;
+					case "jspx":
+						atype.setSelectedItem("JSP(Eval)");
+						break;
 					}
 				}
 			}

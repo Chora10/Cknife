@@ -283,7 +283,14 @@ public class FileManagerPanel extends JPanel {
 			root = new DefaultMutableTreeNode("/");
 			model.setRoot(root);
 		}
-		path.setText(webroot + Safe.SYSTEMSP);
+		String cut = webroot.substring(webroot.length()-1);
+		if(cut.equals(Safe.SYSTEMSP))
+		{
+			path.setText(webroot);
+		} else 
+		{
+			path.setText(webroot + Safe.SYSTEMSP);
+		}
 	}
 
 	public DefaultTreeModel getModel() {
