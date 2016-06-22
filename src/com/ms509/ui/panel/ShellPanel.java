@@ -15,6 +15,7 @@ import javax.swing.text.Document;
 
 import com.ms509.ui.MainFrame;
 import com.ms509.ui.MessageDialog;
+import com.ms509.ui.menu.ShellPopMenu;
 import com.ms509.util.GBC;
 import com.ms509.util.Safe;
 import com.ms509.util.Shell;
@@ -45,7 +46,8 @@ public class ShellPanel extends JPanel {
 	private Shell core;
 	private Font shell_font = null;
 	private int num_t = 0;
-
+	
+	
 	public ShellPanel() {
 		// TODO Auto-generated constructor stub
 		// 控件初始化
@@ -56,6 +58,9 @@ public class ShellPanel extends JPanel {
 		console = new JTextPane();
 		console_scroll = new JScrollPane(console);
 		shell_doc = console.getDocument();
+		
+		ShellPopMenu a = new ShellPopMenu(this,console);
+		
 		// 初始化常量
 		String[] tmp = MainFrame.tab.getUrl().split("\t");
 		url = tmp[1];
@@ -96,6 +101,7 @@ public class ShellPanel extends JPanel {
 			public void run() {
 				// 显示网站路径
 				path = core.GetPath();
+				check_path();
 				System.out.println("path=" + path);
 				final String tmp = path.substring(0, path.length() - 1);
 				SwingUtilities.invokeLater(new Runnable() {
@@ -105,7 +111,7 @@ public class ShellPanel extends JPanel {
 							console.setEnabled(false);
 						} else {
 							try {
-								shell_doc.insertString(shell_doc.getLength(), "\n" + path, null);
+								shell_doc.insertString(shell_doc.getLength(), "\n" + path_show, null);
 							} catch (BadLocationException e) {
 							}
 						}
@@ -134,8 +140,7 @@ public class ShellPanel extends JPanel {
 		// 监听text键盘事件
 		textareaKey key_listener = new textareaKey();
 		console.addKeyListener(key_listener);
-		textareaMouse mouse_listener = new textareaMouse();
-		console.addMouseListener(mouse_listener);
+		
 		// 布局添加
 		bar.add(status);
 		this.add(bar, gbcinfo);
@@ -202,7 +207,15 @@ public class ShellPanel extends JPanel {
 	}
 
 	private class textareaMouse extends MouseAdapter {
-
+		public void mouseClicked(MouseEvent e)
+		{
+//			System.out.println(e.getButton());
+			if(e.getButton()== 3)   // button 3 鼠标右键
+			{
+				//jmenu.setVisible(true);
+				
+			}
+		}
 	}
 
 	// text键盘监听
@@ -246,6 +259,10 @@ public class ShellPanel extends JPanel {
 				String tmp_cmd = null;
 				try {
 					tmp_cmd = shell_doc.getText(command_start, command_stop - command_start);
+					/////////////////////////////////////////////////////////////
+					//多次执行有可能会出错
+					//中文输入法
+					//////////////////////////////////////////////////////////////
 					tmp_cmd = tmp_cmd.replace("\n", "").replace("\r", "");
 					if (tmp_cmd.equals("cls") || tmp_cmd.equals("clear")) { // 清空文本显示区域
 						shell_doc.remove(0, shell_doc.getLength());
@@ -262,7 +279,7 @@ public class ShellPanel extends JPanel {
 							core.SetCMD(k);
 							shell_doc.insertString(shell_doc.getLength(), "\n设置命令路径为:"+k, null);
 							System.out.println("path="+path);
-							shell_doc.insertString(shell_doc.getLength(), "\n" + path+">", null);
+							shell_doc.insertString(shell_doc.getLength(), "\n" + path+"", null);
 							command_start = shell_doc.getLength();
 						}
 					}
