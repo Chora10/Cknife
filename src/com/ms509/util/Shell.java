@@ -195,7 +195,7 @@ public class Shell {
 		String[] index_datas = Common.send(url, params, code).split("\t");
 		String result = null;
 		result = Arrays.toString(index_datas);
-		System.out.println(result);
+		System.out.println("phpresult="+result);
 		re[0] = result.substring(result.indexOf("[") + 1, result.indexOf("[S]"));
 		re[1] = Arrays.toString(index_datas).substring(Arrays.toString(index_datas).indexOf("[S]") + 3,
 				Arrays.toString(index_datas).indexOf("[E]"));
@@ -251,7 +251,14 @@ public class Shell {
 		String[] index_datas = Common.send(url, params, code).split("\t");
 		String result = null;
 		result = Arrays.toString(index_datas);
+		System.out.println(result);
 		re[0] = result.substring(result.indexOf("[") + 1, result.indexOf("[S]"));
+		if(result.indexOf("[E]")+3<(result.length()-1))
+		{
+		String erroroutput = result.substring(result.indexOf("[E]") + 3, (result.length()-1));
+		re[0] = re[0] + erroroutput;
+		System.out.println("r0="+re[0]);
+		}
 		re[1] = Arrays.toString(index_datas).substring(Arrays.toString(index_datas).indexOf("[S]") + 3,
 				Arrays.toString(index_datas).indexOf("[E]"));
 		return re;
@@ -360,7 +367,7 @@ public class Shell {
 			{
 				pa = pa.replace("/", "\\");
 			}
-			pa = pa +">";
+			//pa = pa +"";
 			os = 1;
 			z1 = "cmd"; //设置cmd初始化路径
 		} else // linux系统
@@ -372,7 +379,7 @@ public class Shell {
 				pa = pa + "/";
 			}
 			pa = pa.replace("\t", "");
-			pa = "["+pa+"]$";
+			//pa = "["+pa+"]$";
 			os = 2;
 			z1 = "/bin/sh";  //设置cmd初始化路径
 		}

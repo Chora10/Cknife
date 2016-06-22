@@ -117,28 +117,28 @@ public class SetDBDialog extends JDialog{
 		switch (type) {
 		case "JSP(Eval)":
 			// System.out.println("jsp");
-			dbtypes = new String[]{"<T>MYSQL</T><H>localhost</H><U>root</U><P>root</P><L>utf8</L>",
-					"<T>ORACLE</T><H>localhost:1443/test</H><U>root</U><P>root</P><M>database</M><L>utf8</L>",
-					"<T>MSSQL</T><H>localhost:1443/test</H><U>root</U><P>root</P><M>database</M><L>utf8</L>"};
+			dbtypes = new String[]{"<T>MYSQL</T>\r\n<H>localhost</H>\r\n<U>root</U>\r\n<P>root</P>\r\n<L>utf8</L>",
+					"<T>ORACLE</T>\r\n<H>localhost:1521</H>\r\n<U>root</U>\r\n<P>root</P>\r\n<M>database</M>\r\n<L>utf8</L>",
+					"<T>MSSQL</T><H>localhost:1433</H>\r\n<U>root</U>\r\n<P>root</P>\r\n<M>database</M>\r\n<L>utf8</L>"};
 			// this.jsp();
 			break;
 		case "PHP(Eval)":
 			// System.out.println("php");
-			dbtypes = new String[]{"<T>MYSQL</T><H>localhost</H><U>root</U><P>root</P><L>utf8</L>"};
+			dbtypes = new String[]{"<T>MYSQL</T>\r\n<H>localhost</H>\r\n<U>root</U>\r\n<P>root</P>\r\n<L>utf8</L>"};
 			// this.php();
 			break;
 		case "ASP(Eval)":
 			// System.out.println("asp");
-			dbtypes = new String[]{"<T>MYSQL</T><C>Driver=MySQL ODBC 5.3 Unicode Driver;Server=localhost;database=mysql;UID=root;PWD=root</C>",
-					"<T>MSSQL</T><C>Provider=SQLOLEDB.1;User ID=;Password=;Initial Catalog=master;Data Source=(local)</C>",
-					"<T>MDB</T><C>Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\\111.mdb</C>"};
+			dbtypes = new String[]{"<T>MYSQL</T>\r\n<C>Driver=MySQL ODBC 5.3 Unicode Driver;Server=localhost;database=mysql;UID=root;PWD=root</C>",
+					"<T>MSSQL</T>\r\n<C>Provider=SQLOLEDB.1;User ID=;Password=;Initial Catalog=master;Data Source=(local)</C>",
+					"<T>MDB</T>\r\n<C>Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\\111.mdb</C>"};
 			// this.asp();
 			break;
 		case "ASPX(Eval)":
 			// System.out.println("aspx");
-			dbtypes = new String[]{"<T>MYSQL</T><C>Driver=MySQL ODBC 5.3 Unicode Driver;Server=localhost;database=mysql;UID=root;PWD=root</C>",
-					"<T>MSSQL</T><C>Provider=SQLOLEDB.1;User ID=;Password=;Initial Catalog=master;Data Source=(local)</C>",
-					"<T>MDB</T><C>Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\\111.mdb</C>"};
+			dbtypes = new String[]{"<T>MYSQL</T>\r\n<C>Driver=MySQL ODBC 5.3 Unicode Driver;Server=localhost;database=mysql;UID=root;PWD=root</C>",
+					"<T>MSSQL</T>\r\n<C>Provider=SQLOLEDB.1;User ID=;Password=;Initial Catalog=master;Data Source=(local)</C>",
+					"<T>MDB</T>\r\n<C>Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\\111.mdb</C>"};
 			break;
 		}
 		
