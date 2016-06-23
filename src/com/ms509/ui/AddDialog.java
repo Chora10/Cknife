@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Vector;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -69,11 +70,15 @@ public class AddDialog extends JDialog {
 		JPanel north = new JPanel();
 		JPanel center = new JPanel();
 		JPanel south = new JPanel();
-		north.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 8));
-		center.setLayout(new FlowLayout(FlowLayout.LEFT, 1, 0));
-		south.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 8));
-		JLabel urllabel = new JLabel("  地址: ");
-		JLabel configlabel = new JLabel("  配置: ");
+		north.setLayout(new FlowLayout(FlowLayout.LEFT, 3, 8));
+		center.setLayout(new FlowLayout(FlowLayout.LEFT, 3, 0));
+		south.setLayout(new FlowLayout(FlowLayout.RIGHT, 3, 8));
+		JLabel urllabel = new JLabel("地址:");
+		urllabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+		JLabel configlabel = new JLabel("配置:");
+		configlabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+		JLabel actionlabel = new JLabel("");
+		actionlabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
 		urltext = new JTextField("http://");
 		passtext = new JTextField();
 		configtext = new JTextArea();
@@ -85,24 +90,24 @@ public class AddDialog extends JDialog {
 				"BIG5", "ISO-8859-1" };
 		atype = new JComboBox<>(strtype);
 		acode = new JComboBox<>(strcode);
-		urltext.setColumns(26);
-		passtext.setColumns(4);
+		urltext.setPreferredSize(new Dimension(320,23));
+		passtext.setPreferredSize(new Dimension(56,23));
 		configtext.setLineWrap(true);
-		configtext.setColumns(31);
-		configtext.setRows(8);
+		configtext.setPreferredSize(new Dimension(369,128));
 		configscroll.setBorder(urltext.getBorder());
 		north.add(urllabel);
 		north.add(urltext);
 		north.add(passtext);
 		center.add(configlabel);
-		center.add(configscroll);
+		center.add(configscroll);	
 		south.add(atype);
 		south.add(acode);
 		south.add(button);
+		south.add(actionlabel);
 		this.getContentPane().add(north, BorderLayout.NORTH);
 		this.getContentPane().add(center, BorderLayout.CENTER);
 		this.getContentPane().add(south, BorderLayout.SOUTH);
-		this.getRootPane().setDefaultButton(button);
+		this.getRootPane().setDefaultButton(button);	
 	}
 
 	private void setEvent() {
@@ -126,6 +131,9 @@ public class AddDialog extends JDialog {
 						atype.setSelectedItem("PHP(Eval)");
 						break;
 					case "jsp":
+						atype.setSelectedItem("JSP(Eval)");
+						break;
+					case "jspx":
 						atype.setSelectedItem("JSP(Eval)");
 						break;
 					}

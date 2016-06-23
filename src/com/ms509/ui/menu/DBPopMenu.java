@@ -1,5 +1,6 @@
 package com.ms509.ui.menu;
 
+import java.awt.Component;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
@@ -15,7 +16,10 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -356,7 +360,21 @@ public class DBPopMenu extends JPopupMenu {
 			public void run() {
 				// TODO Auto-generated method stub
 				table.setModel(dtm);
-
+				DefaultTableCellRenderer rend = new DefaultTableCellRenderer();
+				for(int i=0;i<table.getColumnCount();i++)
+				{
+					Object value = table.getValueAt(0, i);
+					Component comp = rend.getTableCellRendererComponent(table, value, false, false,0,0);
+				    int width = (int) comp.getPreferredSize().getWidth();    
+					TableColumnModel cmodel = table.getColumnModel();
+					TableColumn column = cmodel.getColumn(i);
+					column.setMinWidth(width);
+					if(i==0)
+					{
+						rend.setIcon(new ImageIcon(getClass().getResource("/com/ms509/images/data.png")));
+						column.setCellRenderer(rend);
+					}
+				}
 				tree.updateUI();
 			}
 		});
