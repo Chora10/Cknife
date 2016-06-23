@@ -91,8 +91,6 @@ public class ShellPanel extends JPanel {
 		}
 
 		// core = new Shell(path,os,url,code,type1);
-		//System.out.println("asp11");
-		System.out.println("os0="+type);
 		core = new Shell(os, url, code, type);
 
 		// /
@@ -102,7 +100,6 @@ public class ShellPanel extends JPanel {
 				// 显示网站路径
 				path = core.GetPath();
 				check_path();
-				System.out.println("path=" + path);
 				final String tmp = path.substring(0, path.length() - 1);
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
@@ -163,7 +160,6 @@ public class ShellPanel extends JPanel {
 
 		shell_font = new Font("幼圆", Font.BOLD, 12);
 		console.setFont(new Font("幼圆", Font.BOLD, 12));
-		// System.out.println("start=" + shell_doc.getLength());
 		command_start = shell_doc.getLength();
 	}
 
@@ -200,7 +196,6 @@ public class ShellPanel extends JPanel {
 		@Override
 		public void focusGained(FocusEvent e) {
 			// TODO Auto-generated method stub
-			// System.out.println("text console get focus");
 			console.requestFocus();
 			console.setCaretPosition(shell_doc.getLength());
 		}
@@ -212,12 +207,10 @@ public class ShellPanel extends JPanel {
 		@Override
 		public void keyPressed(KeyEvent arg0) {
 			// TODO Auto-generated method stub
-			System.out.println("arg0="+arg0.getKeyCode());
 			if (shell_doc.getLength() <= command_start && !arg0.isControlDown()) {
 				if (arg0.getKeyCode() == 8) {
 					try {
 						String t = shell_doc.getText(console.getCaretPosition() - 1, 1);
-						// System.out.println("");
 						shell_doc.insertString(console.getCaretPosition(), t, null);
 					} catch (Exception e) {
 
@@ -247,8 +240,6 @@ public class ShellPanel extends JPanel {
 		@Override
 		public void keyReleased(KeyEvent arg0) {
 			command_stop = shell_doc.getLength();
-			// System.out.print(arg0.getKeyCode());
-			// System.out.println(path);
 			if (arg0.getKeyCode() == 10) { // 判断回车
 				String tmp_cmd = null;
 				try {
@@ -269,10 +260,8 @@ public class ShellPanel extends JPanel {
 						if(tmp_cmd.substring(0,4).equals("setp"))
 						{
 							String k = tmp_cmd.substring(5,tmp_cmd.length());
-							System.out.println("kkk="+k);
 							core.SetCMD(k);
 							shell_doc.insertString(shell_doc.getLength(), "\n设置命令路径为:"+k, null);
-							System.out.println("path="+path);
 							shell_doc.insertString(shell_doc.getLength(), "\n" + path+"", null);
 							command_start = shell_doc.getLength();
 						}
@@ -305,9 +294,7 @@ public class ShellPanel extends JPanel {
 						});
 						if (num_t == 0) {
 							exe.start();
-							System.out.println(1);
 						} else {
-							System.out.println(0);
 						}
 					}
 					last_commands.add(tmp_cmd);
@@ -328,7 +315,7 @@ public class ShellPanel extends JPanel {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				// System.out.println("shang");
+				
 			}
 
 			// 翻看命令记录（下）
@@ -341,7 +328,7 @@ public class ShellPanel extends JPanel {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				// System.out.println("xia");
+			
 			}
 
 		}
@@ -358,13 +345,13 @@ public class ShellPanel extends JPanel {
 
 			path = result[1];
 			// check_path();
-			// System.out.println("path=" + path + "\n");
+			
 			check_path();
 			shell_doc.insertString(shell_doc.getLength(), "\n" + path_show, null);
 			command_start = shell_doc.getLength();
 			console.setCaretPosition(shell_doc.getLength());
 			status.setText("完成");
-			// System.out.println("caret text");
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			status.setText("执行失败");
@@ -378,11 +365,9 @@ public class ShellPanel extends JPanel {
 	public String key_up_action() {
 		num = num - 1;
 		String last_command = null;
-		// System.out.println(num);
-		if (num >= 0) {
+		if (num >= 0 && !last_commands.isEmpty()) {
 			last_command = last_commands.get(num);
 			last_command = last_command.replace("\n", "").replace("\r", "");
-			// System.out.println(last_command);
 			return last_command;
 		} else {
 			return "";
@@ -394,11 +379,9 @@ public class ShellPanel extends JPanel {
 	public String key_down_action() {
 		num = num + 1;
 		String last_command = null;
-		// System.out.println(num);
 		if (num < last_commands.size() && num >= 0) {
 			last_command = last_commands.get(num);
 			last_command = last_command.replace("\n", "").replace("\r", "");
-			// System.out.println(last_command);
 			return last_command;
 		} else if (num < 0) {
 			num = 0;
