@@ -92,7 +92,7 @@ public class ShellPopMenu {
 			// TODO Auto-generated method stub
 			if (e.isMetaDown()) // 判断右键
 			{
-				shellmenu.show(p, e.getX(), e.getY());
+				shellmenu.show(c, e.getX(), e.getY());
 			}
 		}
 

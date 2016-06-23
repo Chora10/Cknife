@@ -206,24 +206,14 @@ public class ShellPanel extends JPanel {
 		}
 	}
 
-	private class textareaMouse extends MouseAdapter {
-		public void mouseClicked(MouseEvent e)
-		{
-//			System.out.println(e.getButton());
-			if(e.getButton()== 3)   // button 3 鼠标右键
-			{
-				//jmenu.setVisible(true);
-				
-			}
-		}
-	}
 
 	// text键盘监听
 	private class textareaKey extends KeyAdapter {
 		@Override
 		public void keyPressed(KeyEvent arg0) {
 			// TODO Auto-generated method stub
-			if (shell_doc.getLength() <= command_start) {
+			System.out.println("arg0="+arg0.getKeyCode());
+			if (shell_doc.getLength() <= command_start && !arg0.isControlDown()) {
 				if (arg0.getKeyCode() == 8) {
 					try {
 						String t = shell_doc.getText(console.getCaretPosition() - 1, 1);
@@ -235,11 +225,15 @@ public class ShellPanel extends JPanel {
 				}
 			}
 
-			if (console.getCaretPosition() < command_start || console.getSelectionStart() < command_start
-					|| console.getSelectionEnd() < command_start) {
+			if ((console.getCaretPosition() < command_start || console.getSelectionStart() < command_start
+					|| console.getSelectionEnd() < command_start) && !arg0.isControlDown()) {
 				console.setEditable(false);
 				console.setCaretPosition(shell_doc.getLength());
-			} else {
+			} else if(arg0.isControlDown()  && console.getCaretPosition() < command_start)
+			{
+				console.setEditable(false);
+			}else
+			{
 				console.setEditable(true);
 
 			}
