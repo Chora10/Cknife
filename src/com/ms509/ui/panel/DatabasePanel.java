@@ -567,20 +567,28 @@ public class DatabasePanel extends JPanel {
 		DefaultTableCellRenderer rend = new DefaultTableCellRenderer();
 		for(int i=0;i<datalist.getColumnCount();i++)
 		{
-			Object value = datalist.getValueAt(0, i);
-			Component comp = rend.getTableCellRendererComponent(datalist, value, false, false,0,0);
-		    int width = (int) comp.getPreferredSize().getWidth();    
-			TableColumnModel cmodel = datalist.getColumnModel();
-			TableColumn column = cmodel.getColumn(i);
-			column.setMinWidth(width);
-			if(i==0)
+			int maxwidth=0;
+			for(int j=0;j<datalist.getRowCount();j++)
 			{
-				rend.setIcon(new ImageIcon(getClass().getResource("/com/ms509/images/data.png")));
-				column.setCellRenderer(rend);
-			}
+				Object value = datalist.getValueAt(j, i);
+				Component comp = rend.getTableCellRendererComponent(datalist, value, false, false,0,0);
+			    int width = (int) comp.getPreferredSize().getWidth();   
+				TableColumnModel cmodel = datalist.getColumnModel();
+				TableColumn column = cmodel.getColumn(i);
+				maxwidth = Math.max(maxwidth, width);
+				if(j==datalist.getRowCount()-1)
+				{
+					Object hvalue  = column.getHeaderValue();
+					TableCellRenderer hrend = datalist.getTableHeader().getDefaultRenderer();
+					Component hcomp = hrend.getTableCellRendererComponent(datalist, hvalue, false, false,0,0);
+					int hwidth = (int) hcomp.getPreferredSize().getWidth();	
+					maxwidth = Math.max(maxwidth, hwidth);
+				}
+				column.setPreferredWidth(maxwidth);
+			}		
 		}
+	
 
-//		datalistpane.updateUI();
 	}
 
 }
