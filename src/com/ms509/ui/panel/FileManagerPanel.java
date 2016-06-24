@@ -352,7 +352,7 @@ public class FileManagerPanel extends JPanel {
 						TableColumnModel columnmodel = list.getColumnModel();
 						TableColumn isfiledict = columnmodel.getColumn(0);
 						isfiledict.setHeaderValue("");
-						isfiledict.setMaxWidth(1);
+						isfiledict.setMaxWidth(0);
 						TableColumn name = columnmodel.getColumn(1);
 						name.setMinWidth(300);
 						TableColumn time = columnmodel.getColumn(2);

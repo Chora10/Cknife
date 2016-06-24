@@ -1,5 +1,6 @@
 package com.ms509.ui.panel;
 
+import com.ms509.model.DatabaseTableModel;
 import com.ms509.model.DatabaseTreeCellRenderer;
 import com.ms509.model.ResultSetTableModel;
 import com.ms509.ui.MainFrame;
@@ -27,12 +28,17 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.EventObject;
 import java.util.Vector;
 
 import javax.swing.*;
+import javax.swing.event.CellEditorListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -535,13 +541,14 @@ public class DatabasePanel extends JPanel {
 
 	// 根据result结果更新table的显示内容
 	private void UpdateData(String result) {
-		DefaultTableModel dtm = new DefaultTableModel();
+		DatabaseTableModel dtm = new DatabaseTableModel();
 		Vector<Object> al = new Vector<Object>();
 		String[] rows = result.split("\t\\|\t\r\n");
 		// System.out.println(rows[0]);
 		// System.out.println("count="+rows.length);
 		datalist.removeAll();
 		Vector<Object> vtitle = new Vector<Object>();
+		vtitle.add("");
 		String[] dtitle = rows[0].split("\t\\|\t");
 		int columns = dtitle.length;
 		// System.out.println("columns" + columns);
@@ -553,10 +560,15 @@ public class DatabasePanel extends JPanel {
 				// System.out.println(rows[i]);
 				String[] cols = rows[i].split("\t\\|\t");
 				// System.out.println("cols=" + cols.length);
-				Vector<String> vector = new Vector<String>();
+				Vector<Object> vector = new Vector<Object>();
 				for (int m = 0; m < cols.length; m++) {
-					// System.out.println("cols" + m + "=" + cols[m]);
+//					 System.out.println("cols" + m + "=" + cols[m]);
+					if(m==0)
+					{
+						vector.add(new ImageIcon(getClass().getResource("/com/ms509/images/data.png")));
+					} 
 					vector.add(cols[m].replace("\t\\|\t", ""));
+					
 				}
 				al.add(vector);
 			}
@@ -564,11 +576,27 @@ public class DatabasePanel extends JPanel {
 		dtm.setDataVector(al, vtitle);
 		datalist.setModel(dtm);
 		
+		int rowcount = datalist.getRowCount();
+		int colcount = datalist.getColumnCount();
 		DefaultTableCellRenderer rend = new DefaultTableCellRenderer();
-		for(int i=0;i<datalist.getColumnCount();i++)
+		if(rowcount == 0)
+		{
+			JTableHeader header = datalist.getTableHeader();
+			TableColumnModel hmodel = header.getColumnModel();
+			for(int k=0;k<hmodel.getColumnCount();k++)
+			{
+				TableColumn hcolumn = hmodel.getColumn(k);
+				Object hvalue  = hcolumn.getHeaderValue();
+				TableCellRenderer hrend = header.getDefaultRenderer();
+				Component hcomp = hrend.getTableCellRendererComponent(datalist, hvalue, false, false,0,0);
+				int hwidth = (int) hcomp.getPreferredSize().getWidth();	
+				hcolumn.setPreferredWidth(hwidth);
+			}
+		}
+		for(int i=0;i<colcount;i++)
 		{
 			int maxwidth=0;
-			for(int j=0;j<datalist.getRowCount();j++)
+			for(int j=0;j<rowcount;j++)
 			{
 				Object value = datalist.getValueAt(j, i);
 				Component comp = rend.getTableCellRendererComponent(datalist, value, false, false,0,0);
@@ -576,7 +604,7 @@ public class DatabasePanel extends JPanel {
 				TableColumnModel cmodel = datalist.getColumnModel();
 				TableColumn column = cmodel.getColumn(i);
 				maxwidth = Math.max(maxwidth, width);
-				if(j==datalist.getRowCount()-1)
+				if(j==rowcount-1)
 				{
 					Object hvalue  = column.getHeaderValue();
 					TableCellRenderer hrend = datalist.getTableHeader().getDefaultRenderer();
@@ -584,13 +612,12 @@ public class DatabasePanel extends JPanel {
 					int hwidth = (int) hcomp.getPreferredSize().getWidth();	
 					maxwidth = Math.max(maxwidth, hwidth);
 				}
-				column.setPreferredWidth(maxwidth);
+				column.setPreferredWidth(maxwidth+1);
 			}		
 		}
-	
-
+		TableColumn fcolumn  = datalist.getColumnModel().getColumn(0);
+		fcolumn.setMaxWidth(0);
 	}
-
 }
 
 
