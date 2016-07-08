@@ -24,6 +24,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.ResultSet;
@@ -44,6 +45,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 
 public class DatabasePanel extends JPanel {
 
@@ -117,7 +119,7 @@ public class DatabasePanel extends JPanel {
 		datalistpane = new JScrollPane(datalist);
 		datalist.setAutoCreateRowSorter(true);
 		datalist.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		datalistpane.setPreferredSize(new Dimension(0,0));
+		datalistpane.setPreferredSize(new Dimension(0, 0));
 		// jtree右键菜单
 		DBPopMenu m = new DBPopMenu(this, dblist, datalist);
 
@@ -146,25 +148,33 @@ public class DatabasePanel extends JPanel {
 
 		// 初始化布局
 		this.setLayout(new GridBagLayout());
-		GBC gbcleft = new GBC(0, 0, 2, 4).setFill(GBC.VERTICAL).setWeight(0,1).setIpad(200, 0);
+		GBC gbcleft = new GBC(0, 0, 2, 4).setFill(GBC.VERTICAL).setWeight(0, 1)
+				.setIpad(200, 0);
 
 		// x.= 1
-		GBC gbcright1 = new GBC(2, 0, 5, 1).setFill(GBC.BOTH).setWeight(1, 0.7).setInsets(0, 5, 0, 0);
+		GBC gbcright1 = new GBC(2, 0, 5, 1).setFill(GBC.BOTH).setWeight(1, 0.7)
+				.setInsets(0, 5, 0, 0);
 
 		// x.= 2
-		GBC gbcright2_1 = new GBC(2, 1, 1, 1).setFill(GBC.NONE).setInsets(0, 5, 0, 0);
-		GBC gbcright2_2 = new GBC(3, 1, 1, 1).setFill(GBC.HORIZONTAL).setWeight(1, 0);
+		GBC gbcright2_1 = new GBC(2, 1, 1, 1).setFill(GBC.NONE).setInsets(0, 5,
+				0, 0);
+		GBC gbcright2_2 = new GBC(3, 1, 1, 1).setFill(GBC.HORIZONTAL)
+				.setWeight(1, 0);
 		GBC gbcright2_3 = new GBC(4, 1, 1, 1).setFill(GBC.NONE);
-		GBC gbcright2_4 = new GBC(5, 1, 1, 1).setFill(GBC.HORIZONTAL).setWeight(1, 0);
+		GBC gbcright2_4 = new GBC(5, 1, 1, 1).setFill(GBC.HORIZONTAL)
+				.setWeight(1, 0);
 		GBC gbcright2_5 = new GBC(6, 1, 1, 1).setFill(GBC.NONE);
 
 		// x.= 3
-		GBC gbcright3 = new GBC(2, 2, 8, 1).setFill(GBC.BOTH).setWeight(1, 0.3).setInsets(0, 5, 0, 0);
+		GBC gbcright3 = new GBC(2, 2, 8, 1).setFill(GBC.BOTH).setWeight(1, 0.3)
+				.setInsets(0, 5, 0, 0);
 
 		// x. = 4
-		GBC gbcright4_1 = new GBC(2, 3, 5, 1).setFill(GBC.HORIZONTAL).setWeight(1, 0).setInsets(0, 5, 0, 0);
-	
-		GBC gbcstatus = new GBC(0, 4, 9, 1).setFill(GBC.HORIZONTAL).setWeight(1, 0);
+		GBC gbcright4_1 = new GBC(2, 3, 5, 1).setFill(GBC.HORIZONTAL)
+				.setWeight(1, 0).setInsets(0, 5, 0, 0);
+
+		GBC gbcstatus = new GBC(0, 4, 9, 1).setFill(GBC.HORIZONTAL).setWeight(
+				1, 0);
 
 		// jtree
 		this.add(dblistpane, gbcleft);
@@ -199,7 +209,7 @@ public class DatabasePanel extends JPanel {
 		url = tmp[1];
 		pass = tmp[2];
 		config = tmp[3];
-		System.out.println("newdb=" + config);
+//		System.out.println("newdb=" + config);
 		code = tmp[5];
 		Safe.PASS = pass; // 初始化PASS常量
 		// System.out.println(type);
@@ -233,9 +243,10 @@ public class DatabasePanel extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
-			SetDBDialog dialog = new SetDBDialog(MainFrame.tab.getUrl().split("\t"));
+			SetDBDialog dialog = new SetDBDialog(MainFrame.tab.getUrl().split(
+					"\t"));
 			String k = dialog.getStr();
-			System.out.println("回传" + k);
+//			System.out.println("回传" + k);
 			config = k;
 
 			RePainDBList();
@@ -251,7 +262,7 @@ public class DatabasePanel extends JPanel {
 			tmp_sql_str = commandlist.getText();
 
 			String dataname = GetSelectDB();
-			System.out.println("选择数据" + dataname);
+//			System.out.println("选择数据" + dataname);
 
 			// String result = DataBase.exec_sql(url, pass, config, type, code,
 			// sql_query, dataname);
@@ -265,16 +276,18 @@ public class DatabasePanel extends JPanel {
 	}
 
 	// 数据库jtree点击事件
-	class DoAction implements MouseListener {
+	class DoAction extends MouseAdapter {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			// TODO Auto-generated method stub
 			DefaultMutableTreeNode ddd = new DefaultMutableTreeNode();
-			ddd = (DefaultMutableTreeNode) dblist.getLastSelectedPathComponent();
+			ddd = (DefaultMutableTreeNode) dblist
+					.getLastSelectedPathComponent();
 			int pathcount = 0;
+			TreePath tp = dblist.getSelectionPath();
 			try {
-				pathcount = dblist.getSelectionPath().getPathCount();
+				pathcount = tp.getPathCount();
 
 				for (int m = 0; m < choosedb.getItemCount(); m++) // 选中jtree，设置下拉框中对应项
 				{
@@ -283,84 +296,61 @@ public class DatabasePanel extends JPanel {
 					}
 				}
 
-				// System.out.println(pathcount);
 			} catch (Exception k) {
-				System.out.println("点击事件，未获取到count");
+//				System.out.println("点击事件，未获取到count");
 				pathcount = 0;
 			}
-			if (pathcount > 2) {
+			if (ddd != null) {
+				if (pathcount > 2) {
 
-				if (e.getClickCount() == 2 && ddd.getChildCount() == 0) // 判断双击
-				{
-					System.out.println("执行总数查询");
-					status.setText("正在查询");
-					dbn = GetSelectDB();
-					tmp_sql_str = "select * from " + dblist.getLastSelectedPathComponent().toString().replace("\t", "");
-					Thread_exec();
-					// tmp_sql_str = "";
-				}
-			} else {
-				// 首次加载读表名
-				if (e.getClickCount() == 2 && ddd.getChildCount() == 0) // 判断双击
-				{
-					Thread showtb = new Thread(new Runnable() {
-						public void run() {
-							try {
-								DBPopMenu.showtable();
-								dblist.expandRow(dblist.getLeadSelectionRow());
-								t_locker = 0;
-								status.setText("执行完毕");
-							} catch (Exception e) {
-								System.out.println(e);
-								t_locker = 0;
-								status.setText("error");
-							}
-
-						}
-					});
-
-					if (t_locker == 0) {
-						t_locker = 1;
-						if (config.equals("")) {
-							status.setText("请先配置数据库");
-							t_locker = 0;
-						} else {
-							showtb.start();
-						}
-					} else {
-						status.setText("上次操作正在执行中...");
+					if (e.getClickCount() == 2 && ddd.getChildCount() == 0) // 判断双击
+					{
+//						System.out.println("执行总数查询");
+						status.setText("正在查询");
+						dbn = GetSelectDB();
+						tmp_sql_str = "select * from "
+								+ dblist.getLastSelectedPathComponent()
+										.toString().replace("\t", "");
+						Thread_exec();
+						// tmp_sql_str = "";
 					}
+				} else {
+					// 首次加载读表名
+					if (e.getClickCount() == 2 && ddd.getChildCount() == 0) // 判断双击
+					{
+						Thread showtb = new Thread(new Runnable() {
+							public void run() {
+								try {
+									DBPopMenu.showtable();
+									dblist.expandRow(dblist
+											.getLeadSelectionRow());
+									t_locker = 0;
+									status.setText("执行完毕");
+								} catch (Exception e) {
+//									System.out.println(e);
+									t_locker = 0;
+									status.setText("error");
+								}
 
+							}
+						});
+
+						if (t_locker == 0) {
+							t_locker = 1;
+							if (config.equals("")) {
+								status.setText("请先配置数据库");
+								t_locker = 0;
+							} else {
+								showtb.start();
+							}
+						} else {
+							status.setText("上一操作尚未执行完毕");
+						}
+
+					}
 				}
 			}
-			// ddd.getChildCount()>0
-
 		}
-
-		@Override
-		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void mouseExited(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
 	}
 
 	class SelectItem implements ActionListener {
@@ -387,9 +377,9 @@ public class DatabasePanel extends JPanel {
 			// TODO Auto-generated method stub
 
 			if (e.getKeyCode() == KeyEvent.VK_ENTER && e.isControlDown()) {
-				System.out.println("get");
+//				System.out.println("get");
 				tmp_sql_str = commandlist.getText();
-				System.out.println(tmp_sql_str);
+//				System.out.println(tmp_sql_str);
 				dbn = GetSelectDB();
 				Thread_exec();
 				commandlist.setText("");
@@ -408,27 +398,34 @@ public class DatabasePanel extends JPanel {
 
 	private void Thread_exec() {
 		Thread thread_exec = new Thread(new Runnable() {
-			private String re="";
+			private String re = "";
+
 			public void run() {
-				status.setText("正在执行...请稍等");
+				status.setText("正在读取...请稍等");
 				try {
-					re = DataBase.exec_sql(url, pass, config, type, code, tmp_sql_str, dbn);
+					re = DataBase.exec_sql(url, pass, config, type, code,
+							tmp_sql_str, dbn);
+//					System.out.println(re);
 					SwingUtilities.invokeLater(new Runnable() {
 						public void run() {
-							UpdateData(re);
-							status.setText("执行完毕");
+							try {
+								UpdateData(re);
+							} catch (Exception e) {
+
+							}
+
+							status.setText("完成");
 							t_locker = 0;
 						}
-					});		
+					});
 				} catch (Exception e) {
-					new MessageDialog(re,5);
+					new MessageDialog(re, 5);
 					status.setText("error");
 					t_locker = 0;
 				}
 
 			}
 		});
-
 		if (t_locker == 0) {
 			t_locker = 1;
 			if (config.equals("")) {
@@ -438,7 +435,7 @@ public class DatabasePanel extends JPanel {
 				thread_exec.start();
 			}
 		} else {
-			status.setText("上次操作正在执行中...");
+			status.setText("上一操作尚未执行完毕");
 		}
 
 	}
@@ -448,19 +445,21 @@ public class DatabasePanel extends JPanel {
 		Thread thread_Repaindblist = new Thread(new Runnable() {
 			public void run() {// normal
 				try {
-					status.setText("正在执行...");
-					String[] dbl = DataBase.getDBs(url, pass, config, type, code);
+					status.setText("正在连接...请稍等");
+					String[] dbl = DataBase.getDBs(url, pass, config, type,
+							code);
 
 					for (int i = 0; i < dbl.length; i++) {
 						choosedb.addItem(dbl[i]);
 					}
 					// 添加tree显示
-					NodeData n = new NodeData(DataType.DATABASE,"/");
+					NodeData n = new NodeData(DataType.DATABASE, "/");
 					root = new DefaultMutableTreeNode(n);
 					for (int d = 0; d < dbl.length; d++) // dbl[i]="database" 略去
 					{
 						NodeData nd = new NodeData(DataType.DATABASE, dbl[d]);
-						DefaultMutableTreeNode dmtn = new DefaultMutableTreeNode(nd);
+						DefaultMutableTreeNode dmtn = new DefaultMutableTreeNode(
+								nd);
 						root.add(dmtn);
 					}
 					DefaultTreeModel model = new DefaultTreeModel(root);
@@ -469,8 +468,8 @@ public class DatabasePanel extends JPanel {
 					// 添加tree点击事件
 					DoAction caction = new DoAction();
 					dblist.addMouseListener(caction);
-					
-					//给menu加载参数
+
+					// 给menu加载参数
 					DBPopMenu.init_menu(url, pass, config, type, code);
 					status.setText("完成");
 				} catch (Exception e1) {
@@ -480,7 +479,7 @@ public class DatabasePanel extends JPanel {
 					root.removeAllChildren();
 					DefaultTreeModel model = new DefaultTreeModel(root);
 					dblist.setModel(model);
-//					dblist.updateUI();
+					// dblist.updateUI();
 					t_locker = 0;
 				}
 				// SwingUtilities.invokeLater(new Runnable() {
@@ -502,18 +501,19 @@ public class DatabasePanel extends JPanel {
 			}
 
 		} else {
-			status.setText("上次操作正在执行中...");
+			status.setText("上一次操作尚未执行完毕");
 		}
 
 	}
 
 	private String GetSelectDB() {
 		String dataname = "";
-		System.out.println(dblist.getSelectionCount());
+//		System.out.println(dblist.getSelectionCount());
 		if (dblist.getSelectionCount() > 0) {
 			dataname = dblist.getLastSelectedPathComponent().toString();
 
-			DefaultMutableTreeNode node = (DefaultMutableTreeNode) dblist.getLastSelectedPathComponent();
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode) dblist
+					.getLastSelectedPathComponent();
 			node = (DefaultMutableTreeNode) node.getParent();
 			if (node.isRoot()) {
 			} else {
@@ -521,7 +521,8 @@ public class DatabasePanel extends JPanel {
 			}
 		} else {
 			dataname = "mysql";
-			dataname = dblist.getModel().getChild(dblist.getModel().getRoot(), 0).toString();
+			dataname = dblist.getModel()
+					.getChild(dblist.getModel().getRoot(), 0).toString();
 			dblist.setSelectionPath(dblist.getPathForRow(1));
 
 			for (int m = 0; m < choosedb.getItemCount(); m++) // 选中jtree，设置下拉框中对应项
@@ -553,6 +554,7 @@ public class DatabasePanel extends JPanel {
 		for (int k = 0; k < dtitle.length; k++) {
 			vtitle.add(dtitle[k].replace("\t\\|\t", ""));
 		}
+//		System.out.println(vtitle);
 		if (rows.length > 1) {
 			for (int i = 1; i < rows.length; i++) {
 				// System.out.println(rows[i]);
@@ -560,62 +562,65 @@ public class DatabasePanel extends JPanel {
 				// System.out.println("cols=" + cols.length);
 				Vector<Object> vector = new Vector<Object>();
 				for (int m = 0; m < cols.length; m++) {
-//					 System.out.println("cols" + m + "=" + cols[m]);
-					if(m==0)
-					{
-						vector.add(new ImageIcon(getClass().getResource("/com/ms509/images/data.png")));
-					} 
+					// System.out.println("cols" + m + "=" + cols[m]);
+					if (m == 0) {
+						vector.add(new ImageIcon(getClass().getResource(
+								"/com/ms509/images/data.png")));
+					}
 					vector.add(cols[m].replace("\t\\|\t", ""));
-					
+
 				}
 				al.add(vector);
+				dtm.setDataVector(al, vtitle);
+				datalist.setModel(dtm);
 			}
+		} 
+		else	// 没有读取到数据时执行。
+		{
+			DefaultTableModel dtm2 = new DefaultTableModel();
+			dtm2.setDataVector(null, vtitle);
+			datalist.setModel(dtm2);
 		}
-		dtm.setDataVector(al, vtitle);
-		datalist.setModel(dtm);
-		
+
 		int rowcount = datalist.getRowCount();
 		int colcount = datalist.getColumnCount();
 		DefaultTableCellRenderer rend = new DefaultTableCellRenderer();
-		if(rowcount == 0)
-		{
+		if (rowcount == 0) {
 			JTableHeader header = datalist.getTableHeader();
 			TableColumnModel hmodel = header.getColumnModel();
-			for(int k=0;k<hmodel.getColumnCount();k++)
-			{
+			for (int k = 0; k < hmodel.getColumnCount(); k++) {
 				TableColumn hcolumn = hmodel.getColumn(k);
-				Object hvalue  = hcolumn.getHeaderValue();
+				Object hvalue = hcolumn.getHeaderValue();
 				TableCellRenderer hrend = header.getDefaultRenderer();
-				Component hcomp = hrend.getTableCellRendererComponent(datalist, hvalue, false, false,0,0);
-				int hwidth = (int) hcomp.getPreferredSize().getWidth();	
+				Component hcomp = hrend.getTableCellRendererComponent(datalist,
+						hvalue, false, false, 0, 0);
+				int hwidth = (int) hcomp.getPreferredSize().getWidth();
 				hcolumn.setPreferredWidth(hwidth);
 			}
 		}
-		for(int i=0;i<colcount;i++)
-		{
-			int maxwidth=0;
-			for(int j=0;j<rowcount;j++)
-			{
+		for (int i = 0; i < colcount; i++) {
+			int maxwidth = 0;
+			for (int j = 0; j < rowcount; j++) {
 				Object value = datalist.getValueAt(j, i);
-				Component comp = rend.getTableCellRendererComponent(datalist, value, false, false,0,0);
-			    int width = (int) comp.getPreferredSize().getWidth();   
+				Component comp = rend.getTableCellRendererComponent(datalist,
+						value, false, false, 0, 0);
+				int width = (int) comp.getPreferredSize().getWidth();
 				TableColumnModel cmodel = datalist.getColumnModel();
 				TableColumn column = cmodel.getColumn(i);
 				maxwidth = Math.max(maxwidth, width);
-				if(j==rowcount-1)
-				{
-					Object hvalue  = column.getHeaderValue();
-					TableCellRenderer hrend = datalist.getTableHeader().getDefaultRenderer();
-					Component hcomp = hrend.getTableCellRendererComponent(datalist, hvalue, false, false,0,0);
-					int hwidth = (int) hcomp.getPreferredSize().getWidth();	
+				if (j == rowcount - 1) {
+					Object hvalue = column.getHeaderValue();
+					TableCellRenderer hrend = datalist.getTableHeader()
+							.getDefaultRenderer();
+					Component hcomp = hrend.getTableCellRendererComponent(
+							datalist, hvalue, false, false, 0, 0);
+					int hwidth = (int) hcomp.getPreferredSize().getWidth();
 					maxwidth = Math.max(maxwidth, hwidth);
 				}
-				column.setPreferredWidth(maxwidth+1);
-			}		
+				column.setPreferredWidth(maxwidth + 1);
+			}
 		}
-		TableColumn fcolumn  = datalist.getColumnModel().getColumn(0);
+		TableColumn fcolumn = datalist.getColumnModel().getColumn(0);
 		fcolumn.setMaxWidth(0);
 	}
 }
-
-
