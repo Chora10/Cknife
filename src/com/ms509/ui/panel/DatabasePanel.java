@@ -104,6 +104,7 @@ public class DatabasePanel extends JPanel {
 		// 数据库jtree
 		dblist = new JTree();
 		dblistpane = new JScrollPane(dblist);
+		dblistpane.setPreferredSize(new Dimension(25, 0));
 		DefaultTreeModel model = (DefaultTreeModel) dblist.getModel();
 		model.setRoot(new DefaultMutableTreeNode(""));// 先初始化根节点，不初始化会显示更多的组件自带内容
 		dblist.setShowsRootHandles(true);
@@ -116,6 +117,7 @@ public class DatabasePanel extends JPanel {
 		datalistpane = new JScrollPane(datalist);
 		datalist.setAutoCreateRowSorter(true);
 		datalist.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		datalistpane.setPreferredSize(new Dimension(0,0));
 		// jtree右键菜单
 		DBPopMenu m = new DBPopMenu(this, dblist, datalist);
 
@@ -144,32 +146,28 @@ public class DatabasePanel extends JPanel {
 
 		// 初始化布局
 		this.setLayout(new GridBagLayout());
-		GBC gbcleft = new GBC(0, 0, 2, 4).setFill(GBC.VERTICAL).setWeight(0,100).setIpad(200, 500);
-		// GBC gbcright = new GBC(1, 0, 1, 1).setFill(GBC.BOTH).setInsets(0, 0,
-		// 0, 0);
+		GBC gbcleft = new GBC(0, 0, 2, 4).setFill(GBC.VERTICAL).setWeight(0,1).setIpad(200, 0);
 
 		// x.= 1
-		GBC gbcright1 = new GBC(2, 0, 5, 1).setFill(GBC.BOTH).setWeight(100, 100).setInsets(0, 5, 0, 0);
+		GBC gbcright1 = new GBC(2, 0, 5, 1).setFill(GBC.BOTH).setWeight(1, 0.7).setInsets(0, 5, 0, 0);
 
 		// x.= 2
-		GBC gbcright2_1 = new GBC(2, 1, 1, 1).setFill(GBC.NONE).setWeight(40, 0);
-		GBC gbcright2_2 = new GBC(3, 1, 1, 1).setFill(GBC.BOTH).setWeight(100, 0);
-		GBC gbcright2_3 = new GBC(4, 1, 1, 1).setFill(GBC.NONE).setWeight(40, 0);
-		GBC gbcright2_4 = new GBC(5, 1, 1, 1).setFill(GBC.BOTH).setWeight(100, 0);
-		GBC gbcright2_5 = new GBC(6, 1, 1, 1).setFill(GBC.NONE).setWeight(0, 0);
+		GBC gbcright2_1 = new GBC(2, 1, 1, 1).setFill(GBC.NONE).setInsets(0, 5, 0, 0);
+		GBC gbcright2_2 = new GBC(3, 1, 1, 1).setFill(GBC.HORIZONTAL).setWeight(1, 0);
+		GBC gbcright2_3 = new GBC(4, 1, 1, 1).setFill(GBC.NONE);
+		GBC gbcright2_4 = new GBC(5, 1, 1, 1).setFill(GBC.HORIZONTAL).setWeight(1, 0);
+		GBC gbcright2_5 = new GBC(6, 1, 1, 1).setFill(GBC.NONE);
 
 		// x.= 3
-		GBC gbcright3 = new GBC(2, 2, 8, 1).setFill(GBC.BOTH).setWeight(100, 50).setInsets(0, 5, 0, 0);
+		GBC gbcright3 = new GBC(2, 2, 8, 1).setFill(GBC.BOTH).setWeight(1, 0.3).setInsets(0, 5, 0, 0);
 
 		// x. = 4
-		GBC gbcright4_1 = new GBC(2, 3, 5, 1).setFill(GBC.BOTH).setWeight(100, 0).setInsets(0, 5, 0, 0);
-		// GBC gbcright4_2 = new GBC(5, 3, 1, 1).setFill(GBC.NONE).setWeight(30,
-		// 0);
-		GBC gbcstatus = new GBC(0, 4, 9, 1).setFill(GBC.BOTH).setWeight(100, 0);
+		GBC gbcright4_1 = new GBC(2, 3, 5, 1).setFill(GBC.HORIZONTAL).setWeight(1, 0).setInsets(0, 5, 0, 0);
+	
+		GBC gbcstatus = new GBC(0, 4, 9, 1).setFill(GBC.HORIZONTAL).setWeight(1, 0);
 
 		// jtree
 		this.add(dblistpane, gbcleft);
-
 		// sql data output
 		this.add(datalistpane, gbcright1);
 
