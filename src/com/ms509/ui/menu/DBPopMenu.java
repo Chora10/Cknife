@@ -6,6 +6,7 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.BufferedWriter;
@@ -105,93 +106,41 @@ public class DBPopMenu extends JPopupMenu {
 		code = c;
 	}
 	// 数据库列表菜单
-	class DBMenu implements MouseListener {
+	class DBMenu extends MouseAdapter {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			// TODO Auto-generated method stub
-			// System.out.println("11");
 			TreePath index = tree.getPathForLocation(e.getX(), e.getY());
 			tree.setSelectionPath(index);
-			// System.out.println(tree.getSelectionCount());
 			int pathcount = 0;
 			try {
-				pathcount = tree.getSelectionPath().getPathCount();
-				// System.out.println(pathcount);
+				pathcount = index.getPathCount();
 			} catch (Exception k) {
-				System.out.println("点击事件，未获取到count");
 				pathcount = 0;
 			}
-			if (e.isMetaDown() && tree.getSelectionPath() != null && pathcount > 2) {
-				// System.out.println(tree.getSelectionPath());
+			if (e.isMetaDown() && pathcount > 2) {
+				tree.setSelectionPath(index);
 				dbmenu2.show(tree, e.getX(), e.getY());
-			} else if (e.isMetaDown() && tree.getSelectionPath() != null && pathcount == 2) {
+			} else if (e.isMetaDown()  && pathcount == 2) {
+				tree.setSelectionPath(index);
 				dbmenu.show(tree, e.getX(), e.getY());
 			}
-
 		}
-
-		@Override
-		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void mouseExited(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
 	}
 
 	// 列表菜单
-	class TBmenu implements MouseListener {
+	class TBmenu extends MouseAdapter {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			// TODO Auto-generated method stub
+			
+			int row = table.rowAtPoint(e.getPoint());
+			table.setRowSelectionInterval(row,row); 
 			if (e.isMetaDown() && table.getSelectedRow() >= 0) {
 				dbmenu3.show(table, e.getX(), e.getY());
 			}
 		}
-
-		@Override
-		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void mouseExited(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
 	}
 
 	// 菜单点击事件

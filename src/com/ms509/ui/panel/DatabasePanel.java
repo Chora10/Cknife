@@ -480,7 +480,7 @@ public class DatabasePanel extends JPanel {
 					root.removeAllChildren();
 					DefaultTreeModel model = new DefaultTreeModel(root);
 					dblist.setModel(model);
-					dblist.updateUI();
+//					dblist.updateUI();
 					t_locker = 0;
 				}
 				// SwingUtilities.invokeLater(new Runnable() {
