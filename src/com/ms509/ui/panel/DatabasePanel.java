@@ -29,6 +29,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.EventObject;
 import java.util.Vector;
 
@@ -306,11 +307,12 @@ public class DatabasePanel extends JPanel {
 					if (e.getClickCount() == 2 && ddd.getChildCount() == 0) // 判断双击
 					{
 //						System.out.println("执行总数查询");
-						status.setText("正在查询");
+						status.setText("正在查询...请稍等");
 						dbn = GetSelectDB();
 						tmp_sql_str = "select * from "
 								+ dblist.getLastSelectedPathComponent()
 										.toString().replace("\t", "");
+
 						Thread_exec();
 						// tmp_sql_str = "";
 					}
@@ -329,12 +331,11 @@ public class DatabasePanel extends JPanel {
 								} catch (Exception e) {
 //									System.out.println(e);
 									t_locker = 0;
-									status.setText("error");
+//									status.setText("error");
 								}
 
 							}
 						});
-
 						if (t_locker == 0) {
 							t_locker = 1;
 							if (config.equals("")) {
@@ -405,7 +406,7 @@ public class DatabasePanel extends JPanel {
 				try {
 					re = DataBase.exec_sql(url, pass, config, type, code,
 							tmp_sql_str, dbn);
-//					System.out.println(re);
+
 					SwingUtilities.invokeLater(new Runnable() {
 						public void run() {
 							try {
@@ -543,45 +544,36 @@ public class DatabasePanel extends JPanel {
 		DatabaseTableModel dtm = new DatabaseTableModel();
 		Vector<Object> al = new Vector<Object>();
 		String[] rows = result.split("\t\\|\t\r\n");
-		// System.out.println(rows[0]);
-		// System.out.println("count="+rows.length);
 		datalist.removeAll();
 		Vector<Object> vtitle = new Vector<Object>();
 		vtitle.add("");
 		String[] dtitle = rows[0].split("\t\\|\t");
 		int columns = dtitle.length;
-		// System.out.println("columns" + columns);
 		for (int k = 0; k < dtitle.length; k++) {
 			vtitle.add(dtitle[k].replace("\t\\|\t", ""));
 		}
-//		System.out.println(vtitle);
 		if (rows.length > 1) {
 			for (int i = 1; i < rows.length; i++) {
-				// System.out.println(rows[i]);
-				String[] cols = rows[i].split("\t\\|\t");
-				// System.out.println("cols=" + cols.length);
+				String[] cols = rows[i].split("\t\\|");
 				Vector<Object> vector = new Vector<Object>();
 				for (int m = 0; m < cols.length; m++) {
-					// System.out.println("cols" + m + "=" + cols[m]);
 					if (m == 0) {
 						vector.add(new ImageIcon(getClass().getResource(
 								"/com/ms509/images/data.png")));
 					}
-					vector.add(cols[m].replace("\t\\|\t", ""));
+					vector.add(cols[m].replace("\t", ""));
 
 				}
 				al.add(vector);
-				dtm.setDataVector(al, vtitle);
-				datalist.setModel(dtm);
+				dtm.setDataVector(al, vtitle);	
 			}
 		} 
 		else	// 没有读取到数据时执行。
 		{
-			DefaultTableModel dtm2 = new DefaultTableModel();
-			dtm2.setDataVector(null, vtitle);
-			datalist.setModel(dtm2);
+			dtm.setDataVector(null, vtitle);
 		}
-
+		datalist.setModel(dtm);
+		
 		int rowcount = datalist.getRowCount();
 		int colcount = datalist.getColumnCount();
 		DefaultTableCellRenderer rend = new DefaultTableCellRenderer();

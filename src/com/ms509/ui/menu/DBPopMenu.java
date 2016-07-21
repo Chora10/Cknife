@@ -13,6 +13,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -275,31 +276,26 @@ public class DBPopMenu extends JPopupMenu {
 		final DatabaseTableModel dtm = new DatabaseTableModel();
 		Vector<Object> al = new Vector<Object>();
 		String[] rows = tables.split("\\|\t\r\n");
-		// System.out.println(rows[0]);
-//		System.out.println("count=" + rows.length);
 		table.removeAll();
 		Vector<Object> vtitle = new Vector<Object>();
 		vtitle.add("");
 		String[] dtitle = rows[0].split("\t\\|\t");
 		int columns = dtitle.length;
 		for (int k = 0; k < dtitle.length; k++) {
-			// System.out.println(dtitle[k]);
 			vtitle.add(dtitle[k].replace("\t\\|\t", ""));
 		}
 
 		if (rows.length > 1) {
 			for (int i = 1; i < rows.length; i++) {
-				// System.out.println(list[i]);
-				String[] cols = rows[i].split("\t\\|\t");
+				String[] cols = rows[i].split("\t\\|");
 				Vector<Object> vector = new Vector<Object>();
 				for (int m = 0; m < columns; m++) {
-					// System.out.println("cols"+m+"="+cols[m]);
 					if(m==0)
 					{
 						vector.add(new ImageIcon("".getClass().getResource("/com/ms509/images/data.png")));
 					} 
 					// 添加到向量vector中，后续加入到table里面显示
-					vector.add(cols[m].replace("\t\\|\t", ""));
+					vector.add(cols[m].replace("\t", ""));
 					// 添加到tree parent节点中
 					NodeData nd = new NodeData(DataType.TABLE, cols[m]);
 					DefaultMutableTreeNode child = new DefaultMutableTreeNode(nd);
@@ -307,15 +303,13 @@ public class DBPopMenu extends JPopupMenu {
 				}
 				al.add(vector);
 				dtm.setDataVector(al, vtitle);
-				table.setModel(dtm);
 			}
 		} else	// 没有读取到数据时执行。
 		{
-			DefaultTableModel dtm2 = new DefaultTableModel();
-			dtm2.setDataVector(null, vtitle);
-			table.setModel(dtm2);
+			dtm.setDataVector(null, vtitle);
 		}
-
+		table.setModel(dtm);
+		
 		SwingUtilities.invokeLater(new Runnable() {
 			
 			@Override
