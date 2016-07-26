@@ -38,7 +38,7 @@ public class AboutDialog extends JDialog {
 		about_pane.setBackground(Color.white);
 
 		GBC gbclogo = new GBC(0, 0, 1, 1).setFill(GBC.BOTH).setInsets(0, 0, 0, 0);
-		GBC gbccontent1 = new GBC(1, 0, 1, 1).setFill(GBC.BOTH).setWeight(100, 100).setInsets(50, 0, 0, 0);
+		GBC gbccontent1 = new GBC(1, 0, 1, 1).setFill(GBC.BOTH).setWeight(1, 1).setInsets(20, 0, 0, 0);
 
 		// img
 		img_label = new JLabel();
@@ -57,11 +57,11 @@ public class AboutDialog extends JDialog {
 		JEditorPane about_info = new JEditorPane();
 		about_info.setEditable(false);
 		about_info.setContentType("text/html");
-		String copy = "<html></br><div ><h3 style=\"text-align:center;\">Copyright(c) 2015-2016 MS509 Team</h3></div>"
+		String copy = "<html><body><div><h3 style=\"text-align:center;\">Copyright(c) 2015-2016 MS509 Team</h3></div>"
 				+ "<div style=\"font-size:10px;text-align:center;\">主页:<a href=\"http://www.ms509.com\">http://www.ms509.com</a></div>"
-				+ "<p></p><div style=\"font-size:9px;\">免责声明：该软件仅限用于学习和研究目的；不得将本软件用于商业或者非法用途，否则，一切后果请用户自负。</div><div></div>"
+				+ "<br \\><div style=\"font-size:10px;\">免责声明:本工具仅限于安全研究与教学使用,用户使用本工具所造成的所有后果,由用户承担全部法律及连带责任!作者不承担任何法律及连带责任。</div><div></div>"
 				+ "<div style=\"text-align:right;font-size:9px;\">Powered by Chora & MelodyZX&nbsp;&nbsp;&nbsp;&nbsp;</div>"
-				+ "</html>";
+				+ "</body></html>";
 		about_info.setText(copy.toString());
 		// 超链接事件
 		about_info.addHyperlinkListener(new HyperlinkListener() {

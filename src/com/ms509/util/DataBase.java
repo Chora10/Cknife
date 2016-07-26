@@ -27,7 +27,7 @@ public class DataBase {
 	// 初始化配置文件
 	private static void init(String config,int type) {
 		dbtype = config.substring(config.indexOf("<T>") + 3, config.indexOf("</T>"));
-		System.out.println("dbtype" + dbtype);
+//		System.out.println("dbtype" + dbtype);
 		switch(type)
 		{
 		case 0://jsp
@@ -71,7 +71,7 @@ public class DataBase {
 
 			} else if (dbtype.equals("MDB") || dbtype.equals("MSSQL")) {
 				dbhost = config.substring(config.indexOf("<C>") + 3, config.indexOf("</C>"));
-				System.out.println("db=" + dbhost);
+//				System.out.println("db=" + dbhost);
 			}
 			break;
 		case 2://asp
@@ -100,18 +100,18 @@ public class DataBase {
 				// oracle
 				p1 = Safe.JSP_DB_ORACLE;
 			}
-			System.out.println("test");
+//			System.out.println("test");
 			p1 = p1.replace("localhost", dbhost).replace("testdb", dbmaster).replace("username", dbuser)
 					.replace("userpwd", dbpass);
 			params = pass + "=" + Safe.JSP_MAKE + "&" + Safe.CODE + "=" + dbcode + "&" + Safe.ACTION + "=N" + "&z1="
 					+ p1 + "&z2=&z3=";
-			System.out.println("params=" + params);
+//			System.out.println("params=" + params);
 			rs = Common.send(url, params, code);
-			System.out.println(rs);
+//			System.out.println(rs);
 			break; 
 		case 1: //php
 			if (Safe.PHP_BASE64.equals("1")) {
-				System.out.println("use base 64");
+//				System.out.println("use base 64");
 				String payload = "";
 				try {
 					BASE64Encoder encode = new BASE64Encoder();
@@ -224,7 +224,7 @@ public class DataBase {
 		String result = "";
 		switch (type) {
 		case 0:
-			System.out.println("jsp");
+//			System.out.println("jsp");
 			String action = "Q";
 			if(dbtype.equals("MYSQL"))
 			{
@@ -241,7 +241,7 @@ public class DataBase {
 				p1 = Safe.JSP_DB_MSSQL;
 				p1 = p1.replace("localhost", dbhost).replace("testdb", dbn).replace("username", dbuser).replace("userpwd",
 						dbpass);
-				System.out.println(p1);
+//				System.out.println(p1);
 			}else if(dbtype.equals("ORACLE"))
 			{
 				if(sql.equals("get_tables"))
@@ -254,17 +254,17 @@ public class DataBase {
 				//ORACLE 支持
 			}
 		//	p1 = p1.replace("localhost", dbhost).replace("testdb", dbn).replace("username", dbuser).replace("userpwd",dbpass);
-			System.out.println("p1="+p1);
-			System.out.println("dbn="+dbn);
+//			System.out.println("p1="+p1);
+//			System.out.println("dbn="+dbn);
 			sp = "choraheiheihei";
 			params = pass + "=" + Safe.JSP_MAKE + "&" + Safe.CODE + "=" + dbcode + "&" + Safe.ACTION + "="+action + "&z1="
 					+ p1 + sp +dbn+"&z2=" + sql + "&z3=";
-			System.out.println("params=" + params);
+//			System.out.println("params=" + params);
 			result = Common.send(url, params, code);
 			break; // jsp
 		case 1: // 还需区分数据库类型  php 暂只有mysql
 			if (Safe.PHP_BASE64.equals("1")) {
-				System.out.println("use base 64");
+//				System.out.println("use base 64");
 				String payload = "";
 				try {
 					BASE64Encoder encode = new BASE64Encoder();
@@ -288,14 +288,14 @@ public class DataBase {
 				String p1 = dbhost + sp + dbuser + sp + dbpass;
 				String params = pass + "=" + Safe.PHP_MAKE + "&" + Safe.ACTION + "=" + payload + "&z1=" + p1 + "&z2="
 						+ dbn + "&z3=" + dbsql;
-				System.out.println("params="+params);
+//				System.out.println("params="+params);
 				result = Common.send(url, params, code);
 				// System.out.println(rs);
 			}
 			break; // php
 		case 2:   //asp
-			System.out.println("asp1");
-			System.out.println("p1=" + dbhost + "\n");
+//			System.out.println("asp1");
+//			System.out.println("p1=" + dbhost + "\n");
 			p1 = dbhost;
 			try {
 				BASE64Encoder encode = new BASE64Encoder();
@@ -308,7 +308,7 @@ public class DataBase {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			System.out.println("dbtype" + dbtype);
+//			System.out.println("dbtype" + dbtype);
 			if (dbtype.equals("MDB")) {
 				params = pass + "=" + Safe.ASP_DB_MDB + "&z1=" + p1 + "&z2=" + sql + "&z3=";
 			} else if (dbhost.indexOf("SQLOLEDB.1") > 0) {
@@ -317,16 +317,16 @@ public class DataBase {
 			{
 				params = pass + "=" + Safe.ASP_DB_MSSQL + "&z1=" + p1 + "&z2=" + sql + "&z3=";
 			}
-			System.out.println("params=" + params);
+//			System.out.println("params=" + params);
 			result = Common.send(url, params, code);
 			break; // asp
 		case 3: //aspx
-			System.out.println("aspx");
-			System.out.println("D=" + dbhost);
-			System.out.println(dbhost.indexOf("mdb"));
+//			System.out.println("aspx");
+//			System.out.println("D=" + dbhost);
+//			System.out.println(dbhost.indexOf("mdb"));
 
 			p1 = dbhost;
-			System.out.println("p1=" + dbhost + "\n");
+//			System.out.println("p1=" + dbhost + "\n");
 			try {
 				BASE64Encoder encode = new BASE64Encoder();
 
@@ -346,7 +346,7 @@ public class DataBase {
 				params = pass + "=" + Safe.ASPX_DB_MYSQL + "&z1=" + p1 + "&z2=" + sql + "&z3=";
 			}
 			
-			System.out.println("params=" + params);
+//			System.out.println("params=" + params);
 			result = Common.send(url, params, code);
 
 			break; // aspx
@@ -361,7 +361,7 @@ public class DataBase {
 		String[] sqls = k.split("\\|\\|\\|");
 		for(int a =0;a<sqls.length;a++)
 		{
-			System.out.println(sqls[a]);
+//			System.out.println(sqls[a]);
 		}
 		return sqls;
 	}

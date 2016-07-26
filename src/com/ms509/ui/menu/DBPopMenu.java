@@ -6,18 +6,22 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Vector;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
@@ -27,6 +31,7 @@ import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import com.ms509.model.DatabaseTableModel;
 import com.ms509.ui.MainFrame;
 import com.ms509.ui.panel.FileManagerPanel;
 import com.ms509.util.DataBase;
@@ -74,7 +79,7 @@ public class DBPopMenu extends JPopupMenu {
 		tree.addMouseListener(l);
 
 		dbmenu3 = new JPopupMenu();
-		System.out.println("t2");
+//		System.out.println("t2");
 		copysingle = new JMenuItem("复制");
 		copysingle.addActionListener(action);
 		copyline = new JMenuItem("复制整行");
@@ -102,93 +107,41 @@ public class DBPopMenu extends JPopupMenu {
 		code = c;
 	}
 	// 数据库列表菜单
-	class DBMenu implements MouseListener {
+	class DBMenu extends MouseAdapter {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			// TODO Auto-generated method stub
-			// System.out.println("11");
 			TreePath index = tree.getPathForLocation(e.getX(), e.getY());
 			tree.setSelectionPath(index);
-			// System.out.println(tree.getSelectionCount());
 			int pathcount = 0;
 			try {
-				pathcount = tree.getSelectionPath().getPathCount();
-				// System.out.println(pathcount);
+				pathcount = index.getPathCount();
 			} catch (Exception k) {
-				System.out.println("点击事件，未获取到count");
 				pathcount = 0;
 			}
-			if (e.isMetaDown() && tree.getSelectionPath() != null && pathcount > 2) {
-				// System.out.println(tree.getSelectionPath());
+			if (e.isMetaDown() && pathcount > 2) {
+				tree.setSelectionPath(index);
 				dbmenu2.show(tree, e.getX(), e.getY());
-			} else if (e.isMetaDown() && tree.getSelectionPath() != null && pathcount == 2) {
+			} else if (e.isMetaDown()  && pathcount == 2) {
+				tree.setSelectionPath(index);
 				dbmenu.show(tree, e.getX(), e.getY());
 			}
-
 		}
-
-		@Override
-		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void mouseExited(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
 	}
 
 	// 列表菜单
-	class TBmenu implements MouseListener {
+	class TBmenu extends MouseAdapter {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			// TODO Auto-generated method stub
+			
+			int row = table.rowAtPoint(e.getPoint());
+			table.setRowSelectionInterval(row,row); 
 			if (e.isMetaDown() && table.getSelectedRow() >= 0) {
 				dbmenu3.show(table, e.getX(), e.getY());
 			}
 		}
-
-		@Override
-		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void mouseExited(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
 	}
 
 	// 菜单点击事件
@@ -202,7 +155,7 @@ public class DBPopMenu extends JPopupMenu {
 				tree.expandRow(tree.getLeadSelectionRow());
 			} 
 			else if (e.getSource() == outfile) {
-				System.out.println("导出");
+//				System.out.println("导出");
 				String abpath = "test";
 				String name = "test.txt";
 				FileManagerPanel filemanagerpanel = null;
@@ -243,7 +196,7 @@ public class DBPopMenu extends JPopupMenu {
 					int x = table.getSelectedRow();
 					int y  =table.getSelectedColumn();
 					String k = model.getValueAt(x, y).toString();
-					System.out.println("select = "+k);
+//					System.out.println("select = "+k);
 					
 					Clipboard clipboard;//获取系统剪贴板。
 					
@@ -251,7 +204,7 @@ public class DBPopMenu extends JPopupMenu {
 					Transferable tText = new StringSelection(k);
 					clipboard.setContents(tText, null);
 				} catch (Exception e1) {
-					System.out.println("copy failed");
+//					System.out.println("copy failed");
 				}
 			}else if(e.getSource()==copyline)
 			{
@@ -261,7 +214,7 @@ public class DBPopMenu extends JPopupMenu {
 					//System.out.println(table.getSelectedColumn());
 					int y = table.getSelectedRow();
 					int x  =table.getColumnCount();
-					System.out.println("x="+x+",y="+y);
+//					System.out.println("x="+x+",y="+y);
 					String k = "";
 					for(int lx =0;lx<x;lx++)
 					{
@@ -269,7 +222,7 @@ public class DBPopMenu extends JPopupMenu {
 						try
 						{
 							k= k+ model.getValueAt(y,lx).toString()+"\t";
-							System.out.println("select = "+k);
+//							System.out.println("select = "+k);
 						}catch(Exception e1)
 						{
 							break;
@@ -284,7 +237,7 @@ public class DBPopMenu extends JPopupMenu {
 					Transferable tText = new StringSelection(k);
 					clipboard.setContents(tText, null);
 				} catch (Exception e1) {
-					System.out.println("copy failed");
+//					System.out.println("copy failed");
 				}
 			}
 
@@ -293,7 +246,7 @@ public class DBPopMenu extends JPopupMenu {
 	}
 
 	public static void showtable() {
-		System.out.println("显示指定库表名");
+//		System.out.println("显示指定库表名");
 		Safe.PASS = pass; // 初始化PASS常量
 
 		// System.out.println(type);
@@ -305,13 +258,13 @@ public class DBPopMenu extends JPopupMenu {
 		DefaultTreeModel root = (DefaultTreeModel) tree.getModel();
 		DefaultMutableTreeNode node = new DefaultMutableTreeNode();
 		node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-		System.out.println("childcount=" + node.getChildCount());
+//		System.out.println("childcount=" + node.getChildCount());
 		node.removeAllChildren(); // 清空当前节点下已有的节点
 		
 		
 		//
 		String tables = DataBase.getTables(url, pass, config, type, code, dbn);
-		System.out.println(tables);
+//		System.out.println(tables);
 
 
 
@@ -320,62 +273,90 @@ public class DBPopMenu extends JPopupMenu {
 		// System.out.println("nodecount="+node.remove(0);
 
 		// table 显示 向量
-		final DefaultTableModel dtm = new DefaultTableModel();
+		final DatabaseTableModel dtm = new DatabaseTableModel();
 		Vector<Object> al = new Vector<Object>();
 		String[] rows = tables.split("\\|\t\r\n");
-		// System.out.println(rows[0]);
-		System.out.println("count=" + rows.length);
 		table.removeAll();
 		Vector<Object> vtitle = new Vector<Object>();
+		vtitle.add("");
 		String[] dtitle = rows[0].split("\t\\|\t");
 		int columns = dtitle.length;
-
 		for (int k = 0; k < dtitle.length; k++) {
-			// System.out.println(dtitle[k]);
 			vtitle.add(dtitle[k].replace("\t\\|\t", ""));
 		}
 
 		if (rows.length > 1) {
 			for (int i = 1; i < rows.length; i++) {
-				// System.out.println(list[i]);
-				String[] cols = rows[i].split("\t\\|\t");
-				Vector<String> vector = new Vector<String>();
+				String[] cols = rows[i].split("\t\\|");
+				Vector<Object> vector = new Vector<Object>();
 				for (int m = 0; m < columns; m++) {
-					// System.out.println("cols"+m+"="+cols[m]);
+					if(m==0)
+					{
+						vector.add(new ImageIcon("".getClass().getResource("/com/ms509/images/data.png")));
+					} 
 					// 添加到向量vector中，后续加入到table里面显示
-					vector.add(cols[m].replace("\t\\|\t", ""));
+					vector.add(cols[m].replace("\t", ""));
 					// 添加到tree parent节点中
 					NodeData nd = new NodeData(DataType.TABLE, cols[m]);
 					DefaultMutableTreeNode child = new DefaultMutableTreeNode(nd);
 					root.insertNodeInto(child, node, 0);
 				}
 				al.add(vector);
+				dtm.setDataVector(al, vtitle);
 			}
+		} else	// 没有读取到数据时执行。
+		{
+			dtm.setDataVector(null, vtitle);
 		}
-
-		dtm.setDataVector(al, vtitle);
+		table.setModel(dtm);
+		
 		SwingUtilities.invokeLater(new Runnable() {
 			
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				table.setModel(dtm);
+				
+				int rowcount = table.getRowCount();
+				int colcount = table.getColumnCount();
 				DefaultTableCellRenderer rend = new DefaultTableCellRenderer();
-				for(int i=0;i<table.getColumnCount();i++)
+				if(rowcount == 0)
 				{
-					Object value = table.getValueAt(0, i);
-					Component comp = rend.getTableCellRendererComponent(table, value, false, false,0,0);
-				    int width = (int) comp.getPreferredSize().getWidth();    
-					TableColumnModel cmodel = table.getColumnModel();
-					TableColumn column = cmodel.getColumn(i);
-					column.setMinWidth(width);
-					if(i==0)
+					JTableHeader header = table.getTableHeader();
+					TableColumnModel hmodel = header.getColumnModel();
+					for(int k=0;k<hmodel.getColumnCount();k++)
 					{
-						rend.setIcon(new ImageIcon(getClass().getResource("/com/ms509/images/data.png")));
-						column.setCellRenderer(rend);
+						TableColumn hcolumn = hmodel.getColumn(k);
+						Object hvalue  = hcolumn.getHeaderValue();
+						TableCellRenderer hrend = header.getDefaultRenderer();
+						Component hcomp = hrend.getTableCellRendererComponent(table, hvalue, false, false,0,0);
+						int hwidth = (int) hcomp.getPreferredSize().getWidth();	
+						hcolumn.setPreferredWidth(hwidth);
 					}
 				}
-				tree.updateUI();
+				for(int i=0;i<colcount;i++)
+				{
+					int maxwidth=0;
+					for(int j=0;j<rowcount;j++)
+					{
+						Object value = table.getValueAt(j, i);
+						Component comp = rend.getTableCellRendererComponent(table, value, false, false,0,0);
+					    int width = (int) comp.getPreferredSize().getWidth();   
+						TableColumnModel cmodel = table.getColumnModel();
+						TableColumn column = cmodel.getColumn(i);
+						maxwidth = Math.max(maxwidth, width);
+						if(j==rowcount-1)
+						{
+							Object hvalue  = column.getHeaderValue();
+							TableCellRenderer hrend = table.getTableHeader().getDefaultRenderer();
+							Component hcomp = hrend.getTableCellRendererComponent(table, hvalue, false, false,0,0);
+							int hwidth = (int) hcomp.getPreferredSize().getWidth();	
+							maxwidth = Math.max(maxwidth, hwidth);
+						}
+						column.setPreferredWidth(maxwidth+1);
+					}		
+				}
+				TableColumn fcolumn  = table.getColumnModel().getColumn(0);
+				fcolumn.setMaxWidth(0);
 			}
 		});
 
