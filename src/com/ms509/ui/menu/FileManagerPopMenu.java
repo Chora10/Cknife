@@ -23,6 +23,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.text.Caret;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreePath;
@@ -217,6 +218,13 @@ public class FileManagerPopMenu extends JPopupMenu {
 			case "重命名":
 				model.setEdit(true);
 				list.editCellAt(list.getSelectedRow(), 1);
+				JTextField edit = (JTextField)list.getEditorComponent();
+				Caret c = edit.getCaret();
+				edit.requestFocusInWindow();
+				// 在MAC皮肤下，如果设置的位置是末尾c.setDot(edit.getText().length())，或者如果没用使用setDot设置光标的位置则都会自动全选。其他皮肤则不会自动全选。
+//				c.setDot(2);
+//				edit.selectAll();	// 全选，通用所有皮肤。
+				c.setVisible(true);
 				model.setEdit(false);
 				break;
 			case "文件夹":
@@ -231,6 +239,11 @@ public class FileManagerPopMenu extends JPopupMenu {
 				model.fireTableDataChanged();
 				model.setEdit(true);
 				list.editCellAt(model.getRowCount() - 1, 1);
+				JTextField fedit = (JTextField)list.getEditorComponent();
+				Caret fc = fedit.getCaret();
+				fedit.requestFocusInWindow();
+				fedit.selectAll();
+				fc.setVisible(true);
 				model.setEdit(false);
 				break;
 			case "下载":
@@ -430,6 +443,10 @@ public class FileManagerPopMenu extends JPopupMenu {
 					filemanagerpanel.getRoot(), name);
 			if (tn != null) {
 				TreePath tp = new TreePath(tn.getPath());
+				DefaultTreeSelectionModel dsmodel = new DefaultTreeSelectionModel();
+				dsmodel.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+				dsmodel.setSelectionPath(tp);
+				filemanagerpanel.getTree().setSelectionModel(dsmodel);
 				filemanagerpanel.showLeft(tp);
 			}
 			filemanagerpanel.showRight(path.getText(), list);
@@ -459,6 +476,10 @@ public class FileManagerPopMenu extends JPopupMenu {
 						filemanagerpanel.getRoot(), name);
 				if (tn != null) {
 					TreePath tp = new TreePath(tn.getPath());
+					DefaultTreeSelectionModel dsmodel = new DefaultTreeSelectionModel();
+					dsmodel.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+					dsmodel.setSelectionPath(tp);
+					filemanagerpanel.getTree().setSelectionModel(dsmodel);
 					filemanagerpanel.showLeft(tp);
 				}
 				filemanagerpanel.showRight(path.getText(), list);

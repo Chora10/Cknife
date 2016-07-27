@@ -6,8 +6,13 @@ import java.util.Enumeration;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
+
+import com.ms509.ui.MainFrame;
+import com.ms509.ui.panel.FileManagerPanel;
 
 public class TreeMethod {
 
@@ -23,7 +28,7 @@ public class TreeMethod {
 	}
 
 	public static void makeIndexTree(String paths[], String[] adds,
-			DefaultMutableTreeNode root) {
+			DefaultMutableTreeNode root,JTree tree) {
 		DefaultMutableTreeNode node = root;
 		root.setAllowsChildren(true);
 		int i;
@@ -42,6 +47,11 @@ public class TreeMethod {
 				}
 			}
 		}
+		// 根目录获得焦点
+		DefaultTreeSelectionModel dsmodel = new DefaultTreeSelectionModel();
+		dsmodel.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+		dsmodel.setSelectionPath(new TreePath(node.getPath()));
+		tree.setSelectionModel(dsmodel);
 	}
 
 	public static void addTree(String[] trees, DefaultMutableTreeNode parent,

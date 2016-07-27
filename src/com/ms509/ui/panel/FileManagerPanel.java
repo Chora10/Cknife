@@ -326,7 +326,7 @@ public class FileManagerPanel extends JPanel {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						TreeMethod.makeIndexTree(tmp2, trees,
-								TreeMethod.searchNode(root, search));
+								TreeMethod.searchNode(root, search),tree);
 						TreeMethod.expandAll(tree, new TreePath(root), true);
 						status.setText("正在载入右边栏...请稍等");
 						showRight(webroot, list);
@@ -390,7 +390,7 @@ public class FileManagerPanel extends JPanel {
 						select.setAllowsChildren(true);
 						TreeMethod.addTree(trees, select, model);
 						if (!tree.isExpanded(tp)) {
-							tree.expandPath(tp);
+							tree.scrollPathToVisible(tp);
 						}
 						lstatus = true;
 					}
