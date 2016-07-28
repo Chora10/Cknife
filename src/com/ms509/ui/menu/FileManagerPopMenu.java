@@ -1,5 +1,6 @@
 package com.ms509.ui.menu;
 
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -18,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -238,6 +240,12 @@ public class FileManagerPopMenu extends JPopupMenu {
 				model.addRow(vector);
 				model.fireTableDataChanged();
 				model.setEdit(true);
+				// 滚动条滑动到末尾
+				int row = model.getRowCount()-1;
+//				list.setRowSelectionInterval(row, row);
+				Rectangle rect = list.getCellRect(row, 0, true);
+				list.scrollRectToVisible(rect);
+				
 				list.editCellAt(model.getRowCount() - 1, 1);
 				JTextField fedit = (JTextField)list.getEditorComponent();
 				Caret fc = fedit.getCaret();

@@ -1,19 +1,27 @@
 package com.ms509.model;
 
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeSelectionModel;
+import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 
 import com.ms509.ui.panel.FileManagerPanel;
 import com.ms509.util.Common;
 import com.ms509.util.Safe;
+import com.ms509.util.TreeMethod;
 
 /*
  * 通过重写getColumnClass方法，在单元格直接设置图标
@@ -151,12 +159,18 @@ public class RightTableModel extends AbstractTableModel {
 				this.remove(this.getRowCount() - 1);
 			} else {
 				Vector exists = new Vector();
+				int ei=0;
 				for (Vector vec : this.datas) {
 					exists.add(vec.get(1));
 				}
 				if (exists.contains(aValue)) {
-					filemanagerpanel.getStatus().setText("目录已存在");
 					this.remove(this.getRowCount() - 1);
+					JTable list = filemanagerpanel.getList();
+					int row = exists.indexOf(aValue);
+					list.setRowSelectionInterval(row,row);
+					Rectangle rect = list.getCellRect(row, 0, true);
+					list.scrollRectToVisible(rect);
+					filemanagerpanel.getStatus().setText("目录已存在");
 				} else {
 					final String np = path + aValue.toString() + Safe.SYSTEMSP;
 					Runnable newrun = new Runnable() {
@@ -171,9 +185,21 @@ public class RightTableModel extends AbstractTableModel {
 									if (ret.equals("1")) {
 										datas.set(rowIndex, data);
 										fireTableDataChanged();
+										JTree tree = filemanagerpanel.getTree();
+										String[] trees = new String[]{getValueAt(getRowCount()-1, 1).toString()};
+										TreePath tp = tree.getSelectionPath();
+										DefaultMutableTreeNode select = (DefaultMutableTreeNode) tp
+												.getLastPathComponent();
+										select.setAllowsChildren(true);	
+										TreeMethod.addTree(trees, select, filemanagerpanel.getModel());
+										int row = getRowCount()-1;
+										filemanagerpanel.getList().setRowSelectionInterval(row, row);
 										filemanagerpanel.getStatus().setText(
 												"新建文件夹成功");
+										// 刷新列表
+//										filemanagerpanel.showRight(filemanagerpanel.getPath().getText(), filemanagerpanel.getList());
 									} else {
+										remove(getRowCount() - 1);
 										filemanagerpanel.getStatus().setText(
 												"新建文件夹失败");
 									}
