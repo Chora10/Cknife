@@ -1,5 +1,6 @@
 package com.ms509.util;
 
+//数据库语句执行
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.UnsupportedCharsetException;
@@ -25,15 +26,13 @@ public class DataBase {
 	}
 
 	// 初始化配置文件
-	private static void init(String config,int type) {
+	private static void init(String config, int type) {
 		dbtype = config.substring(config.indexOf("<T>") + 3, config.indexOf("</T>"));
-//		System.out.println("dbtype" + dbtype);
-		switch(type)
-		{
-		case 0://jsp
-			if (dbtype.equals("MYSQL") || dbtype.equals("ORACLE")) {
+		switch (type) {
+		case 0:// jsp
+			if (dbtype.equals("MYSQL") || dbtype.equals("ORACLE")) { // 获取mysql
+																		// oracle数据库配置信息
 				dbhost = config.substring(config.indexOf("<H>") + 3, config.indexOf("</H>"));
-				
 				dbuser = config.substring(config.indexOf("<U>") + 3, config.indexOf("</U>"));
 				dbpass = config.substring(config.indexOf("<P>") + 3, config.indexOf("</P>"));
 				dbcode = config.substring(config.indexOf("<L>") + 3, config.indexOf("</L>"));
@@ -44,8 +43,7 @@ public class DataBase {
 				}
 
 			}
-			if(dbtype.equals("MSSQL"))
-			{
+			if (dbtype.equals("MSSQL")) { // 获取mssql数据库配置信息
 				dbhost = config.substring(config.indexOf("<H>") + 3, config.indexOf("</H>"));
 				dbuser = config.substring(config.indexOf("<U>") + 3, config.indexOf("</U>"));
 				dbpass = config.substring(config.indexOf("<P>") + 3, config.indexOf("</P>"));
@@ -57,8 +55,8 @@ public class DataBase {
 				}
 			}
 			break;
-		case 1://php
-			if (dbtype.equals("MYSQL")) {
+		case 1:// php
+			if (dbtype.equals("MYSQL")) { // php － mysql
 				dbhost = config.substring(config.indexOf("<H>") + 3, config.indexOf("</H>"));
 				dbuser = config.substring(config.indexOf("<U>") + 3, config.indexOf("</U>"));
 				dbpass = config.substring(config.indexOf("<P>") + 3, config.indexOf("</P>"));
@@ -68,25 +66,26 @@ public class DataBase {
 				} else {
 					dbmaster = "";
 				}
-
-			} else if (dbtype.equals("MDB") || dbtype.equals("MSSQL")) {
+			} else if (dbtype.equals("MDB") || dbtype.equals("MSSQL")) { // php
+																			// mdb
+																			// mssql
+																			// 暂无
 				dbhost = config.substring(config.indexOf("<C>") + 3, config.indexOf("</C>"));
-//				System.out.println("db=" + dbhost);
 			}
 			break;
-		case 2://asp
+		case 2:// asp
 			dbhost = config.substring(config.indexOf("<C>") + 3, config.indexOf("</C>"));
 			break;
-		case 3://aspx
-				dbhost = config.substring(config.indexOf("<C>") + 3, config.indexOf("</C>"));
+		case 3:// aspx
+			dbhost = config.substring(config.indexOf("<C>") + 3, config.indexOf("</C>"));
 			break;
 		}
-			
+
 	}
 
 	// 获取数据库库名
 	public static String[] getDBs(String url, String pass, String config, int type, String code) {
-		init(config ,type);
+		init(config, type);
 		String[] result = null;
 		String rs = null;
 		switch (type) {
@@ -100,18 +99,15 @@ public class DataBase {
 				// oracle
 				p1 = Safe.JSP_DB_ORACLE;
 			}
-//			System.out.println("test");
+			// System.out.println("test");
 			p1 = p1.replace("localhost", dbhost).replace("testdb", dbmaster).replace("username", dbuser)
 					.replace("userpwd", dbpass);
 			params = pass + "=" + Safe.JSP_MAKE + "&" + Safe.CODE + "=" + dbcode + "&" + Safe.ACTION + "=N" + "&z1="
 					+ p1 + "&z2=&z3=";
-//			System.out.println("params=" + params);
 			rs = Common.send(url, params, code);
-//			System.out.println(rs);
-			break; 
-		case 1: //php
+			break;
+		case 1: // php 仅支持mysql
 			if (Safe.PHP_BASE64.equals("1")) {
-//				System.out.println("use base 64");
 				String payload = "";
 				try {
 					BASE64Encoder encode = new BASE64Encoder();
@@ -126,48 +122,65 @@ public class DataBase {
 				String p1 = dbhost + sp + dbuser + sp + dbpass;
 				String params = pass + "=" + Safe.PHP_MAKE + "&" + Safe.ACTION + "=" + payload + "&z1=" + p1
 						+ "&z2=&z3=";
-//				System.out.println(params);
 				rs = Common.send(url, params, code);
-//				System.out.println(rs);
-			}else{
-				
+			} else {
+
 			}
-			break; // 
-		case 2:   //asp    //读取库名时实际并未连接数据库
+			break; //
+		case 2: // asp //读取库名时实际并未连接数据库
 			if (dbtype.equals("MDB")) {
 				String dbname = dbhost.substring(dbhost.indexOf("Data Source=") + 12, dbhost.length());
-				System.out.println(dbname);
-				rs = "\t|\t\r\n" + dbname;
-				// getTables(url,pass,config,type,code,"");
-			} else if(dbtype.equals("MYSQL"))
-			{
+				//System.out.println(dbname);
+				rs = "" + dbname;
+			} else if (dbtype.equals("MYSQL")) {
 				String dname = "";
-				dname = dbhost.substring(dbhost.indexOf("database=")+9, dbhost.length());
+				dname = dbhost.substring(dbhost.indexOf("database=") + 9, dbhost.length());
 				dname = dname.substring(0, dname.indexOf(";"));
 				rs = exec_sql(url, pass, config, type, code, "show databases;", dname);
-			}
-			else {
-				rs = "\t|\t\r\n[ado database]";
-				// getTables(url,pass,config,type,code,"");
+			} else if (dbtype.equals("MSSQL")) {
+				if (dbhost.indexOf("SQLOLEDB") > 0) {
+					rs = "[ado database]";
+				}
+				if (dbhost.indexOf("Driver=") > -1) {
+
+					String sub = dbhost.substring(dbhost.indexOf("Database=") + 9, dbhost.length());
+					sub = sub.substring(0, sub.indexOf(";"));
+					String dname = sub;
+					rs = exec_sql(url, pass, config, type, code,
+							"select [name] from master.dbo.sysdatabases order by 1", dname);
+					rs = rs.substring(rs.indexOf("name\t\\|\t\r\n") + 10, rs.length());
+				}
 			}
 
-			break; // 
-		case 3:   //aspx 问题同asp
-			System.out.println("aspx");
+			break; //
+		case 3: // aspx 问题同asp
+			//System.out.println("aspx");
 			// ASPX base64 编码
 			if (dbtype.equals("MDB")) {
 				String dbname = dbhost.substring(dbhost.indexOf("Data Source=") + 12, dbhost.indexOf("mdb") + 3);
-				System.out.println(dbname);
+				//System.out.println(dbname);
 				getTables(url, pass, config, type, code, "");
-				rs = "\t|\t\r\n" + dbname;
-			} else if(dbtype.equals("MYSQL"))
-			{
+				rs = "" + dbname;
+			} else if (dbtype.equals("MYSQL")) {
 				String dname = "";
-				dname = dbhost.substring(dbhost.indexOf("database=")+9, dbhost.length());
+				dname = dbhost.substring(dbhost.indexOf("database=") + 9, dbhost.length());
 				dname = dname.substring(0, dname.indexOf(";"));
 				rs = exec_sql(url, pass, config, type, code, "show databases;", dname);
-			}else {
-				rs = "\t|\t\r\n[ado database]";
+			} else if (dbtype.equals("MSSQL")) {
+				if (dbhost.indexOf("SQLOLEDB") > 0) {
+					rs = "[ado database]";
+				}
+				if (dbhost.indexOf("Driver=") > -1) {
+
+					String sub = dbhost.substring(dbhost.indexOf("Database=") + 9, dbhost.length());
+					sub = sub.substring(0, sub.indexOf(";"));
+					String dname = sub;
+					rs = exec_sql(url, pass, config, type, code,
+							"select [name] from master.dbo.sysdatabases order by 1", dname);
+					rs = rs.substring(rs.indexOf("name\t\\|\t\r\n") + 10, rs.length());
+				}
+			} else {
+				rs = "[ado database]";
 				getTables(url, pass, config, type, code, "");
 			}
 			break; // aspx
@@ -176,40 +189,58 @@ public class DataBase {
 		return result;
 	}
 
-	// 获取数据库表明
+	// 获取数据库表名
 	public static String getTables(String url, String pass, String config, int type, String code, String dbn) {
-		// String result = null;
 		String s = "show tables from " + dbn;
 		String result = "";
-		switch(type)
-		{
-		case 0: //jsp
-			if (dbtype.equals("MDB") ) {
+		switch (type) {
+		case 0: // jsp
+			if (dbtype.equals("MDB")) {
 				result = exec_sql(url, pass, config, type, code, "", dbn);
-			}
-			else if(dbtype.equals("ORACLE")|| dbtype.equals("MSSQL")){
+			} else if (dbtype.equals("ORACLE")) {
 				result = exec_sql(url, pass, config, type, code, "get_tables", dbn);
-			}else
-			{
+			} else if (dbtype.equals("MSSQL")) {
+				result = exec_sql(url, pass, config, type, code,
+						"SELECT [name] FROM sysobjects WHERE (xtype='U') ORDER BY 1", dbn);
+			} else {
 				result = exec_sql(url, pass, config, type, code, s, dbn);
 			}
 			break;
-		case 1://php
+		case 1:// php
 			if (dbtype.equals("MDB") || dbtype.equals("MSSQL")) {
 				result = exec_sql(url, pass, config, type, code, "", dbn);
 			} else {
 				result = exec_sql(url, pass, config, type, code, s, dbn);
 			}
 			break;
-		case 2://asp
-			result = exec_sql(url, pass, config, type, code, "", dbn);
-			break;
-		case 3://aspx
-			if (dbtype.equals("MDB") || dbtype.equals("MSSQL")) {
+		case 2:// asp
+			if (dbtype.equals("MDB")) {
 				result = exec_sql(url, pass, config, type, code, "", dbn);
+			} else if (dbhost.indexOf("SQLOLEDB.1") > 0) {
+				result = exec_sql(url, pass, config, type, code, "", dbn);
+			} else if (dbhost.indexOf("Sql Server") > 0) {
+				// params = pass + "=" + Safe.ASP_DB_MSSQL + "&z1=" + p1 +
+				// "&z2=" + sql + "&z3=";
+				String sql = "SELECT [name] FROM sysobjects WHERE (xtype='U') ORDER BY 1";
+				result = exec_sql(url, pass, config, type, code, sql, dbn);
 			} else {
-				result = exec_sql(url, pass, config, type, code, s, dbn);
+				result = exec_sql(url, pass, config, type, code, "", dbn);
 			}
+			break;
+		case 3:// aspx
+			if (dbtype.equals("MDB")) {
+				result = exec_sql(url, pass, config, type, code, "", dbn);
+			} else if (dbhost.indexOf("SQLOLEDB.1") > 0) {
+				result = exec_sql(url, pass, config, type, code, "", dbn);
+			} else if (dbhost.indexOf("Sql Server") > 0) {
+				// params = pass + "=" + Safe.ASP_DB_MSSQL + "&z1=" + p1 +
+				// "&z2=" + sql + "&z3=";
+				String sql = "SELECT [name] FROM sysobjects WHERE (xtype='U') ORDER BY 1";
+				result = exec_sql(url, pass, config, type, code, sql, dbn);
+			} else {
+				result = exec_sql(url, pass, config, type, code, "", dbn);
+			}
+
 			break;
 		}
 		return result;
@@ -218,53 +249,49 @@ public class DataBase {
 	// 执行sql语句
 	public static String exec_sql(String url, String pass, String config, int type, String code, String sql,
 			String dbn) {
-		// System.out.print("config="+config);
-		init(config,type);
+
+		init(config, type);
 		String dbsql = "";
 		String result = "";
+
+		if (dbn.lastIndexOf("\t") == dbn.length()) {
+			dbn.substring(0, dbn.length() - 1);
+		}
+
 		switch (type) {
-		case 0:
-//			System.out.println("jsp");
+		case 0: // jsp
+			// System.out.println("jsp");
 			String action = "Q";
-			if(dbtype.equals("MYSQL"))
-			{
+			if (dbtype.equals("MYSQL")) {
 				p1 = Safe.JSP_DB_MYSQL;
-				p1 = p1.replace("localhost", dbhost).replace("testdb", dbn).replace("username", dbuser).replace("userpwd",
-						dbpass);
-				
-			}else if(dbtype.equals("MSSQL"))
-			{
-				if(sql.equals("get_tables"))
-				{
+				p1 = p1.replace("localhost", dbhost).replace("testdb", dbn).replace("username", dbuser)
+						.replace("userpwd", dbpass);
+
+			} else if (dbtype.equals("MSSQL")) {
+				if (sql.equals("get_tables")) {
 					action = "O";
 				}
 				p1 = Safe.JSP_DB_MSSQL;
-				p1 = p1.replace("localhost", dbhost).replace("testdb", dbn).replace("username", dbuser).replace("userpwd",
-						dbpass);
-//				System.out.println(p1);
-			}else if(dbtype.equals("ORACLE"))
-			{
-				if(sql.equals("get_tables"))
-				{
+				p1 = p1.replace("localhost", dbhost).replace("testdb", dbn).replace("username", dbuser)
+						.replace("userpwd", dbpass);
+				// System.out.println(p1);
+			} else if (dbtype.equals("ORACLE")) {
+				if (sql.equals("get_tables")) {
 					action = "O";
 				}
 				p1 = Safe.JSP_DB_ORACLE;
-				p1 = p1.replace("localhost", dbhost).replace("testdb", dbmaster).replace("username", dbuser).replace("userpwd",
-						dbpass);
-				//ORACLE 支持
+				p1 = p1.replace("localhost", dbhost).replace("testdb", dbmaster).replace("username", dbuser)
+						.replace("userpwd", dbpass);
+				// ORACLE 支持
 			}
-		//	p1 = p1.replace("localhost", dbhost).replace("testdb", dbn).replace("username", dbuser).replace("userpwd",dbpass);
-//			System.out.println("p1="+p1);
-//			System.out.println("dbn="+dbn);
 			sp = "choraheiheihei";
-			params = pass + "=" + Safe.JSP_MAKE + "&" + Safe.CODE + "=" + dbcode + "&" + Safe.ACTION + "="+action + "&z1="
-					+ p1 + sp +dbn+"&z2=" + sql + "&z3=";
-//			System.out.println("params=" + params);
+			params = pass + "=" + Safe.JSP_MAKE + "&" + Safe.CODE + "=" + dbcode + "&" + Safe.ACTION + "=" + action
+					+ "&z1=" + p1 + sp + dbn + "&z2=" + sql + "&z3=";
 			result = Common.send(url, params, code);
 			break; // jsp
-		case 1: // 还需区分数据库类型  php 暂只有mysql
+		case 1: // 还需区分数据库类型 php 暂只有mysql
 			if (Safe.PHP_BASE64.equals("1")) {
-//				System.out.println("use base 64");
+				// System.out.println("use base 64");
 				String payload = "";
 				try {
 					BASE64Encoder encode = new BASE64Encoder();
@@ -284,22 +311,17 @@ public class DataBase {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				sp= "choraheiheihei";
+				sp = "choraheiheihei";
 				String p1 = dbhost + sp + dbuser + sp + dbpass;
 				String params = pass + "=" + Safe.PHP_MAKE + "&" + Safe.ACTION + "=" + payload + "&z1=" + p1 + "&z2="
 						+ dbn + "&z3=" + dbsql;
-//				System.out.println("params="+params);
 				result = Common.send(url, params, code);
-				// System.out.println(rs);
 			}
 			break; // php
-		case 2:   //asp
-//			System.out.println("asp1");
-//			System.out.println("p1=" + dbhost + "\n");
+		case 2: // asp
 			p1 = dbhost;
 			try {
 				BASE64Encoder encode = new BASE64Encoder();
-
 				p1 = toHexString(p1);
 				p1 = URLEncoder.encode(p1);
 				sql = toHexString(sql);
@@ -308,32 +330,42 @@ public class DataBase {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-//			System.out.println("dbtype" + dbtype);
 			if (dbtype.equals("MDB")) {
 				params = pass + "=" + Safe.ASP_DB_MDB + "&z1=" + p1 + "&z2=" + sql + "&z3=";
 			} else if (dbhost.indexOf("SQLOLEDB.1") > 0) {
 				params = pass + "=" + Safe.ASP_DB_MSSQL + "&z1=" + p1 + "&z2=" + sql + "&z3=";
-			} else if (dbtype.equals("MYSQL"))
-			{
+			} else if (dbhost.indexOf("Sql Server") > 0) {
+
+				if (dbn != "") {
+					String tmp = "USE [" + dbn + "];";
+					tmp = toHexString(tmp);
+					sql = tmp + sql;
+
+				}
+
+				params = pass + "=" + Safe.ASP_DB_MSSQL + "&z1=" + p1 + "&z2=" + sql + "&z3=";
+			} else if (dbtype.equals("MYSQL")) {
 				params = pass + "=" + Safe.ASP_DB_MSSQL + "&z1=" + p1 + "&z2=" + sql + "&z3=";
 			}
-//			System.out.println("params=" + params);
 			result = Common.send(url, params, code);
 			break; // asp
-		case 3: //aspx
-//			System.out.println("aspx");
-//			System.out.println("D=" + dbhost);
-//			System.out.println(dbhost.indexOf("mdb"));
-
+		case 3: // aspx
 			p1 = dbhost;
-//			System.out.println("p1=" + dbhost + "\n");
 			try {
 				BASE64Encoder encode = new BASE64Encoder();
+				if (dbhost.indexOf("Sql Server") > 0) {   //使用sql server连接模式，需要先指定数据库
 
-				p1 = encode.encode(p1.getBytes(code));
+					if (dbn != "") {
+						String tmp = "USE [" + dbn + "];";
+						sql = tmp + sql;
+
+					}
+				}
+								p1 = encode.encode(p1.getBytes(code));
 				p1 = URLEncoder.encode(p1);
 				sql = encode.encode(sql.getBytes(code));
 				sql = URLEncoder.encode(sql);
+
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -341,48 +373,41 @@ public class DataBase {
 			if (dbtype.equals("MDB")) {
 				params = pass + "=" + Safe.ASPX_DB_MDB + "&z1=" + p1 + "&z2=" + sql + "&z3=";
 			} else if (dbtype.equals("MSSQL")) {
-				params = pass + "=" + Safe.ASPX_DB_MSSQL + "&z1=" + p1 + "&z2=" + sql + "&z3=";
-			}else if (dbtype.equals("MYSQL")) {
+				if (dbhost.indexOf("SQLOLEDB.1") > 0) {
+					params = pass + "=" + Safe.ASPX_DB_MSSQL + "&z1=" + p1 + "&z2=" + sql + "&z3=";
+				} else if (dbhost.indexOf("Sql Server") > 0) {
+					params = pass + "=" + Safe.ASPX_DB_MSSQL + "&z1=" + p1 + "&z2=" + sql + "&z3=";
+				}
+				// params = pass + "=" + Safe.ASPX_DB_MSSQL + "&z1=" + p1 +
+				// "&z2=" + sql + "&z3=";
+			} else if (dbtype.equals("MYSQL")) {
 				params = pass + "=" + Safe.ASPX_DB_MYSQL + "&z1=" + p1 + "&z2=" + sql + "&z3=";
 			}
-			
-//			System.out.println("params=" + params);
-			result = Common.send(url, params, code);
 
+			result = Common.send(url, params, code);
 			break; // aspx
 		}
 		return result;
 	}
 
-	
-	public static String[] Load_SQL()
-	{
+	public static String[] Load_SQL() {
 		String k = Safe.COMMON_SQL_STRING;
 		String[] sqls = k.split("\\|\\|\\|");
-		for(int a =0;a<sqls.length;a++)
-		{
-//			System.out.println(sqls[a]);
-		}
 		return sqls;
 	}
-	
+
 	// 16进制 转换
 	private static String toHexString(String s) {
 		String str = "";
 		try {
 			byte[] b = s.getBytes();
-			// String k = new String(b,"GBK");
-			// byte[] b = k.getBytes();
-			// String str = " ";
 			for (int i = 0; i < b.length; i++) {
 				Integer I = new Integer(b[i]);
 				String strTmp = I.toHexString(b[i]);
-				// System.out.println(strTmp.length());
 				if (strTmp.length() > 2)
 					strTmp = strTmp.substring(strTmp.length() - 2);
 				str = str + strTmp;
 			}
-			// System.out.println(str.toUpperCase());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
