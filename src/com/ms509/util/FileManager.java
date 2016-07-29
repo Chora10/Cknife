@@ -225,13 +225,7 @@ public class FileManager {
 		case "ASPX(Eval)":
 			switch (action) {
 			case "readindex":
-				String path_index = Safe.ASPX_MAKE.replace("PAYLOAD", Safe.ASPX_INDEX);
-				try {
-					params = Safe.PASS + "=" + URLEncoder.encode(path_index, code);
-				} catch (UnsupportedEncodingException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				params = Safe.PASS+"="+Safe.ASPX_INDEX+"&"+Safe.PARAM1+"="+this.makeParam2(path);
 				break;
 			case "readdict":
 				params = Safe.PASS+"="+Safe.ASPX_READDICT+"&"+Safe.PARAM1+"="+this.makeParam2(path);
@@ -416,7 +410,7 @@ public class FileManager {
 			}
 			break;
 		}
-//		System.out.println(params);
+		
 		return Common.send(this.url, params, this.code);
 	}
 
