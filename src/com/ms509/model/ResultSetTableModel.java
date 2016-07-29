@@ -73,7 +73,7 @@ public class ResultSetTableModel extends AbstractTableModel {
 
 	public void addRow(Vector<String> vector) {
 		this.datas.add(vector);
-		this.fireTableDataChanged();
+		this.fireTableRowsInserted(datas.size()-1,datas.size()-1);
 	}
 
 	public void update(String id, Vector<String> vector) {
@@ -83,8 +83,9 @@ public class ResultSetTableModel extends AbstractTableModel {
 
 	public void remove(String id) {
 		try {
-			this.datas.remove(this.getId(id));
-			this.fireTableDataChanged();
+			int row = this.getId(id);
+			this.datas.remove(row);
+			this.fireTableRowsDeleted(row,row);
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
