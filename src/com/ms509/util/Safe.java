@@ -18,6 +18,7 @@ public final class Safe {
 	public static String ASP_SAVEFILE;
 	public static String ASP_DELETE;
 	public static String ASP_RENAME;
+	public static String ASP_RETIME;
 	public static String ASP_NEWDICT;
 	public static String ASP_UPLOAD;
 	public static String ASP_DOWNLOAD;
@@ -36,6 +37,7 @@ public final class Safe {
 	public static String ASPX_SAVEFILE;
 	public static String ASPX_DELETE;
 	public static String ASPX_RENAME;
+	public static String ASPX_RETIME;
 	public static String ASPX_NEWDICT;
 	public static String ASPX_UPLOAD;
 	public static String ASPX_DOWNLOAD;
@@ -52,6 +54,7 @@ public final class Safe {
 	public static String PHP_SAVEFILE;
 	public static String PHP_DELETE;
 	public static String PHP_RENAME;
+	public static String PHP_RETIME;
 	public static String PHP_NEWDICT;
 	public static String PHP_UPLOAD;
 	public static String PHP_DOWNLOAD;
@@ -66,6 +69,7 @@ public final class Safe {
 	public static String JSP_SAVEFILE;
 	public static String JSP_DELETE;
 	public static String JSP_RENAME;
+	public static String JSP_RETIME;
 	public static String JSP_NEWDICT;
 	public static String JSP_UPLOAD;
 	public static String JSP_DOWNLOAD;
@@ -82,6 +86,7 @@ public final class Safe {
 	public static String CUS_SAVEFILE;
 	public static String CUS_DELETE;
 	public static String CUS_RENAME;
+	public static String CUS_RETIME;
 	public static String CUS_NEWDICT;
 	public static String CUS_UPLOAD;
 	public static String CUS_DOWNLOAD;

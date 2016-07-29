@@ -5,12 +5,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -18,6 +22,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
@@ -25,9 +30,12 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.text.Caret;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeSelectionModel;
+import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -41,7 +49,7 @@ import com.ms509.util.TreeMethod;
 
 public class FileManagerPopMenu extends JPopupMenu {
 	private JMenuItem upfile, downfile, openfile, rename, delete, addfile,
-			adddict;
+			adddict,retime;
 
 	public FileManagerPopMenu(String type) {
 		// TODO Auto-generated constructor stub
@@ -51,6 +59,7 @@ public class FileManagerPopMenu extends JPopupMenu {
 			downfile = new JMenuItem("下载");
 			openfile = new JMenuItem("打开");
 			rename = new JMenuItem("重命名");
+			retime = new JMenuItem("修改时间");
 			delete = new JMenuItem("删除");
 			JMenu addfiledict = new JMenu("新建");
 			addfile = new JMenuItem("文件");
@@ -59,16 +68,18 @@ public class FileManagerPopMenu extends JPopupMenu {
 			this.add(downfile);
 			this.addSeparator();
 			this.add(openfile);
-			this.add(rename);
 			this.add(delete);
+			this.add(rename);
+			this.add(retime);	
 			addfiledict.add(addfile);
 			addfiledict.add(adddict);
 			this.add(addfiledict);
 			upfile.addActionListener(menu);
 			downfile.addActionListener(menu);
 			openfile.addActionListener(menu);
-			rename.addActionListener(menu);
 			delete.addActionListener(menu);
+			rename.addActionListener(menu);
+			retime.addActionListener(menu);
 			addfile.addActionListener(menu);
 			adddict.addActionListener(menu);
 		} else {
@@ -212,10 +223,15 @@ public class FileManagerPopMenu extends JPopupMenu {
 				text.getPath().setText(abpath);
 				break;
 			case "删除":
-				filemanagerpanel.getStatus().setText("正在删除...请稍等");
-				abpath = path.getText()
-						+ list.getValueAt(list.getSelectedRow(), 1);
-				new deleteThread(filemanagerpanel, abpath).start();
+				int button = JOptionPane.showConfirmDialog(MainFrame.main,
+						"确认删除？", "提示", JOptionPane.YES_NO_OPTION);
+				if(button == 0)
+				{
+					filemanagerpanel.getStatus().setText("正在删除...请稍等");
+					abpath = path.getText()
+							+ list.getValueAt(list.getSelectedRow(), 1);
+					new deleteThread(filemanagerpanel, abpath).start();
+				}
 				break;
 			case "重命名":
 				model.setEdit(true);
@@ -225,9 +241,52 @@ public class FileManagerPopMenu extends JPopupMenu {
 				edit.requestFocusInWindow();
 				// 在MAC皮肤下，如果设置的位置是末尾c.setDot(edit.getText().length())，或者如果没用使用setDot设置光标的位置则都会自动全选。其他皮肤则不会自动全选。
 //				c.setDot(2);
-//				edit.selectAll();	// 全选，通用所有皮肤。
+				edit.selectAll();	// 全选，通用所有皮肤。
 				c.setVisible(true);
 				model.setEdit(false);
+				break;
+			case "修改时间":
+				final String oldtime = model.getValueAt(list.getSelectedRow(),2).toString();
+				model.setEdit(true);
+				list.editCellAt(list.getSelectedRow(), 2);
+				final JTextField edit2 = (JTextField)list.getEditorComponent();
+				Caret c2 = edit2.getCaret();
+				edit2.requestFocusInWindow();
+				c2.setVisible(true);
+				model.setEdit(false);
+				model.addTableModelListener(new TableModelListener() {
+					public void tableChanged(TableModelEvent e) {
+						if(e.getType() == TableModelEvent.UPDATE)
+						{
+							final String newtime = model.getValueAt(list.getSelectedRow(),2).toString();
+							final String abpath = path.getText() + list.getValueAt(list.getSelectedRow(), 1);
+							if(!oldtime.equals(newtime))
+							{
+								Runnable run = new Runnable() {
+									private String ret;
+									public void run() {
+										ret = "-1";
+										filemanagerpanel.getStatus().setText("正在修改时间...请稍等");
+										ret = filemanagerpanel.getFm().doAction("rename", abpath,newtime);
+										SwingUtilities.invokeLater(new Runnable() {
+											public void run() {
+												if(ret.equals("1"))
+												{
+													filemanagerpanel.getStatus().setText("修改时间成功");
+												} else 
+												{
+													model.setValueAt(oldtime, list.getSelectedRow(), 2);
+													filemanagerpanel.getStatus().setText("修改时间失败");
+												}
+											}
+										});		
+									}
+								};
+								new Thread(run).start();
+							}
+						}
+					}
+				});
 				break;
 			case "文件夹":
 				Vector vector = new Vector<>();
@@ -238,7 +297,6 @@ public class FileManagerPopMenu extends JPopupMenu {
 				vector.add("0");
 				vector.add("0");
 				model.addRow(vector);
-				model.fireTableDataChanged();
 				model.setEdit(true);
 				// 滚动条滑动到末尾
 				int row = model.getRowCount()-1;
@@ -539,8 +597,18 @@ public class FileManagerPopMenu extends JPopupMenu {
 
 		public void run() {
 			String data = fmp.getFm().doAction("delete", abpath);
+			FileManagerPanel filemanagerpanel = (FileManagerPanel) MainFrame.tab
+					.getSelectedComponent();
 				if (data.equals("1")) {
 					fmp.setRstatus(false);
+					try {
+						String[] name = abpath.split("\\\\|/");
+						String dname = name[name.length-1];
+						DefaultMutableTreeNode dmt = TreeMethod.searchNode(filemanagerpanel.getRoot(), dname);
+						filemanagerpanel.getModel().removeNodeFromParent(dmt);
+					} catch (Exception e) {
+						
+					}
 					SwingUtilities.invokeLater(new Runnable() {
 						public void run() {
 							fmp.showRight(Common.getAbsolutePath(abpath), list);

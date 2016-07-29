@@ -36,14 +36,14 @@ public class AddDialog extends JDialog {
 	private JComboBox<String> atype, acode;
 
 	public AddDialog() {
-		super(MainFrame.main, "添加shell", true);
+		super(MainFrame.main, "添加SHELL", true);
 		this.setComponent();
 		this.setEvent();
 		this.setVisible(true); // 模态对话框必须在添加完组件后设置可见，不然会显示不了。
 	}
 
 	public AddDialog(String s) {
-		super(MainFrame.main, "修改shell", true);
+		super(MainFrame.main, "修改SHELL", true);
 		String[] tmp = s.split("\t");
 		this.setComponent();
 		this.setEvent();
