@@ -226,14 +226,18 @@ public class RightTableModel extends AbstractTableModel {
 								if (ret.equals("1")) {
 									datas.get(rowIndex).setElementAt(newdata, col);
 									fireTableCellUpdated(rowIndex, col);
-									JTree tree = filemanagerpanel.getTree();
-									DefaultMutableTreeNode dmt = TreeMethod.searchNode(filemanagerpanel.getRoot(), roldname);
-									filemanagerpanel.getModel().valueForPathChanged(tree.getSelectionPath().pathByAddingChild(dmt), rnewname);
-									// 非model模式更新界面需要执行updateUI
-//									dmt.setUserObject(rnewname);
-//									tree.updateUI();
-									filemanagerpanel.getList().setRowSelectionInterval(rowIndex,rowIndex);
-									filemanagerpanel.getStatus().setText("重命名成功");
+									try {
+										JTree tree = filemanagerpanel.getTree();
+										DefaultMutableTreeNode dmt = TreeMethod.searchNode(filemanagerpanel.getRoot(), roldname);
+										filemanagerpanel.getModel().valueForPathChanged(tree.getSelectionPath().pathByAddingChild(dmt), rnewname);
+										// 非model模式更新界面需要执行updateUI
+//										dmt.setUserObject(rnewname);
+//										tree.updateUI();
+										filemanagerpanel.getList().setRowSelectionInterval(rowIndex,rowIndex);
+									} catch (Exception e) {
+									} finally {
+										filemanagerpanel.getStatus().setText("重命名成功");
+									}
 								} else {
 									filemanagerpanel.getStatus().setText("重命名失败");
 								}

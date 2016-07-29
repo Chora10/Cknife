@@ -267,7 +267,7 @@ public class FileManagerPopMenu extends JPopupMenu {
 									public void run() {
 										ret = "-1";
 										filemanagerpanel.getStatus().setText("正在修改时间...请稍等");
-										ret = filemanagerpanel.getFm().doAction("rename", abpath,newtime);
+										ret = filemanagerpanel.getFm().doAction("retime", abpath,newtime);
 										SwingUtilities.invokeLater(new Runnable() {
 											public void run() {
 												if(ret.equals("1"))
