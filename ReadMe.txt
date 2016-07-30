@@ -94,6 +94,7 @@ PHP_READDICT=...      			       读取主页功能的代码放这儿
 PHP_READFILE=...       			       读取文件功能的代码放这儿
 PHP_DELETE=...           		       删除文件夹以及文件功能的代码放这儿
 PHP_RENAME=...         			       重命名文件夹以及文件功能的代码放这儿
+PHP_RETIME=...         			       修改时间功能的代码放这儿
 PHP_NEWDICT=...        			       新建目录功能的代码放这儿
 PHP_UPLOAD=...          		       上传文件功能的代码放这儿
 PHP_DOWNLOAD=...    			       下载文件功能的代码放这儿
@@ -120,6 +121,7 @@ CUS_READFILE=readfile
 CUS_SAVEFILE=savefile 
 CUS_DELETE=delete 
 CUS_RENAME=rename 
+CUS_RETIME=retime 
 CUS_NEWDICT=newdict 
 CUS_UPLOAD=upload 
 CUS_DOWNLOAD=download 
@@ -128,6 +130,10 @@ CUS_SHELL=shell
 七、更新日志：(更新版本后请删除Config.ini文件，重新打开自动生成新版本的Config.ini)
 
 程序在使用过程中难免有各种BUG，及时关注看一下是否有更新吧，说不定己经修补了呢。
+
+已知问题：
+Graphite与Metal类型的皮肤互相之间切换不需要重启Cknife，其余类型(Nimbus、Windows、Mac等)的皮肤相互之间切换也不需要重启Cknife，
+但是这两种类型的皮肤进行切换就需要重启Cknife才能完全生效，不然最小化、最大化、关闭按钮不会显示，这是Swing架构遗留的问题。
 
 20160729
 1、文件管理修复若干BUG
