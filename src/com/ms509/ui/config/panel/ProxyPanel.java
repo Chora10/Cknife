@@ -1,5 +1,6 @@
 package com.ms509.ui.config.panel;
 
+import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,18 +38,19 @@ public class ProxyPanel extends JPanel{
 		GBC gbctype = new GBC(1,4,1,1).setInsets(10, 20, 0, 0);
 		GBC gbcok = new GBC(2,4,1,1).setInsets(10, 5, 0, 0);
 		GBC gbccancle = new GBC(3,4,1,1).setInsets(10, 5, 0, 0);
+		Dimension dim = new Dimension(200, 23);
 		JLabel lhost = new JLabel("地址:");
 		host = new JTextField();
-		host.setColumns(20);
+		host.setPreferredSize(dim);
 		JLabel lport = new JLabel("端口:");
 		port = new JTextField();
-		port.setColumns(20);
+		port.setPreferredSize(dim);
 		JLabel luser = new JLabel("用户名:");
 		user = new JTextField();
-		user.setColumns(20);
+		user.setPreferredSize(dim);
 		JLabel lpass = new JLabel("密码:");
 		pass = new JTextField();
-		pass.setColumns(20);
+		pass.setPreferredSize(dim);
 		JLabel ltype = new JLabel("类型:");
 		type = new JComboBox<String>();
 		type.addItem("SOCKS");
