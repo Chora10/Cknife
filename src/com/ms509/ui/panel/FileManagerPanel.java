@@ -207,6 +207,8 @@ public class FileManagerPanel extends JPanel {
 		Runnable run = new Runnable() {
 			public void run() {
 				arrtmp = fm.doAction("readindex");
+				//System.out.println("arrtmp is:");
+				//System.out.println(arrtmp);
 				// System.out.println(arrtmp);
 
 				if (arrtmp.indexOf("HTTP/1.") > -1 || arrtmp.indexOf("/") < 0

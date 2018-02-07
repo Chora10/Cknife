@@ -94,10 +94,43 @@ public class TreeMethod {
 		Enumeration e = root.breadthFirstEnumeration();
 		while (e.hasMoreElements()) {
 			node = (DefaultMutableTreeNode) e.nextElement();
+			System.out.println("the current visiting node is:");
+			//System.out.println(node.getUserObject());
 			if (name.equalsIgnoreCase(node.getUserObject().toString())) {
 				return node;
 			}
 		}
 		return null;
 	}
+	
+	public static DefaultMutableTreeNode searchNodeByAbsolutePath(
+			DefaultMutableTreeNode root, String abpath) {
+		DefaultMutableTreeNode node = null;
+		Enumeration e = root.breadthFirstEnumeration();
+		while (e.hasMoreElements()) {
+			node = (DefaultMutableTreeNode) e.nextElement();
+			//System.out.println(node.getUserObject());
+			Object[] treepath = node.getUserObjectPath();
+			String treepathString = "";
+			for(int i=0;i<treepath.length;i++)
+			{
+				if(i==0)
+				{
+					treepathString=treepath[i].toString();
+				}
+				else
+				{
+					treepathString=treepathString+treepath[i].toString()+Safe.SYSTEMSP;
+				}
+			}
+			if (treepathString.startsWith(abpath)) {
+				return node;
+			}
+			if (abpath.equalsIgnoreCase(node.getUserObject().toString())) {
+				return node;
+			}
+		}
+		return null;
+	}
+	
 }

@@ -156,8 +156,11 @@ public class FileManagerPopMenu extends JPopupMenu {
 						final String abpath = Common.autoPath(path.getText())
 								+ name + Safe.SYSTEMSP;
 						filemanagerpanel.showRight(abpath, list);
-						DefaultMutableTreeNode tn = TreeMethod.searchNode(
-								filemanagerpanel.getRoot(), name);
+						
+						//DefaultMutableTreeNode tn = TreeMethod.searchNode(
+								//filemanagerpanel.getRoot(), name);
+						DefaultMutableTreeNode tn = TreeMethod.searchNodeByAbsolutePath(
+								filemanagerpanel.getRoot(), abpath);
 						if (tn != null) {
 							TreePath tp = new TreePath(tn.getPath());
 							DefaultTreeSelectionModel dsmodel = new DefaultTreeSelectionModel();
