@@ -429,8 +429,7 @@ public class FileManager {
 				}
 			}
 			String[] left = al.toArray(new String[] {});
-			return left;
-			
+			return left;			
 		} catch (Exception e) {
 			return filedicts = new String[]{};
 		}

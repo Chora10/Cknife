@@ -22,8 +22,6 @@ public class Common {
 
 	public static String purData(String data) {
 		String datas = data;
-		//System.out.println("datas is:");
-		//System.out.println(datas);
 		String regex = Common.purRegex(Safe.SPL) + "(.*)"
 				+ Common.purRegex(Safe.SPR);
 		Matcher m = Pattern.compile(regex, Pattern.DOTALL).matcher(data);

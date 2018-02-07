@@ -94,8 +94,6 @@ public class TreeMethod {
 		Enumeration e = root.breadthFirstEnumeration();
 		while (e.hasMoreElements()) {
 			node = (DefaultMutableTreeNode) e.nextElement();
-			System.out.println("the current visiting node is:");
-			//System.out.println(node.getUserObject());
 			if (name.equalsIgnoreCase(node.getUserObject().toString())) {
 				return node;
 			}
